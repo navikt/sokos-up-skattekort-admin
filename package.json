@@ -1,0 +1,87 @@
+{
+	"name": "sokos-react-template",
+	"version": "1.0.0",
+	"description": "Mikrofrontend for Utbetalingsportalen",
+	"type": "module",
+	"scripts": {
+		"dev": "vite --mode mock",
+		"dev:backend": "vite --mode backend",
+		"build": "tsc && vite build",
+		"playwright": "playwright test",
+		"biome:check": "biome check --files-ignore-unknown=true",
+		"biome:fix": "biome check --write --no-errors-on-unmatched",
+		"stylelint:check": "stylelint '**/*.css'",
+		"stylelint:fix": "stylelint '**/*.css' --fix",
+		"prepare": "husky"
+	},
+	"dependencies": {
+		"@axe-core/playwright": "4.11.1",
+		"@grafana/faro-web-sdk": "2.3.1",
+		"@navikt/aksel-icons": "7.39.0",
+		"@navikt/ds-css": "7.39.0",
+		"@navikt/ds-react": "7.39.0",
+		"axios": "1.13.6",
+		"react": "19.2.4",
+		"react-dom": "19.2.4",
+		"swr": "2.4.1",
+		"zod": "4.3.6"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.4.8",
+		"@navikt/aksel-stylelint": "7.39.0",
+		"@playwright/test": "1.58.2",
+		"@rollup/plugin-terser": "1.0.0",
+		"@types/node": "25.5.0",
+		"@types/react": "19.2.14",
+		"@types/react-dom": "19.2.3",
+		"@vitejs/plugin-react": "5.2.0",
+		"autoprefixer": "10.4.27",
+		"husky": "9.1.7",
+		"lint-staged": "16.4.0",
+		"msw": "2.12.14",
+		"postcss": "8.5.8",
+		"stylelint": "16.26.1",
+		"stylelint-config-standard": "39.0.1",
+		"typescript": "5.9.3",
+		"vite": "7.3.2",
+		"vite-plugin-css-injected-by-js": "4.0.1",
+		"vite-plugin-environment": "1.1.3"
+	},
+	"msw": {
+		"workerDirectory": [
+			"public"
+		]
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version"
+		]
+	},
+	"stylelint": {
+		"extends": [
+			"stylelint-config-standard",
+			"@navikt/aksel-stylelint/recommended"
+		],
+		"ignoreFiles": "dist/**/*"
+	},
+	"lint-staged": {
+		"*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}": "biome check --write --no-errors-on-unmatched",
+		"*.css": "stylelint --fix"
+	},
+	"engines": {
+		"pnpm": ">=10.16.0",
+		"node": ">=24.13.0"
+	},
+	"pnpm": {
+		"overrides": {
+			"flatted": ">=3.4.0",
+			"picomatch": ">=4.0.4"
+		}
+	}
+}
