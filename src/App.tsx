@@ -1,11 +1,11 @@
-import { useEffect } from "react";
-import TemplatePage from "./pages/TemplatePage";
-import { initGrafanaFaro } from "./util/grafanaFaro";
+import {useEffect} from "react";
+import SkattekortAdmin from "./pages/SkattekortAdmin";
+import {initGrafanaFaro} from "./util/grafanaFaro";
 
 export default function App() {
-	useEffect(() => {
-		initGrafanaFaro();
-	}, []);
+    useEffect(() => {
+        initGrafanaFaro();
+    }, []);
 
-	return <TemplatePage />;
+    return <SkattekortAdmin/>;
 }

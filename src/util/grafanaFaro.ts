@@ -24,16 +24,16 @@ export function initGrafanaFaro() {
 		return;
 	}
 
-	initializeFaro({
-		isolate: true,
-		url: getTelemetryCollectorURL(),
-		app: {
-			name: "sokos-react-template",
-		},
-		instrumentations: [
-			...getWebInstrumentations({
-				captureConsole: false,
-			}),
-		],
-	});
+	// initializeFaro({
+	// 	isolate: true,
+	// 	url: getTelemetryCollectorURL(),
+	// 	app: {
+	// 		name: "sokos-up-skattekort-admin",
+	// 	},
+	// 	instrumentations: [
+	// 		...getWebInstrumentations({
+	// 			captureConsole: false,
+	// 		}),
+	// 	],
+	// });
 }

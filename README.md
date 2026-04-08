@@ -1,20 +1,7 @@
-# sokos-react-template
+# sokos-up-skattekort-admin
 
 Brukes som utgangspunkt for å opprette nye mikrofrontends i Utbetalingsportalen.
 
-NB! Navngi følgende: `sokos-up-appNavn`, f.eks: `sokos-up-venteregister`
-
-## Tilpass repo-et
-
-1. Kjør `chmod 755 setupTemplate.sh`
-2. Kjør:
-
-   ```bash
-   ./setupTemplate.sh
-   ```
-
-3. Kun spesifiser navnet på applikasjonen som skal stå etter sokos-up-`appNavn`. Hvis du ønsker `sokos-up-venteregister` så skriv inn bare `venteregister`.
-4. Slett `setupTemplate.sh` hvis du er ferdig med endre navn på prosjektet
 5. Templaten kommer med [Playwright](https://playwright.dev/) installert. Endre følgende filer: [playwright.config.ts](playwright.config.ts) og [accessibility.spec.ts](playwright-tests/accessibility.spec.ts). Playwright testene kan kjøres med kommandoen `pnpm exec playwright test`
 6. Sett riktig namespace og team i nais manifestene, de ligger i mappen under `nais/<cluster>`
 7. Velg riktig ingress til appen i nais.yaml. Ingressen bør være `https://utbetalingsportalen.intern.dev.nav.no/appNavn`
@@ -53,7 +40,7 @@ Templaten har ikke routing. Men om du ønsker å ha routing gjør du følgende:
 2. Erstatter følgende innhold i [App.tsx](/src/App.tsx)
 
 ```typescript
-return <TemplatePage />;
+return <SkattekortAdmin />;
 ```
 
 med
@@ -61,7 +48,7 @@ med
 ```typescript
 return <BrowserRouter basename="/mikrofrontend">
     <Routes>
-        <Route path="/" element={<TemplatePage />} />
+        <Route path="/" element={<SkattekortAdmin />} />
         <Route path="/anotherpage" element={<AnotherPage />} />
     </Routes>
   </BrowserRouter>

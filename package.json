@@ -1,5 +1,5 @@
 {
-	"name": "sokos-react-template",
+	"name": "sokos-up-skattekort-admin",
 	"version": "1.0.0",
 	"description": "Mikrofrontend for Utbetalingsportalen",
 	"type": "module",
@@ -17,12 +17,14 @@
 	"dependencies": {
 		"@axe-core/playwright": "4.11.1",
 		"@grafana/faro-web-sdk": "2.3.1",
+        "@hookform/resolvers": "5.2.1",
 		"@navikt/aksel-icons": "7.39.0",
 		"@navikt/ds-css": "7.39.0",
 		"@navikt/ds-react": "7.39.0",
 		"axios": "1.13.6",
 		"react": "19.2.4",
 		"react-dom": "19.2.4",
+        "react-hook-form": "7.72.0",
 		"swr": "2.4.1",
 		"zod": "4.3.6"
 	},
@@ -43,7 +45,7 @@
 		"stylelint": "16.26.1",
 		"stylelint-config-standard": "39.0.1",
 		"typescript": "5.9.3",
-		"vite": "7.3.2",
+		"vite": "7.3.1",
 		"vite-plugin-css-injected-by-js": "4.0.1",
 		"vite-plugin-environment": "1.1.3"
 	},
