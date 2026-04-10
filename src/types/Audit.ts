@@ -33,3 +33,7 @@ export const AuditSchema = z.object({
 });
 
 export type Audit = z.infer<typeof AuditSchema>;
+
+const AuditResponseSchema = z.object({items: z.array(AuditSchema)})
+
+export type AuditResponse = z.infer<typeof AuditResponseSchema>;

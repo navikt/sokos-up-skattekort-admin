@@ -1,0 +1,204 @@
+{
+  "items": [
+    {
+      "id": 9643,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-01-23T09:01:45.793787Z",
+      "tag": "OPPRETTET_PERSON",
+      "informasjon": "Skattekort manuelt opprettet for tidligere ukjent person"
+    },
+    {
+      "id": 9644,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-01-23T09:01:45.793787Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort SkattekortopplysningerOK for 2026 som er opprettet manuelt"
+    },
+    {
+      "id": 9645,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-01-23T09:01:51.879369Z",
+      "tag": "MOTTATT_FORESPOERSEL",
+      "informasjon": "Skattekort manuelt opprettet for tidligere ukjent person"
+    },
+    {
+      "id": 9646,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-01-23T09:01:51.879369Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort SkattekortopplysningerOK for 2026 som er opprettet manuelt"
+    },
+    {
+      "id": 9647,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-01-23T09:15:27.870686Z",
+      "tag": "MOTTATT_FORESPOERSEL",
+      "informasjon": "Skattekort manuelt opprettet for tidligere ukjent person"
+    },
+    {
+      "id": 9648,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-01-23T09:15:27.870686Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort SkattekortopplysningerOK for 2026 som er opprettet manuelt"
+    },
+    {
+      "id": 9889,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-02-09T12:26:56.522492Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort IkkeSkattekort for 2026 som er opprettet manuelt"
+    },
+    {
+      "id": 9890,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-02-09T12:26:56.522492Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort IkkeSkattekort for 2026 fra bestillingsbatch manuelt syntetisk"
+    },
+    {
+      "id": 9891,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-02-09T12:31:48.560930Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort IkkeSkattekort for 2026 som er opprettet manuelt"
+    },
+    {
+      "id": 9892,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-02-09T12:31:48.560930Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort IkkeSkattekort for 2026 fra bestillingsbatch manuelt syntetisk"
+    },
+    {
+      "id": 9893,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-02-09T12:32:00.125693Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort IkkeSkattekort for 2026 som er opprettet manuelt"
+    },
+    {
+      "id": 9894,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-02-09T12:32:00.125693Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort IkkeSkattekort for 2026 fra bestillingsbatch manuelt syntetisk"
+    },
+    {
+      "id": 9895,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-02-09T12:32:59.725936Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort IkkeSkattekort for 2026 som er opprettet manuelt"
+    },
+    {
+      "id": 9896,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-02-09T12:32:59.725936Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort IkkeSkattekort for 2026 fra bestillingsbatch manuelt syntetisk"
+    },
+    {
+      "id": 9897,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-02-09T12:33:23.379261Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort IkkeSkattekort for 2026 som er opprettet manuelt"
+    },
+    {
+      "id": 9898,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-02-09T12:33:23.379261Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort IkkeSkattekort for 2026 fra bestillingsbatch manuelt syntetisk"
+    },
+    {
+      "id": 9899,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-02-09T12:34:02.782378Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort IkkeSkattekort for 2026 som er opprettet manuelt"
+    },
+    {
+      "id": 9900,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-02-09T12:34:24.687320Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort IkkeSkattekort for 2026 som er opprettet manuelt"
+    },
+    {
+      "id": 9960,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-02-11T12:04:25.499617Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort SkattekortopplysningerOK for 2026 som er opprettet manuelt"
+    },
+    {
+      "id": 9990,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-02-12T10:58:44.930723Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort SkattekortopplysningerOK for 2026 som er opprettet manuelt"
+    },
+    {
+      "id": 9991,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-02-12T10:59:29.241421Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort SkattekortopplysningerOK for 2026 som er opprettet manuelt"
+    },
+    {
+      "id": 9992,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-02-12T11:00:05.871026Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort SkattekortopplysningerOK for 2026 som er opprettet manuelt"
+    },
+    {
+      "id": 9993,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-02-12T11:03:04.848790Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort SkattekortopplysningerOK for 2026 som er opprettet manuelt"
+    },
+    {
+      "id": 9994,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-02-12T11:03:04.848790Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort SkattekortopplysningerOK for 2026 fra bestillingsbatch manuelt syntetisk"
+    },
+    {
+      "id": 10000,
+      "personId": 123,
+      "brukerId": "system",
+      "opprettet": "2026-02-13T12:53:06.012337Z",
+      "tag": "SKATTEKORTINFORMASJON_MOTTATT",
+      "informasjon": "Lagret skattekort SkattekortopplysningerOK for 2026 som er opprettet manuelt"
+    }
+  ]
+}

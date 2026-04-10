@@ -2,6 +2,8 @@ import { HttpResponse, http } from "msw";
 import mangeSkattekort from "./responseMedMangeSkattekort.json";
 import {HentSkattekortRequest} from "../src/types/HentSkattekortRequestSchema";
 import ingenSkattekort from "./responseUtenSkattekort.json";
+import auditLogg from "./auditLogg.json"
+import batcher from "./batcher.json"
 
 export const handlers = [
     http.post("/sokos-skattekort/api/v2/person/hent-navn", () => {
@@ -38,6 +40,12 @@ export const handlers = [
                         ? "VENTER_PAA_UTSENDING"
                         : /* Og hvis det er mer enn 15s siden man trykket:  */ "SENDT_FORSYSTEM";
         return HttpResponse.json({ data: status }, { status: 200 });
+    }),
+    http.post("/sokos-skattekort/api/v1/admin/auditlogg", async () => {
+        return HttpResponse.json(auditLogg, { status: 200 });
+    }),
+    http.post("/sokos-skattekort/api/v1/admin/hentBatcher", async ({ request }) => {
+        return HttpResponse.json(batcher, { status: 200 });
     })
 ];
 let skattekortBestilt: Date | null = null;

@@ -25,12 +25,12 @@ export default function ShowSkattekort({
 				</VStack>
 			)}
 
-			{data?.map((skattekort) => (
+			{data?.map((skattekort, index) => (
 				<VStack
 					key={`${skattekort.opprettet}${skattekort.id}`}
 					padding="space-8"
 				>
-					<ExpansionCard aria-label="Skattekort">
+					<ExpansionCard open={index == 0} aria-label="Skattekort">
 						<ExpansionCard.Header>
 							<ExpansionCard.Title as="h4" size="small">
 								{skattekortTittel(skattekort)} {skattekort.inntektsaar}.{" "}
