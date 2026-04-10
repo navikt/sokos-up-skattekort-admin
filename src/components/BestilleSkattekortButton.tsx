@@ -29,7 +29,7 @@ export default function BestilleSkattekortButton(
 	};
 
 	const [shouldRefreshStatus, setShouldRefreshStatus] = useState(false);
-	const { data, error, isLoading } = useFetchSkattekortStatus(request, shouldRefreshStatus, props.gjelderId != "");
+	const { data, error, isLoading } = useFetchSkattekortStatus(request, shouldRefreshStatus);
 
 	useEffect(() => {
 		if (data?.data) {
@@ -49,9 +49,7 @@ export default function BestilleSkattekortButton(
 	}, [data, props]);
 
 	function handleClick() {
-		setShouldRefreshStatus(true);
-        console.log("Klikket");
-        console.log(props.gjelderId)
+		shouldRefreshStatus || setShouldRefreshStatus(true);
         
 		bestillSkattekort(request)
 			.then((response) => {
@@ -72,10 +70,6 @@ export default function BestilleSkattekortButton(
 	return (
 		<Tooltip content={props.error ? props.error.message : "Bestill skattekort"}>
 			<span>
-                <div>DATA: {data ? JSON.stringify(data) : "NADA"}</div>
-                <div>PERSON: {props.gjelderId ?? "NOBODY"}</div>
-                <div>ERROR: {props.error?.message ?? "NO ERROR"}</div>
-                <div>ERROR_FETCH: {error ? JSON.stringify(error) : "NO FETCH ERROR"}</div>
 				<Button
 					size={"small"}
 					variant={"secondary-neutral"}

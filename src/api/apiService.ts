@@ -2,7 +2,7 @@ import useSWRImmutable from "swr/immutable";
 import {api, axiosPostFetcher} from "./apiConfig";
 import type {ForespoerselRequest} from "./models/ForespoerselRequest";
 import {HentNavnResponse, HentNavnResponseSchema} from "../types/HentNavnResponse";
-import {AxiosResponse} from "axios";
+import {AxiosError, AxiosResponse} from "axios";
 import {HentNavnRequest} from "../types/HentNavnRequest";
 import {
     WrappedHentNavnResponseWithError,
@@ -13,6 +13,11 @@ import {
 import {BackendError, NoDataError} from "../types/Error";
 import {Skattekort, SkattekortListSchema} from "../types/SkattekortResponseDTOSchema";
 import {HentSkattekortRequest} from "../types/HentSkattekortRequestSchema";
+import {ZodError} from "zod";
+import useSWR from "swr";
+import {Audit} from "../types/Audit";
+export type OtherErrors = AxiosError | ZodError<unknown> | BackendError;
+export type AllErrors = OtherErrors | NoDataError;
 
 const BASE_URI = {
     SOKOS_SKATTEKORT_API: "/sokos-skattekort/api/v1/",
@@ -29,7 +34,7 @@ function swrConfig<T, ArgType>(fetcher: (arg: ArgType) => Promise<T>) {
 
 export function useFetchNavn(fnr: string): {
     data: string | undefined;
-    error: any | null;
+    error: AllErrors | null;
     isLoading: boolean;
 } {
     const shouldFetch = fnr?.trim().length > 0;
@@ -82,11 +87,12 @@ export async function bestillSkattekort(request: ForespoerselRequest) {
 
 export function useFetchSkattekortStatus(
     request: ForespoerselRequest,
-    shouldRefresh: boolean,
-    shouldFetch: boolean
+    shouldRefresh: boolean
 ) {
-    const {data, error, isLoading} = useSWRImmutable<WrappedStatusResponseWithError>(
-        shouldFetch ? ["/skattekort/status", request] : null,
+    const key = request.personIdent && request.personIdent != "" ? ["/skattekort/status", request] : null;
+    // useSWR skal være mutable slik at vi kan polle status mens bestilling og henting pågår
+    const {data, error, isLoading} = useSWR<WrappedStatusResponseWithError>(
+         key,
         {
             ...swrConfig<WrappedStatusResponseWithError, [string, string]>(
                 async ([_url, request]: [string, string]) => {
@@ -110,9 +116,8 @@ export function useFetchSkattekortStatus(
                 },
             ),
             onError: (error) => {
-                return {data:{data:"API_ERROR"}, error, isValidating: false};
+                return {data:{data:"API_ERROR"}, error, isLoading: false};
             },
-            shouldRetryOnError: false,
             refreshInterval: shouldRefresh ? 1000 : 0,
         });
     return {data, error, isLoading};
@@ -150,6 +155,34 @@ export function useFetchSkattekort(fnr: string): {
             ),
             onError: (error) => {
                 return { data: [], error, isValidating: false };
+            },
+            shouldRetryOnError: false,
+        },
+    );
+    return { data, error, isLoading };
+}
+
+// TODO 
+export function useFetchAuditLogg(fnr: string): {
+    data: any | undefined;
+    error:  BackendError | NoDataError | null;
+    isLoading: boolean;
+} {
+    const shouldFetch = fnr?.trim().length > 0;
+    const { data, error, isLoading } = useSWRImmutable<Skattekort[]>(
+        shouldFetch ? ["/auditLogg", fnr] : null,
+        {
+            ...swrConfig<any, [string, string]>(
+                async ([_url, fnr]: [string, string]) => {
+                    return api(BASE_URI.SOKOS_SKATTEKORT_PERSON_API)
+                        .post<
+                            HentSkattekortRequest,
+                            AxiosResponse<{items:Audit[]}>
+                        >(_url, { fnr, hentAlle: true })
+                },
+            ),
+            onError: (error) => {
+                return { data: {}, error, isValidating: false };
             },
             shouldRetryOnError: false,
         },
