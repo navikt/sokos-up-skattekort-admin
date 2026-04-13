@@ -23,6 +23,7 @@ export const BestillingsbatchSchema = z.object({
     opprettet: z.string(),
     dataSendt: z.string(),
     dataMottatt: z.string().nullable().optional(),
+    showFullRequest: z.boolean().optional(),
 });
 
 export type Bestillingsbatch = z.infer<typeof BestillingsbatchSchema>;

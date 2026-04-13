@@ -1,58 +1,31 @@
-import {BodyShort, Box, Heading, Table, TextField, Timeline, Tooltip, VStack} from "@navikt/ds-react";
+import {BodyShort, Box, Button, ExpansionCard, Heading, Table, VStack} from "@navikt/ds-react";
 import {useFetchBatcher} from "../api/apiService";
-import {BatchInsightResponse, Bestillingsbatch} from "../types/Bestillingsbatch";
+import type {BatchInsightRequest, Bestillingsbatch} from "../types/Bestillingsbatch";
 import {toLocalDate, toLocalTime} from "../util/norskFormat";
-import {ArrowCirclepathIcon} from "@navikt/aksel-icons";
+import SoekBatch from "./SoekBatch";
 import {useState} from "react";
 
 export default function GenerellInformasjon() {
+    const [batchInsightRequest, setBatchInsightRequest] = useState<BatchInsightRequest | null>(null);
+    const {data, error, isLoading} = useFetchBatcher(batchInsightRequest)
+
     return (<Box margin={"space-24"}>
         <Heading size={"medium"} spacing>Generell informasjon</Heading>
-        <ShowBatches/>
+        <SoekBatch isLoading={isLoading} handleBatchInsightRequest={setBatchInsightRequest}/>
+        {data &&
+            <ExpansionCard defaultOpen aria-label="Bestillingsbatcher">
+                <ExpansionCard.Header>
+                    <ExpansionCard.Title>Bestillingsbatcher</ExpansionCard.Title>
+                </ExpansionCard.Header>
+                <ExpansionCard.Content>
+                    <Table zebraStripes>
+                        <TableHeaders/>
+                        <Batches batches={data.items}/>
+                    </Table>
+                </ExpansionCard.Content>
+            </ExpansionCard>
+        }
     </Box>)
-}
-
-type ShowBatchesProps = {
-    data: BatchInsightResponse
-}
-
-function ShowBatches() {
-    const [datoFom, setDatoFom] = useState<string>("")
-    const [datoTom, setDatoTom] = useState<string>("")
-    const {data, error, isLoading} = useFetchBatcher(datoFom, datoTom)
-
-    return (<>
-        {data && <Box marginInline="auto" maxWidth="800px">
-                <Timeline>
-                    <Timeline.Row label="" icon={<ArrowCirclepathIcon title="a11y-title" fontSize="1.5rem"/>}>
-                        {data.items.slice(-5).map((item) => (
-                            <Timeline.Period
-                                key={item.id}
-                                start={new Date(item.opprettet)}
-                                end={new Date(item.oppdatert)}
-                                status={"info"}
-                            >
-                                <Tooltip key={item.id} content={"test"}>
-                                    <Table>
-                                        <TableHeaders/>
-                                        <Batches batches={[item]}/>
-                                    </Table>
-                                </Tooltip>
-                            </Timeline.Period>
-                        ))}
-                    </Timeline.Row>
-                </Timeline>
-            </Box>}
-            <Box> 
-                <TextField label={"DatoFOM"} value={datoFom} onChange={(e) => setDatoFom(e.target.value)}/>
-                <TextField label={"DatoTOM"} value={datoTom} onChange={(e) => setDatoTom(e.target.value)}/>
-            </Box>
-        {data && <Table zebraStripes>
-                <TableHeaders/>
-                {data.items && <Batches batches={data.items}/>}
-            </Table>}
-        </>
-    )
 }
 
 function TableHeaders() {
@@ -65,7 +38,6 @@ function TableHeaders() {
             <Table.HeaderCell scope="col">Oppdatert</Table.HeaderCell>
             <Table.HeaderCell scope="col">Data sendt</Table.HeaderCell>
             <Table.HeaderCell scope="col">Data mottatt</Table.HeaderCell>
-
         </Table.Row>
     </Table.Header>)
 }
@@ -75,18 +47,51 @@ type BatchesProps = {
 }
 
 function Batches({batches}: Readonly<BatchesProps>) {
-    return (<Table.Body>
-        {batches.slice(0, 5).map((item) => (
-            <Table.Row key={item.id}>
-                <Table.DataCell>{item.bestillingsreferanse}</Table.DataCell>
-                <Table.DataCell>{item.status}</Table.DataCell>
-                <Table.DataCell>{item.type}</Table.DataCell>
-                <Table.DataCell><VStack><BodyShort>{toLocalDate(item.opprettet)}</BodyShort><BodyShort>{toLocalTime(item.opprettet)}</BodyShort></VStack></Table.DataCell>
-                <Table.DataCell><VStack><BodyShort>{toLocalDate(item.oppdatert)}</BodyShort><BodyShort>{toLocalTime(item.oppdatert)}</BodyShort></VStack></Table.DataCell>
-                <Table.DataCell>{JSON.stringify(JSON.parse(item.dataSendt), null, 2)}</Table.DataCell>
-                <Table.DataCell>{item.dataMottatt && JSON.stringify(JSON.parse(item.dataMottatt), null, 2)}</Table.DataCell>
-            </Table.Row>
-        ))}
-        {batches.length > 5 && <Table.ExpandableRow colSpan={5} content={"..."}></Table.ExpandableRow>}
-    </Table.Body>)
+    return (
+        <Table.Body>
+            {batches.map((item) => (
+                <TableRow key={item.id} item={item}/>
+            ))}
+        </Table.Body>)
+}
+
+function TableRow({item}: Readonly<{ item: Bestillingsbatch }>) {
+    function showDataSendt(batch: Bestillingsbatch, showFullRequest: number) {
+        const dataSendt = JSON.parse(batch.dataSendt);
+        const arbeidstakere = dataSendt?.forespoerselOmSkattekortTilArbeidsgiver?.arbeidsgiver[0]?.arbeidstakeridentifikator?.join(", ")
+        
+        if (showFullRequest > 0) {return JSON.stringify(dataSendt, null, 2)}
+        let text:string;
+        if (batch.type === "OPPDATERING") text = "Det vanlige Oppdateringsrequestet"
+        else text = `Request(${dataSendt.inntektsaar}, ${arbeidstakere})`;
+        return <Button variant="tertiary-neutral">{text}</Button>
+    }
+
+    function showDataMottatt(batch: Bestillingsbatch, showFullResponse: number) {
+        const dataMottatt = batch.dataMottatt ? JSON.parse(batch.dataMottatt) : null
+        
+        if (showFullResponse || (dataMottatt == null) || dataMottatt.status === "INGEN_ENDRINGER") return JSON.stringify(dataMottatt, null, 2)
+        
+        
+        // @ts-expect-error - kanskje jeg legger inn type på data mottatt senere
+        const arbeidstakere = dataMottatt?.arbeidsgiver[0]?.arbeidstaker.map(a => a.arbeidstakeridentifikator)
+        let text :string;
+        if (arbeidstakere.length < 5) text=`Skattekort for ${arbeidstakere.join(",")}`
+            else text =`Skattekort for ${arbeidstakere.length} personer`
+        
+        return <Button variant="tertiary-neutral">{text}</Button>
+        
+    }
+    const [showFullRequest, setShowFullRequest] = useState<number>(0)
+    const [showFullResponse, setShowFullResponse] = useState<number>(0)
+    
+    return <Table.Row key={item.id}>
+        <Table.DataCell>{item.bestillingsreferanse}</Table.DataCell>
+        <Table.DataCell>{item.status}</Table.DataCell>
+        <Table.DataCell>{item.type}</Table.DataCell>
+        <Table.DataCell><VStack><BodyShort>{toLocalDate(item.opprettet)}</BodyShort><BodyShort>{toLocalTime(item.opprettet)}</BodyShort></VStack></Table.DataCell>
+        <Table.DataCell><VStack><BodyShort>{toLocalDate(item.oppdatert)}</BodyShort><BodyShort>{toLocalTime(item.oppdatert)}</BodyShort></VStack></Table.DataCell>
+        <Table.DataCell onClick={() => {setShowFullRequest((showFullRequest+1)%3)} }>{showDataSendt(item, showFullRequest)}</Table.DataCell>
+        <Table.DataCell onClick={() => {setShowFullResponse((showFullResponse+1)%3)} }>{showDataMottatt(item, showFullResponse)}</Table.DataCell>
+    </Table.Row>
 }

@@ -1,24 +1,24 @@
 import useSWRImmutable from "swr/immutable";
 import {api, axiosPostFetcher} from "./apiConfig";
 import type {ForespoerselRequest} from "./models/ForespoerselRequest";
-import {HentNavnResponse, HentNavnResponseSchema} from "../types/HentNavnResponse";
-import {AxiosError, AxiosResponse} from "axios";
-import {HentNavnRequest} from "../types/HentNavnRequest";
+import {type HentNavnResponse, HentNavnResponseSchema} from "../types/HentNavnResponse";
+import type {AxiosError, AxiosResponse} from "axios";
+import type {HentNavnRequest} from "../types/HentNavnRequest";
 import {
-    WrappedHentNavnResponseWithError,
+    type WrappedHentNavnResponseWithError,
     WrappedHentNavnResponseWithErrorSchema,
-    WrappedSkattekortResponseDTOWithError,
+    type WrappedSkattekortResponseDTOWithError,
     WrappedSkattekortResponseDTOWithErrorSchema,
-    WrappedStatusResponseWithError,
+    type WrappedStatusResponseWithError,
     WrappedStatusResponseWithErrorSchema
 } from "../types/WrappedResponseWithErrorSchema";
 import {BackendError, NoDataError} from "../types/Error";
-import {Skattekort, SkattekortListSchema} from "../types/SkattekortResponseDTOSchema";
-import {HentSkattekortRequest} from "../types/HentSkattekortRequestSchema";
-import {ZodError} from "zod";
+import {type Skattekort, SkattekortListSchema} from "../types/SkattekortResponseDTOSchema";
+import type {HentSkattekortRequest} from "../types/HentSkattekortRequestSchema";
+import type {ZodError} from "zod";
 import useSWR from "swr";
-import {AuditResponse} from "../types/Audit";
-import {BatchInsightResponse} from "../types/Bestillingsbatch";
+import type {AuditResponse} from "../types/Audit";
+import type {BatchInsightRequest, BatchInsightResponse} from "../types/Bestillingsbatch";
 
 export type OtherErrors = AxiosError | ZodError<unknown> | BackendError;
 export type AllErrors = OtherErrors | NoDataError;
@@ -94,7 +94,7 @@ export function useFetchSkattekortStatus(
     request: ForespoerselRequest,
     shouldRefresh: boolean
 ) {
-    const key = request.personIdent && request.personIdent != "" ? ["/skattekort/status", request] : null;
+    const key = request.personIdent?.length === 11 ? ["/skattekort/status", request] : null;
     // useSWR skal være mutable slik at vi kan polle status mens bestilling og henting pågår
     const {data, error, isLoading} = useSWR<WrappedStatusResponseWithError>(
          key,
@@ -196,21 +196,21 @@ export function useFetchAuditLogg(fnr: string): {
     return { data, error, isLoading };
 }
 
-export function useFetchBatcher(datoFom: string|null, datoTom: string|null): {
+export function useFetchBatcher(batchInsightRequest: BatchInsightRequest|null): {
     data: BatchInsightResponse | undefined;
     error:  BackendError | NoDataError | null;
     isLoading: boolean;
 } {
     const { data, error, isLoading } = useSWR<BatchInsightResponse>(
-        ["/hentBatcher", datoFom, datoTom],
+        ["/hentBatcher", batchInsightRequest],
         {
-            ...swrConfig<BatchInsightResponse, [string, string]>(
-                async ([_url, fnr]: [string, string]) => {
+            ...swrConfig<BatchInsightResponse, [string, BatchInsightRequest]>(
+                async ([_url, request]: [string, BatchInsightRequest]) => {
                     return api(BASE_URI.SOKOS_SKATTEKORT_ADMIN_API)
                         .post<
-                            {fnr: string},
+                            {datoFom: string, datoTom: string},
                             AxiosResponse<BatchInsightResponse>
-                        >(_url, { fnr, hentAlle: true })
+                        >(_url, request)
                         .then((response: AxiosResponse<BatchInsightResponse>) => response.data)
                         .then((wrapped: BatchInsightResponse) => wrapped)
                 },

@@ -30,7 +30,7 @@ export default function ShowSkattekort({
 					key={`${skattekort.opprettet}${skattekort.id}`}
 					padding="space-8"
 				>
-					<ExpansionCard open={index == 0} aria-label="Skattekort">
+					<ExpansionCard defaultOpen={index === 0} aria-label="Skattekort">
 						<ExpansionCard.Header>
 							<ExpansionCard.Title as="h4" size="small">
 								{skattekortTittel(skattekort)} {skattekort.inntektsaar}.{" "}
