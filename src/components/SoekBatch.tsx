@@ -4,14 +4,15 @@ import {Box, Button, HStack, VStack,} from "@navikt/ds-react";
 import {useForm} from "react-hook-form";
 import {type BatchInsightRequest, BatchInsightRequestSchema} from "../types/Bestillingsbatch";
 import DateTimePicker from "./DateTimePicker";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 export type SoekProps = {
     isLoading?: boolean;
+    batchInsightRequest: BatchInsightRequest | null;
     handleBatchInsightRequest: (request: BatchInsightRequest) => void;
 };
 
-export default function SoekBatch({isLoading, handleBatchInsightRequest}: Readonly<SoekProps>) {
+export default function SoekBatch({isLoading, batchInsightRequest, handleBatchInsightRequest}: Readonly<SoekProps>) {
 
     const [tidspunktFom, setTidspunktFom] = useState<Date>(new Date(Date.now() - 1000 * 60 * 60 * 24))
     const [tidspunktTom, setTidspunktTom] = useState<Date>(new Date(Date.now()))
@@ -24,9 +25,15 @@ export default function SoekBatch({isLoading, handleBatchInsightRequest}: Readon
         resolver: zodResolver(BatchInsightRequestSchema),
     });
 
+    useEffect(() => {
+        if ( batchInsightRequest?.tidspunktFom) setTidspunktFom(new Date(batchInsightRequest?.tidspunktFom));
+        if ( batchInsightRequest?.tidspunktTom) setTidspunktTom(new Date(batchInsightRequest?.tidspunktTom));
+    }, [batchInsightRequest]);
+    
     function handleSoekReset() {
         setTidspunktFom(new Date(Date.now() - 1000 * 60 * 60 * 24));
         setTidspunktTom(new Date(Date.now()));
+        
         reset();
     }
     
@@ -52,7 +59,9 @@ export default function SoekBatch({isLoading, handleBatchInsightRequest}: Readon
                                 {...register("tidspunktTom")}
                                 labelText={"Tidspunkt TOM "}
                                 selectedDate={tidspunktTom}
-                                setSelectedDate={date => date ? setTidspunktTom(date) : null}
+                                setSelectedDate={date => {
+                                    if (date) setTidspunktTom(date);
+                                }}
                             />
                         </VStack>
                         <HStack gap="space-16" justify="end">

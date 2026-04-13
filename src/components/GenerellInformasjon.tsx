@@ -1,18 +1,49 @@
-import {BodyShort, Box, Button, ExpansionCard, Heading, Table, VStack} from "@navikt/ds-react";
+import {BodyShort, Box, Button, ExpansionCard, Heading, Skeleton, Table, Timeline, VStack} from "@navikt/ds-react";
 import {useFetchBatcher} from "../api/apiService";
 import type {BatchInsightRequest, Bestillingsbatch} from "../types/Bestillingsbatch";
 import {toLocalDate, toLocalTime} from "../util/norskFormat";
 import SoekBatch from "./SoekBatch";
 import {useState} from "react";
+import {PersonIcon} from "@navikt/aksel-icons";
 
 export default function GenerellInformasjon() {
     const [batchInsightRequest, setBatchInsightRequest] = useState<BatchInsightRequest | null>(null);
+    
     const {data, error, isLoading} = useFetchBatcher(batchInsightRequest)
+    const fom = batchInsightRequest?.tidspunktFom ? new Date(batchInsightRequest.tidspunktFom) : new Date("2025-12-01");
+    const tom = batchInsightRequest?.tidspunktTom ? new Date(batchInsightRequest.tidspunktTom) : new Date();
 
-    return (<Box margin={"space-24"}>
+    function handleDatePick(date: Date) {
+        const midnight = new Date ( date.getFullYear(), date.getMonth(), date.getDate());
+        const next = new Date ( date.getFullYear(), date.getMonth(), date.getDate()+1);
+        
+        setBatchInsightRequest({tidspunktFom: midnight.toISOString(), tidspunktTom: next.toISOString()});
+    }
+    
+    return (
+        <Box margin={"space-24"}>
         <Heading size={"medium"} spacing>Generell informasjon</Heading>
-        <SoekBatch isLoading={isLoading} handleBatchInsightRequest={setBatchInsightRequest}/>
-        {data &&
+        <SoekBatch isLoading={isLoading} batchInsightRequest={batchInsightRequest} handleBatchInsightRequest={setBatchInsightRequest} />
+            {isLoading && <Skeleton width="100%" height="200px" />}
+            {!isLoading && data &&
+            <>
+                {data.items.length > 0 && <Box marginInline="auto" maxWidth="800px">
+                <Timeline startDate={fom} endDate={tom}>
+                    <Timeline.Row  label="Tidslinje" icon={<PersonIcon aria-hidden />}>
+                        {data.items.map((p) => (
+                            <Timeline.Period
+                                key={p.id}
+                                start={new Date(p.opprettet)}
+                                end={new Date(p.opprettet)}
+                                status={"success"}
+                                icon={<PersonIcon aria-hidden />}
+                                statusLabel={"foo"}
+                                onClick={() => handleDatePick(new Date(p.opprettet))}
+                            />                             
+                        ))}
+                    </Timeline.Row>
+                </Timeline>
+            </Box>}
             <ExpansionCard defaultOpen aria-label="Bestillingsbatcher">
                 <ExpansionCard.Header>
                     <ExpansionCard.Title>Bestillingsbatcher</ExpansionCard.Title>
@@ -24,6 +55,7 @@ export default function GenerellInformasjon() {
                     </Table>
                 </ExpansionCard.Content>
             </ExpansionCard>
+            </>
         }
     </Box>)
 }

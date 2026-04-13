@@ -1,11 +1,9 @@
 import * as ReactDatePicker from 'react-datepicker';
 
-// biome-ignore lint/suspicious/noExplicitAny: Rappa fra Pensjon - kanskje vi skal være finere?
+// biome-ignore lint/suspicious/noExplicitAny: Rappa fra Pensjon 
 const DatePicker: any = (ReactDatePicker as any).default || ReactDatePicker;
 import 'react-datepicker/dist/react-datepicker.css';
 import {nb} from 'date-fns/locale';
-
-// Nådeløst stjålet fra pensjon
 
 interface DateTimePickerProps {
     selectedDate: Date | null;
