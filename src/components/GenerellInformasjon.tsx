@@ -140,11 +140,22 @@ function TableRow({item}: Readonly<{ item: Bestillingsbatch }>) {
         <Table.DataCell>{item.type}</Table.DataCell>
         <Table.DataCell><VStack><BodyShort>{toLocalDate(item.opprettet)}</BodyShort><BodyShort>{toLocalTime(item.opprettet)}</BodyShort></VStack></Table.DataCell>
         <Table.DataCell><VStack><BodyShort>{toLocalDate(item.oppdatert)}</BodyShort><BodyShort>{toLocalTime(item.oppdatert)}</BodyShort></VStack></Table.DataCell>
-        <Table.DataCell onClick={() => {
-            setShowFullRequest((showFullRequest + 1) % 3)
+        <Table.DataCell onClick={(e) => {
+            setShowFullRequest((showFullRequest + 1) % 3);
+            (e.currentTarget as HTMLElement).scrollIntoView({
+                behavior: "smooth",
+                block: "nearest",
+                inline: "nearest"
+            });
+            
         }}>{showDataSendt(item, showFullRequest)}</Table.DataCell>
-        <Table.DataCell onClick={() => {
-            setShowFullResponse((showFullResponse + 1) % 3)
+        <Table.DataCell onClick={(e) => {
+            setShowFullResponse((showFullResponse + 1) % 3);
+            (e.currentTarget as HTMLElement).scrollIntoView({
+                behavior: "smooth",
+                block: "nearest",
+                inline: "nearest"
+            })
         }}>{showDataMottatt(item, showFullResponse)}</Table.DataCell>
     </Table.Row>
 }
