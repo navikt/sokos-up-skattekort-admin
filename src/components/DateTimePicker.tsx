@@ -28,8 +28,8 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
                                                            timeFormat = 'HH:mm',
                                                            timeIntervals = 15,
                                                            timeCaption = 'Klokkeslett',
-                                                           placeholderText = 'Velg dato',
-                                                           ariaLabel = 'Velg dato', tabIndex
+                                                           placeholderText = 'Velg tidspunkt',
+                                                           ariaLabel = 'Velg tidspunkt', tabIndex
                                                        }) => {
 
 

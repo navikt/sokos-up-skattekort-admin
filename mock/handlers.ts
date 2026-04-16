@@ -3,8 +3,8 @@ import mangeSkattekort from "./responseMedMangeSkattekort.json";
 import type {HentSkattekortRequest} from "../src/types/HentSkattekortRequestSchema";
 import ingenSkattekort from "./responseUtenSkattekort.json";
 import auditLogg from "./auditLogg.json"
-import batcher from "./batcher.json"
-import type {BatchInsightRequest} from "../src/types/Bestillingsbatch";
+import batcher from "./batcher_mindre.json"
+import {now} from "../src/util/dateUtils";
 
 export const handlers = [
     http.post("/sokos-skattekort/api/v2/person/hent-navn", () => {
@@ -29,7 +29,7 @@ export const handlers = [
         },
     ),
     http.post("/sokos-skattekort/api/v1/skattekort/bestille", async () => {
-        skattekortBestilt = new Date();
+        skattekortBestilt = now();
         return HttpResponse.json({data: "", errorMessage: ""}, {status: 201});
     }),
     http.post("/sokos-skattekort/api/v1/skattekort/status", async () => {
@@ -48,25 +48,7 @@ export const handlers = [
         return HttpResponse.json(auditLogg, {status: 200});
     }),
     http.post("/sokos-skattekort/api/v1/admin/hentBatcher", async ({request}) => {
-
-        const requestObj = await request.json() as BatchInsightRequest
-
-        const filtered = batcher.items
-            .filter(batch =>
-                requestObj?.tidspunktFom == null ||
-                new Date(batch.oppdatert).getTime() > new Date(requestObj.tidspunktFom).getTime() ||
-                new Date(batch.opprettet).getTime() > new Date(requestObj.tidspunktFom).getTime())
-            .filter(batch =>
-                requestObj?.tidspunktTom == null ||
-                new Date(batch.oppdatert).getTime() < new Date(requestObj.tidspunktTom).getTime() ||
-                new Date(batch.opprettet).getTime() < new Date(requestObj.tidspunktTom).getTime()
-            )
-        
-        const filteredBatches = {
-            ...batcher,
-            items: filtered
-        }
-        return HttpResponse.json(filteredBatches, {status: 200});
+        return HttpResponse.json(batcher, {status: 200});
     })
 ];
 let skattekortBestilt: Date | null = null;

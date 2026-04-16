@@ -4,7 +4,7 @@ import {Box, Button, HStack, VStack,} from "@navikt/ds-react";
 import {useForm} from "react-hook-form";
 import {type BatchInsightRequest, BatchInsightRequestSchema} from "../types/Bestillingsbatch";
 import DateTimePicker from "./DateTimePicker";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 export type SoekProps = {
     isLoading?: boolean;
@@ -12,10 +12,10 @@ export type SoekProps = {
     handleBatchInsightRequest: (request: BatchInsightRequest) => void;
 };
 
-export default function SoekBatch({isLoading, batchInsightRequest, handleBatchInsightRequest}: Readonly<SoekProps>) {
+export default function SoekBatch({isLoading, handleBatchInsightRequest}: Readonly<SoekProps>) {
 
-    const [tidspunktFom, setTidspunktFom] = useState<Date>(new Date(Date.now() - 1000 * 60 * 60 * 24))
-    const [tidspunktTom, setTidspunktTom] = useState<Date>(new Date(Date.now()))
+    const [tidspunktFom, setTidspunktFom] = useState<Date | null>(null)
+    const [tidspunktTom, setTidspunktTom] = useState<Date | null>(null)
     const {
         register,
         handleSubmit,
@@ -25,22 +25,19 @@ export default function SoekBatch({isLoading, batchInsightRequest, handleBatchIn
         resolver: zodResolver(BatchInsightRequestSchema),
     });
 
-    useEffect(() => {
-        if ( batchInsightRequest?.tidspunktFom) setTidspunktFom(new Date(batchInsightRequest?.tidspunktFom));
-        if ( batchInsightRequest?.tidspunktTom) setTidspunktTom(new Date(batchInsightRequest?.tidspunktTom));
-    }, [batchInsightRequest]);
-    
     function handleSoekReset() {
-        setTidspunktFom(new Date(Date.now() - 1000 * 60 * 60 * 24));
-        setTidspunktTom(new Date(Date.now()));
-        
-        reset();
+        setTidspunktFom(null)
+        setTidspunktTom(null)
+        reset()
     }
-    
+
     function handleKlikk() {
-        handleBatchInsightRequest({tidspunktTom: tidspunktTom.toISOString(), tidspunktFom: tidspunktFom.toISOString()});
+        handleBatchInsightRequest({
+            tidspunktTom: tidspunktTom?.toISOString(),
+            tidspunktFom: tidspunktFom?.toISOString()
+        });
     }
-    
+
     return (
         <Box padding="6" background={"surface-alt-1-subtle"} borderRadius="large">
             <form onSubmit={handleSubmit(handleBatchInsightRequest)}>

@@ -35,7 +35,10 @@ export const BatchInsightResponseSchema = z.object({items:z.array(Bestillingsbat
 export type BatchInsightResponse = z.infer<typeof BatchInsightResponseSchema>;
 
 export const BatchInsightRequestSchema = z.object({
-    tidspunktFom: z.string(),
-    tidspunktTom: z.string()})
+    tidspunktFom: z.string().optional(),
+    tidspunktTom: z.string().optional(),
+    type: BestillingsbatchTypeSchema.optional(),
+    status: BestillingsbatchStatusSchema.optional()
+})
 
 export type BatchInsightRequest = z.infer<typeof BatchInsightRequestSchema>;

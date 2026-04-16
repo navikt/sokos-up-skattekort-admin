@@ -4,7 +4,7 @@ import {
 	type Skattekort,
 	Trekkode,
 } from "../types/SkattekortResponseDTOSchema";
-import { toLocalDate, toLocalTime } from "../util/norskFormat";
+import { toLocalDate, toLocalTime } from "../util/dateUtils";
 import LabelText from "./LabelText";
 
 function menneskeleseligTilleggsopplysning(t: string) {

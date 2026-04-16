@@ -1,92 +1,230 @@
 {
   "items": [
     {
-      "id": 4,
-      "status": "FERDIG",
+      "id": 7413,
+      "status": "FEILET",
       "type": "OPPDATERING",
-      "bestillingsreferanse": "BR4974",
-      "oppdatert": "2025-11-28T09:00:51.726436Z",
-      "opprettet": "2025-11-28T09:00:50.726436Z",
-      "dataSendt": "{\"inntektsaar\":\"2025\",\"bestillingstype\":\"HENT_KUN_ENDRING\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\"}",
-      "dataMottatt": "{\"status\":\"INGEN_ENDRINGER\"}"
+      "bestillingsreferanse": "BR7400",
+      "oppdatert": "2026-03-19T08:45:33.239423Z",
+      "opprettet": "2026-03-16T10:03:50.898334Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_KUN_ENDRING\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\"}"
     },
     {
-      "id": 22,
-      "status": "FERDIG",
-      "type": "OPPDATERING",
-      "bestillingsreferanse": "BR4999",
-      "oppdatert": "2025-11-28T09:00:53.726436Z",
-      "opprettet": "2025-11-28T09:00:52.726436Z",
-      "dataSendt": "{\"inntektsaar\":\"2025\",\"bestillingstype\":\"HENT_KUN_ENDRING\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\"}",
-      "dataMottatt": "{\"status\":\"INGEN_ENDRINGER\"}"
-    },
-    {
-      "id": 30,
-      "status": "FERDIG",
-      "type": "OPPDATERING",
-      "bestillingsreferanse": "BR5071",
-      "oppdatert": "2025-11-28T09:00:52.726436Z",
-      "opprettet": "2025-11-28T09:00:51.726436Z",
-      "dataSendt": "{\"inntektsaar\":\"2025\",\"bestillingstype\":\"HENT_KUN_ENDRING\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\"}",
-      "dataMottatt": "{\"status\":\"INGEN_ENDRINGER\"}"
-    },
-    {
-      "id": 159,
-      "status": "FERDIG",
-      "type": "OPPDATERING",
-      "bestillingsreferanse": "BR5208",
-      "oppdatert": "2025-11-28T09:00:54.726436Z",
-      "opprettet": "2025-11-28T09:00:53.726436Z",
-      "dataSendt": "{\"inntektsaar\":\"2025\",\"bestillingstype\":\"HENT_KUN_ENDRING\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\"}",
-      "dataMottatt": "{\"status\":\"INGEN_ENDRINGER\"}"
-    },
-    {
-      "id": 339,
-      "status": "FERDIG",
-      "type": "OPPDATERING",
-      "bestillingsreferanse": "BR5409",
-      "oppdatert": "2025-11-28T09:00:57.726436Z",
-      "opprettet": "2025-11-28T09:00:56.726436Z",
-      "dataSendt": "{\"inntektsaar\":\"2025\",\"bestillingstype\":\"HENT_KUN_ENDRING\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\"}",
-      "dataMottatt": "{\"status\":\"INGEN_ENDRINGER\"}"
-    },
-    {
-      "id": 519,
-      "status": "FERDIG",
-      "type": "OPPDATERING",
-      "bestillingsreferanse": "BR5602",
-      "oppdatert": "2025-11-28T09:00:59.726436Z",
-      "opprettet": "2025-11-28T09:00:58.726436Z",
-      "dataSendt": "{\"inntektsaar\":\"2025\",\"bestillingstype\":\"HENT_KUN_ENDRING\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\"}",
-      "dataMottatt": "{\"status\":\"INGEN_ENDRINGER\"}"
-    },
-    {
-      "id": 608,
-      "status": "NY",
-      "type": "OPPDATERING",
-      "bestillingsreferanse": "BR5757",
-      "oppdatert": "2025-11-28T09:01:50.726436Z",
-      "opprettet": "2025-11-28T09:01:50.726436Z",
-      "dataSendt": "{\"inntektsaar\":\"2025\",\"bestillingstype\":\"HENT_KUN_ENDRING\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\"}",
-      "dataMottatt": "{\"status\":\"INGEN_ENDRINGER\"}"
-    },
-    {
-      "id": 3088,
-      "status": "FERDIG",
-      "type": "BESTILLING",
-      "bestillingsreferanse": "BR2386",
-      "oppdatert": "2026-03-03T14:20:23.341492Z",
-      "opprettet": "2026-03-03T14:20:13.458447Z",
-      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"12345612345\"]}]}}",
-      "dataMottatt": "{\"status\":\"FORESPOERSEL_OK\",\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstaker\":[{\"arbeidstakeridentifikator\":\"12345612345\",\"resultatForSkattekort\":\"ikkeSkattekort\",\"inntektsaar\":2026}]}]}"
-    },
-    {
-      "id": 3089,
+      "id": 7416,
       "status": "FEILET",
       "type": "BESTILLING",
-      "bestillingsreferanse": "BR2386",
-      "oppdatert": "2026-03-03T14:20:23.341492Z",
-      "opprettet": "2026-03-03T14:20:13.458447Z",
-      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"12345612345\"]}]}}"
+      "bestillingsreferanse": "BR7822",
+      "oppdatert": "2026-03-19T20:14:24.137162Z",
+      "opprettet": "2026-03-19T14:35:37.695960Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"30819598882\"]}]}}"
+    },
+    {
+      "id": 7922,
+      "status": "FEILET",
+      "type": "OPPDATERING",
+      "bestillingsreferanse": "BR8438",
+      "oppdatert": "2026-03-20T19:29:21.132948Z",
+      "opprettet": "2026-03-20T18:27:56.411114Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_KUN_ENDRING\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\"}"
+    },
+    {
+      "id": 7926,
+      "status": "FERDIG",
+      "type": "OPPDATERING",
+      "bestillingsreferanse": "BR8442",
+      "oppdatert": "2026-03-23T07:50:47.078305Z",
+      "opprettet": "2026-03-23T07:49:46.809224Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_KUN_ENDRING\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\"}",
+      "dataMottatt": "{\"status\":\"INGEN_ENDRINGER\"}"
+    },
+    {
+      "id": 7927,
+      "status": "FERDIG",
+      "type": "OPPDATERING",
+      "bestillingsreferanse": "BR8443",
+      "oppdatert": "2026-03-23T07:51:46.851435Z",
+      "opprettet": "2026-03-23T07:50:47.087112Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_KUN_ENDRING\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\"}",
+      "dataMottatt": "{\"status\":\"INGEN_ENDRINGER\"}"
+    },
+    {
+      "id": 7928,
+      "status": "FERDIG",
+      "type": "OPPDATERING",
+      "bestillingsreferanse": "BR8444",
+      "oppdatert": "2026-03-23T07:52:47.726433Z",
+      "opprettet": "2026-03-23T07:51:46.857446Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_KUN_ENDRING\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\"}",
+      "dataMottatt": "{\"status\":\"INGEN_ENDRINGER\"}"
+    },
+    {
+      "id": 7929,
+      "status": "FERDIG",
+      "type": "OPPDATERING",
+      "bestillingsreferanse": "BR8445",
+      "oppdatert": "2026-03-23T16:48:46.334320Z",
+      "opprettet": "2026-03-23T07:52:47.732939Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_KUN_ENDRING\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\"}",
+      "dataMottatt": "{\"status\":\"INGEN_ENDRINGER\"}"
+    },
+    {
+      "id": 7930,
+      "status": "FERDIG",
+      "type": "BESTILLING",
+      "bestillingsreferanse": "BR8564",
+      "oppdatert": "2026-03-24T08:55:59.318750Z",
+      "opprettet": "2026-03-24T08:55:50.435014Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"06817998982\"]}]}}",
+      "dataMottatt": "{\"status\":\"FORESPOERSEL_OK\",\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstaker\":[{\"arbeidstakeridentifikator\":\"06817998982\",\"resultatForSkattekort\":\"ikkeSkattekort\",\"inntektsaar\":2026}]}]}"
+    },
+    {
+      "id": 7931,
+      "status": "FERDIG",
+      "type": "BESTILLING",
+      "bestillingsreferanse": "BR8592",
+      "oppdatert": "2026-03-24T11:12:19.983529Z",
+      "opprettet": "2026-03-24T11:12:10.484421Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"15858499469\"]}]}}",
+      "dataMottatt": "{\"status\":\"FORESPOERSEL_OK\",\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstaker\":[{\"arbeidstakeridentifikator\":\"15858499469\",\"resultatForSkattekort\":\"ikkeSkattekort\",\"inntektsaar\":2026}]}]}"
+    },
+    {
+      "id": 7932,
+      "status": "FERDIG",
+      "type": "BESTILLING",
+      "bestillingsreferanse": "BR8750",
+      "oppdatert": "2026-03-26T11:28:28.711033Z",
+      "opprettet": "2026-03-26T11:28:20.707427Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"15826697463\"]}]}}",
+      "dataMottatt": "{\"status\":\"FORESPOERSEL_OK\",\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstaker\":[{\"arbeidstakeridentifikator\":\"15826697463\",\"resultatForSkattekort\":\"ikkeSkattekort\",\"inntektsaar\":2026}]}]}"
+    },
+    {
+      "id": 7933,
+      "status": "FERDIG",
+      "type": "BESTILLING",
+      "bestillingsreferanse": "BR8757",
+      "oppdatert": "2026-03-26T11:52:19.824379Z",
+      "opprettet": "2026-03-26T11:52:09.871228Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"29886999818\"]}]}}",
+      "dataMottatt": "{\"status\":\"FORESPOERSEL_OK\",\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstaker\":[{\"arbeidstakeridentifikator\":\"29886999818\",\"resultatForSkattekort\":\"ikkeSkattekort\",\"inntektsaar\":2026}]}]}"
+    },
+    {
+      "id": 7934,
+      "status": "FERDIG",
+      "type": "BESTILLING",
+      "bestillingsreferanse": "BR8929",
+      "oppdatert": "2026-03-30T06:37:31.384505Z",
+      "opprettet": "2026-03-30T06:37:21.924135Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"52846200150\"]}]}}",
+      "dataMottatt": "{\"status\":\"FORESPOERSEL_OK\",\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstaker\":[{\"arbeidstakeridentifikator\":\"52846200150\",\"resultatForSkattekort\":\"ikkeSkattekort\",\"inntektsaar\":2026}]}]}"
+    },
+    {
+      "id": 7935,
+      "status": "FERDIG",
+      "type": "BESTILLING",
+      "bestillingsreferanse": "BR9184",
+      "oppdatert": "2026-04-07T11:10:19.019933Z",
+      "opprettet": "2026-04-07T11:10:09.763459Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"26918299687\"]}]}}",
+      "dataMottatt": "{\"status\":\"FORESPOERSEL_OK\",\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstaker\":[{\"arbeidstakeridentifikator\":\"26918299687\",\"resultatForSkattekort\":\"ikkeSkattekort\",\"inntektsaar\":2026}]}]}"
+    },
+    {
+      "id": 7936,
+      "status": "FERDIG",
+      "type": "BESTILLING",
+      "bestillingsreferanse": "BR9291",
+      "oppdatert": "2026-04-10T07:16:43.448878Z",
+      "opprettet": "2026-04-10T07:16:36.024796Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"69866102155\"]}]}}",
+      "dataMottatt": "{\"status\":\"FORESPOERSEL_OK\",\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstaker\":[{\"arbeidstakeridentifikator\":\"69866102155\",\"resultatForSkattekort\":\"ikkeSkattekort\",\"inntektsaar\":2026}]}]}"
+    },
+    {
+      "id": 7937,
+      "status": "FERDIG",
+      "type": "BESTILLING",
+      "bestillingsreferanse": "BR9338",
+      "oppdatert": "2026-04-10T11:28:28.321462Z",
+      "opprettet": "2026-04-10T11:28:24.969258Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"08816298815\"]}]}}",
+      "dataMottatt": "{\"status\":\"FORESPOERSEL_OK\",\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstaker\":[{\"arbeidstakeridentifikator\":\"08816298815\",\"resultatForSkattekort\":\"ikkeSkattekort\",\"inntektsaar\":2026}]}]}"
+    },
+    {
+      "id": 7938,
+      "status": "FERDIG",
+      "type": "BESTILLING",
+      "bestillingsreferanse": "BR9398",
+      "oppdatert": "2026-04-13T07:03:42.081190Z",
+      "opprettet": "2026-04-13T07:03:33.205443Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"21865999493\"]}]}}",
+      "dataMottatt": "{\"status\":\"FORESPOERSEL_OK\",\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstaker\":[{\"arbeidstakeridentifikator\":\"21865999493\",\"resultatForSkattekort\":\"ikkeSkattekort\",\"inntektsaar\":2026}]}]}"
+    },
+    {
+      "id": 7939,
+      "status": "FERDIG",
+      "type": "BESTILLING",
+      "bestillingsreferanse": "BR9495",
+      "oppdatert": "2026-04-13T17:16:08.421106Z",
+      "opprettet": "2026-04-13T17:15:56.392599Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"25878298856\"]}]}}",
+      "dataMottatt": "{\"status\":\"FORESPOERSEL_OK\",\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstaker\":[{\"arbeidstakeridentifikator\":\"25878298856\",\"resultatForSkattekort\":\"ikkeSkattekort\",\"inntektsaar\":2026}]}]}"
+    },
+    {
+      "id": 7940,
+      "status": "FERDIG",
+      "type": "BESTILLING",
+      "bestillingsreferanse": "BR9521",
+      "oppdatert": "2026-04-14T06:52:59.453406Z",
+      "opprettet": "2026-04-14T06:52:49.977783Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"12846198588\"]}]}}",
+      "dataMottatt": "{\"status\":\"FORESPOERSEL_OK\",\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstaker\":[{\"arbeidstakeridentifikator\":\"12846198588\",\"resultatForSkattekort\":\"ikkeSkattekort\",\"inntektsaar\":2026}]}]}"
+    },
+    {
+      "id": 7941,
+      "status": "FERDIG",
+      "type": "BESTILLING",
+      "bestillingsreferanse": "BR9522",
+      "oppdatert": "2026-04-14T07:29:30.546529Z",
+      "opprettet": "2026-04-14T07:29:21.168850Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"25856199269\"]}]}}",
+      "dataMottatt": "{\"status\":\"FORESPOERSEL_OK\",\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstaker\":[{\"arbeidstakeridentifikator\":\"25856199269\",\"resultatForSkattekort\":\"ikkeSkattekort\",\"inntektsaar\":2026}]}]}"
+    },
+    {
+      "id": 7942,
+      "status": "FERDIG",
+      "type": "BESTILLING",
+      "bestillingsreferanse": "BR9543",
+      "oppdatert": "2026-04-14T10:16:56.221448Z",
+      "opprettet": "2026-04-14T10:16:49.217445Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"26846498205\"]}]}}",
+      "dataMottatt": "{\"status\":\"FORESPOERSEL_OK\",\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstaker\":[{\"arbeidstakeridentifikator\":\"26846498205\",\"resultatForSkattekort\":\"ikkeSkattekort\",\"inntektsaar\":2026}]}]}"
+    },
+    {
+      "id": 7943,
+      "status": "FERDIG",
+      "type": "BESTILLING",
+      "bestillingsreferanse": "BR9545",
+      "oppdatert": "2026-04-14T10:26:06.483654Z",
+      "opprettet": "2026-04-14T10:25:56.810996Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"06824997509\"]}]}}",
+      "dataMottatt": "{\"status\":\"FORESPOERSEL_OK\",\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstaker\":[{\"arbeidstakeridentifikator\":\"06824997509\",\"resultatForSkattekort\":\"ikkeSkattekort\",\"inntektsaar\":2026}]}]}"
+    },
+    {
+      "id": 7944,
+      "status": "FERDIG",
+      "type": "BESTILLING",
+      "bestillingsreferanse": "BR9555",
+      "oppdatert": "2026-04-14T10:40:36.923680Z",
+      "opprettet": "2026-04-14T10:40:28.742074Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"09846498513\"]}]}}",
+      "dataMottatt": "{\"status\":\"FORESPOERSEL_OK\",\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstaker\":[{\"arbeidstakeridentifikator\":\"09846498513\",\"resultatForSkattekort\":\"ikkeSkattekort\",\"inntektsaar\":2026}]}]}"
+    },
+    {
+      "id": 7945,
+      "status": "FEILET",
+      "type": "BESTILLING",
+      "bestillingsreferanse": "BR9711",
+      "oppdatert": "2026-04-16T08:00:19.764359Z",
+      "opprettet": "2026-04-16T06:08:26.694452Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"16846496576\"]}]}}"
     }
-  ]}
+  ]
+}

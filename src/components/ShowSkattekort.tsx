@@ -3,7 +3,7 @@ import {
 	type Skattekort,
 	skattekortTittel,
 } from "../types/SkattekortResponseDTOSchema";
-import { toLocalDate } from "../util/norskFormat";
+import { toLocalDate } from "../util/dateUtils";
 import Skattekortdata from "./Skattekortdata";
 
 export type ShowSkattekortProps = {
