@@ -1,19 +1,26 @@
-import {BodyShort, Box, Button, ExpansionCard, Heading, Skeleton, Table, Timeline, VStack} from "@navikt/ds-react";
+import {BodyShort, Box, Button, ExpansionCard, Skeleton, Table, Timeline, VStack} from "@navikt/ds-react";
 import {useFetchBatcher} from "../api/apiService";
 import type {BatchInsightRequest, Bestillingsbatch} from "../types/Bestillingsbatch";
-import {
-    isMoreThan24HoursBetween,
-    now,
-    toLocalDate,
-    toLocalTime
-} from "../util/dateUtils";
+import {isMoreThan24HoursBetween, now, toLocalDate, toLocalTime} from "../util/dateUtils";
 import SoekBatch from "./SoekBatch";
-import {useState} from "react";
+import {type RefObject, useLayoutEffect, useRef, useState} from "react";
 import {PersonIcon} from "@navikt/aksel-icons";
 
-export default function GenerellInformasjon() {
-    const [batchInsightRequest, setBatchInsightRequest] = useState<BatchInsightRequest | null>({});
+type BatchCellRefs = Record<string, HTMLTableCellElement | null>;
 
+export default function BestillingsbatchInformasjon() {
+    const [batchInsightRequest, setBatchInsightRequest] = useState<BatchInsightRequest | null>({
+        tidspunktTom: null,
+        tidspunktFom: null
+    });
+    const [currentCell, setCurrentCell] = useState<HTMLTableCellElement|null>(null)
+    useLayoutEffect(() => {
+        currentCell?.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "nearest"
+        });
+    }, [currentCell])
     const {data, error, isLoading} = useFetchBatcher(batchInsightRequest);
 
     const earliestBatch = data?.items.length === 0 ? null : data?.items
@@ -29,9 +36,10 @@ export default function GenerellInformasjon() {
         }, new Date("1970-01-01")
     )
 
+    const batchRefs = useRef<BatchCellRefs>({});
+
     return (
         <Box margin={"space-24"}>
-            <Heading size={"medium"} spacing>Generell informasjon</Heading>
             <SoekBatch isLoading={isLoading} batchInsightRequest={batchInsightRequest}
                        handleBatchInsightRequest={setBatchInsightRequest}/>
             {isLoading && <Skeleton width="100%" height="200px"/>}
@@ -49,8 +57,9 @@ export default function GenerellInformasjon() {
                                             status={"success"}
                                             icon={<PersonIcon aria-hidden/>}
                                             statusLabel={"foo"}
+                                            onClick={() => setCurrentCell(batchRefs.current[p.bestillingsreferanse])}
                                         >
-                                            Hello this is period.
+                                            Bestilt fra Skatteetaten {toLocalDate(p.opprettet)}
                                         </Timeline.Period>
                                     ))}
                                 </Timeline.Row>
@@ -61,10 +70,24 @@ export default function GenerellInformasjon() {
                             <ExpansionCard.Title>Bestillingsbatcher</ExpansionCard.Title>
                         </ExpansionCard.Header>
                         <ExpansionCard.Content>
-                            <div style={{height: "600px", overflow: "scroll"}}>
+                            <div style={{height: "600px", overflowY: "scroll", overflowX: "hidden"}}>
                                 <Table zebraStripes>
-                                    <TableHeaders/>
-                                    <Batches batches={data.items}/>
+                                    <Table.Header>
+                                        <Table.Row>
+                                            <Table.HeaderCell scope="col">Ref</Table.HeaderCell>
+                                            <Table.HeaderCell scope="col">Status</Table.HeaderCell>
+                                            <Table.HeaderCell scope="col">Type</Table.HeaderCell>
+                                            <Table.HeaderCell scope="col">Opprettet</Table.HeaderCell>
+                                            <Table.HeaderCell scope="col">Oppdatert</Table.HeaderCell>
+                                            <Table.HeaderCell scope="col">Data sendt</Table.HeaderCell>
+                                            <Table.HeaderCell scope="col">Data mottatt</Table.HeaderCell>
+                                        </Table.Row>
+                                    </Table.Header>
+                                    <Table.Body>
+                                        {data.items.map((item) => (
+                                            <TableRow currentCell={currentCell} setCurrentCell={setCurrentCell} key={item.id ?? item.bestillingsreferanse} item={item} batchRefs={batchRefs}/>
+                                        ))}
+                                    </Table.Body>
                                 </Table>
                             </div>
                         </ExpansionCard.Content>
@@ -74,34 +97,14 @@ export default function GenerellInformasjon() {
         </Box>)
 }
 
-function TableHeaders() {
-    return (<Table.Header>
-        <Table.Row>
-            <Table.HeaderCell scope="col">Ref</Table.HeaderCell>
-            <Table.HeaderCell scope="col">Status</Table.HeaderCell>
-            <Table.HeaderCell scope="col">Type</Table.HeaderCell>
-            <Table.HeaderCell scope="col">Opprettet</Table.HeaderCell>
-            <Table.HeaderCell scope="col">Oppdatert</Table.HeaderCell>
-            <Table.HeaderCell scope="col">Data sendt</Table.HeaderCell>
-            <Table.HeaderCell scope="col">Data mottatt</Table.HeaderCell>
-        </Table.Row>
-    </Table.Header>)
+type TableRowProps = {
+    item: Bestillingsbatch
+    batchRefs: RefObject<BatchCellRefs>
+    currentCell: HTMLTableCellElement|null,
+    setCurrentCell: (currentCell: HTMLTableCellElement|null) => void
 }
 
-type BatchesProps = {
-    batches: Bestillingsbatch[]
-}
-
-function Batches({batches}: Readonly<BatchesProps>) {
-    return (
-        <Table.Body>
-            {batches.map((item) => (
-                <TableRow key={item.id} item={item}/>
-            ))}
-        </Table.Body>)
-}
-
-function TableRow({item}: Readonly<{ item: Bestillingsbatch }>) {
+function TableRow({item, batchRefs, currentCell, setCurrentCell}: Readonly<TableRowProps>) {
     function showDataSendt(batch: Bestillingsbatch, showFullRequest: number) {
         const dataSendt = JSON.parse(batch.dataSendt);
         const arbeidstakere = dataSendt?.forespoerselOmSkattekortTilArbeidsgiver?.arbeidsgiver[0]?.arbeidstakeridentifikator?.join(", ")
@@ -119,8 +122,7 @@ function TableRow({item}: Readonly<{ item: Bestillingsbatch }>) {
         const dataMottatt = batch.dataMottatt ? JSON.parse(batch.dataMottatt) : null
 
         if (showFullResponse || (dataMottatt == null) || dataMottatt.status === "INGEN_ENDRINGER") return JSON.stringify(dataMottatt, null, 2)
-
-
+        
         // @ts-expect-error - kanskje jeg legger inn type på data mottatt senere
         const arbeidstakere = dataMottatt?.arbeidsgiver[0]?.arbeidstaker.map(a => a.arbeidstakeridentifikator)
         let text: string;
@@ -128,34 +130,28 @@ function TableRow({item}: Readonly<{ item: Bestillingsbatch }>) {
         else text = `Skattekort for ${arbeidstakere.length} personer`
 
         return <Button variant="tertiary-neutral">{text}</Button>
-
     }
 
     const [showFullRequest, setShowFullRequest] = useState<number>(0)
     const [showFullResponse, setShowFullResponse] = useState<number>(0)
-
-    return <Table.Row key={item.id}>
-        <Table.DataCell>{item.bestillingsreferanse}</Table.DataCell>
+    
+    return <Table.Row>
+        <Table.DataCell
+            ref={(cell) => {
+                batchRefs.current[item.bestillingsreferanse] = cell;
+            }}
+        >{item.bestillingsreferanse}</Table.DataCell>
         <Table.DataCell>{item.status}</Table.DataCell>
         <Table.DataCell>{item.type}</Table.DataCell>
         <Table.DataCell><VStack><BodyShort>{toLocalDate(item.opprettet)}</BodyShort><BodyShort>{toLocalTime(item.opprettet)}</BodyShort></VStack></Table.DataCell>
         <Table.DataCell><VStack><BodyShort>{toLocalDate(item.oppdatert)}</BodyShort><BodyShort>{toLocalTime(item.oppdatert)}</BodyShort></VStack></Table.DataCell>
         <Table.DataCell onClick={(e) => {
             setShowFullRequest((showFullRequest + 1) % 3);
-            (e.currentTarget as HTMLElement).scrollIntoView({
-                behavior: "smooth",
-                block: "nearest",
-                inline: "nearest"
-            });
-            
+            setCurrentCell(batchRefs.current[item.bestillingsreferanse])
         }}>{showDataSendt(item, showFullRequest)}</Table.DataCell>
         <Table.DataCell onClick={(e) => {
             setShowFullResponse((showFullResponse + 1) % 3);
-            (e.currentTarget as HTMLElement).scrollIntoView({
-                behavior: "smooth",
-                block: "nearest",
-                inline: "nearest"
-            })
+            setCurrentCell(batchRefs.current[item.bestillingsreferanse])
         }}>{showDataMottatt(item, showFullResponse)}</Table.DataCell>
     </Table.Row>
 }

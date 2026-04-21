@@ -16,8 +16,8 @@ export function toLocalTime(zulu: string) {
     }).format(new Date(zulu));
 }
 
-export function toLocalDateTime(zulu: string) {
-    return toLocalDate(zulu) + " " + toLocalTime(zulu);
+export function toLocalDateTime(zulu: string|null) {
+    return zulu ? toLocalDate(zulu) + " " + toLocalTime(zulu) : null;
 }
 
 export function forFemMinutterSiden():Date {

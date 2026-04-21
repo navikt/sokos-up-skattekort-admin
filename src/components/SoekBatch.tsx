@@ -1,10 +1,9 @@
 import {zodResolver} from "@hookform/resolvers/zod";
 import {EraserIcon, MagnifyingGlassIcon} from "@navikt/aksel-icons";
-import {Box, Button, HStack, VStack,} from "@navikt/ds-react";
+import {Box, Button, HelpText, HStack, TextField, VStack,} from "@navikt/ds-react";
 import {useForm} from "react-hook-form";
 import {type BatchInsightRequest, BatchInsightRequestSchema} from "../types/Bestillingsbatch";
-import DateTimePicker from "./DateTimePicker";
-import {useState} from "react";
+import React from "react";
 
 export type SoekProps = {
     isLoading?: boolean;
@@ -13,9 +12,6 @@ export type SoekProps = {
 };
 
 export default function SoekBatch({isLoading, handleBatchInsightRequest}: Readonly<SoekProps>) {
-
-    const [tidspunktFom, setTidspunktFom] = useState<Date | null>(null)
-    const [tidspunktTom, setTidspunktTom] = useState<Date | null>(null)
     const {
         register,
         handleSubmit,
@@ -23,74 +19,74 @@ export default function SoekBatch({isLoading, handleBatchInsightRequest}: Readon
         formState: {errors},
     } = useForm<BatchInsightRequest>({
         resolver: zodResolver(BatchInsightRequestSchema),
+        defaultValues: {tidspunktFom: new Date("2025").toISOString(), tidspunktTom: null},
     });
 
     function handleSoekReset() {
-        setTidspunktFom(null)
-        setTidspunktTom(null)
         reset()
     }
 
-    function handleKlikk() {
+    function onSubmit(data: BatchInsightRequest) {
         handleBatchInsightRequest({
-            tidspunktTom: tidspunktTom?.toISOString(),
-            tidspunktFom: tidspunktFom?.toISOString()
+            tidspunktFom: data?.tidspunktFom,
+            tidspunktTom: data?.tidspunktTom,
         });
     }
 
     return (
         <Box padding="6" background={"surface-alt-1-subtle"} borderRadius="large">
-            <form onSubmit={handleSubmit(handleBatchInsightRequest)}>
+
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <VStack gap={"4"}>
                     <HStack justify="space-between">
-                        <VStack>
-                            <DateTimePicker
-                                {...register("tidspunktFom")}
-                                labelText={"Tidspunkt FOM "}
-                                selectedDate={tidspunktFom}
-                                setSelectedDate={date => {
-                                    if (date) setTidspunktFom(date);
-                                }}
-                            />
-                            <DateTimePicker
-                                {...register("tidspunktTom")}
-                                labelText={"Tidspunkt TOM "}
-                                selectedDate={tidspunktTom}
-                                setSelectedDate={date => {
-                                    if (date) setTidspunktTom(date);
-                                }}
-                            />
-                        </VStack>
-                        <HStack gap="space-16" justify="end">
-                            <VStack><Button
-                                disabled={isLoading}
-                                variant="secondary"
-                                size={"small"}
-                                type="button"
-                                icon={<EraserIcon aria-hidden={"true"}/>}
-                                iconPosition={"right"}
-                                title={"Nullstill"}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    handleSoekReset();
-                                }}
-                            >
-                                Nytt søk
-                            </Button>
-                                <Button
-                                    disabled={isLoading}
-                                    size={"small"}
-                                    variant={"primary"}
-                                    type={"submit"}
-                                    title={"Begrens"}
-                                    iconPosition={"right"}
-                                    icon={<MagnifyingGlassIcon aria-hidden={"true"}/>}
-                                    onClick={() => handleKlikk()}
-                                >
-                                    Søk
-                                </Button>
-                            </VStack>
-                        </HStack>
+                        <TextField
+                            {...register("tidspunktFom")}
+                            size={"small"}
+                            htmlSize={30}
+                            maxLength={27}
+                            label="Dato FOM"
+                            error={errors.tidspunktFom?.message}
+                            onBlur={(e) => {e.preventDefault()}}
+                        />
+                        <TextField
+                            {...register("tidspunktTom")}
+                            size={"small"}
+                            htmlSize={30}
+                            maxLength={27}
+                            label="Dato TOM"
+                            error={errors.tidspunktTom?.message}
+                        />
+                        <HelpText placement="left" title="Om arbeidsflaten skattekort">
+                            Datoformat eksempler: 2026-01-01, 2026-01-01T01:01, 2026-01-01T01:01, 2026-01-01T01:01:01.123456.
+                            Kan også ha stor Z til slutt for å spesifisere tidspunkt på samme tidssone som i databasen
+                        </HelpText>
+                    </HStack>
+                    <HStack gap="space-16" justify="end">
+                        <Button
+                            disabled={isLoading}
+                            variant="secondary"
+                            size={"small"}
+                            type="button"
+                            icon={<EraserIcon aria-hidden={"true"}/>}
+                            iconPosition={"right"}
+                            title={"Nytt søk"}
+                            onClick={(e) => {
+                                handleSoekReset();
+                            }}
+                        >
+                            Nytt søk
+                        </Button>
+                        <Button
+                            disabled={isLoading}
+                            size={"small"}
+                            variant={"primary"}
+                            type={"submit"}
+                            title={"Søk"}
+                            iconPosition={"right"}
+                            icon={<MagnifyingGlassIcon aria-hidden={"true"}/>}
+                        >
+                            Søk
+                        </Button>
                     </HStack>
                 </VStack>
             </form>

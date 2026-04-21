@@ -34,11 +34,19 @@ export type BestillingsbatchType = z.infer<typeof BestillingsbatchTypeSchema>;
 export const BatchInsightResponseSchema = z.object({items:z.array(BestillingsbatchSchema)});
 export type BatchInsightResponse = z.infer<typeof BatchInsightResponseSchema>;
 
+function refineString(dateString:string){
+    const date = new Date(dateString);
+    return !Number.isNaN(date.getTime())
+}
+
+const HjemmelagetDatoTid = z.string()
+    .refine(refineString,
+        { message: "Eksempel: 2025-01-01T00:00:00.123456Z" }
+    )
+
 export const BatchInsightRequestSchema = z.object({
-    tidspunktFom: z.string().optional(),
-    tidspunktTom: z.string().optional(),
-    type: BestillingsbatchTypeSchema.optional(),
-    status: BestillingsbatchStatusSchema.optional()
+    tidspunktFom: HjemmelagetDatoTid.nullable(),
+    tidspunktTom: HjemmelagetDatoTid.nullable(),
 })
 
 export type BatchInsightRequest = z.infer<typeof BatchInsightRequestSchema>;
