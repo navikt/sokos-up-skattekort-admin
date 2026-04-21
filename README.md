@@ -2,7 +2,6 @@
 
 Brukes som utgangspunkt for å opprette nye mikrofrontends i Utbetalingsportalen.
 
-5. Templaten kommer med [Playwright](https://playwright.dev/) installert. Endre følgende filer: [playwright.config.ts](playwright.config.ts) og [accessibility.spec.ts](playwright-tests/accessibility.spec.ts). Playwright testene kan kjøres med kommandoen `pnpm exec playwright test`
 6. Sett riktig namespace og team i nais manifestene, de ligger i mappen under `nais/<cluster>`
 7. Velg riktig ingress til appen i nais.yaml. Ingressen bør være `https://utbetalingsportalen.intern.dev.nav.no/appNavn`
 8. Repoet må legges til i [Nais Console](https://console.nav.cloud.nais.io/). Det finner du ved å gå inn på team Økonomi og repositories nest nederst til venstre.
