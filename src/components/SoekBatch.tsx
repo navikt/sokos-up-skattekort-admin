@@ -3,7 +3,7 @@ import {EraserIcon, MagnifyingGlassIcon} from "@navikt/aksel-icons";
 import {Box, Button, HelpText, HStack, TextField, VStack,} from "@navikt/ds-react";
 import {useForm} from "react-hook-form";
 import {type BatchInsightRequest, BatchInsightRequestSchema} from "../types/Bestillingsbatch";
-import React from "react";
+import {now} from "../util/dateUtils";
 
 export type SoekProps = {
     isLoading?: boolean;
@@ -19,7 +19,7 @@ export default function SoekBatch({isLoading, handleBatchInsightRequest}: Readon
         formState: {errors},
     } = useForm<BatchInsightRequest>({
         resolver: zodResolver(BatchInsightRequestSchema),
-        defaultValues: {tidspunktFom: new Date("2025").toISOString(), tidspunktTom: null},
+        defaultValues: {tidspunktFom: new Date(now().getTime() - 60 * 60 * 1000 * 3).toISOString(), tidspunktTom: null},
     });
 
     function handleSoekReset() {
@@ -28,8 +28,8 @@ export default function SoekBatch({isLoading, handleBatchInsightRequest}: Readon
 
     function onSubmit(data: BatchInsightRequest) {
         handleBatchInsightRequest({
-            tidspunktFom: data?.tidspunktFom,
-            tidspunktTom: data?.tidspunktTom,
+            tidspunktFom: data?.tidspunktFom ? new Date(data.tidspunktFom).toISOString() : null,
+            tidspunktTom: data?.tidspunktTom ? new Date(data.tidspunktTom).toISOString() : null   
         });
     }
 
@@ -58,7 +58,8 @@ export default function SoekBatch({isLoading, handleBatchInsightRequest}: Readon
                         />
                         <HelpText placement="left" title="Om arbeidsflaten skattekort">
                             Datoformat eksempler: 2026-01-01, 2026-01-01T01:01, 2026-01-01T01:01, 2026-01-01T01:01:01.123456.
-                            Kan også ha stor Z til slutt for å spesifisere tidspunkt på samme tidssone som i databasen
+                            Kan også ha stor Z til slutt for å spesifisere tidspunkt på samme tidssone som i databasen.
+                            Standardsøk er de 20 siste batchene pluss eventuelle batcher som ikke er i status FERDIG som ikke er blant de 20 siste.
                         </HelpText>
                     </HStack>
                     <HStack gap="space-16" justify="end">
@@ -86,6 +87,23 @@ export default function SoekBatch({isLoading, handleBatchInsightRequest}: Readon
                             icon={<MagnifyingGlassIcon aria-hidden={"true"}/>}
                         >
                             Søk
+                        </Button>
+                        <Button
+                            disabled={isLoading}
+                            variant="primary"
+                            size={"small"}
+                            type="button"
+                            icon={<EraserIcon aria-hidden={"true"}/>}
+                            iconPosition={"right"}
+                            title={"Standardsøk"}
+                            onClick={(e) => {
+                                handleBatchInsightRequest({
+                                    tidspunktFom: null,
+                                    tidspunktTom: null,
+                                })
+                            }}
+                        >
+                            Standardsøk
                         </Button>
                     </HStack>
                 </VStack>
