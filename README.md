@@ -39,7 +39,7 @@ Templaten har ikke routing. Men om du ønsker å ha routing gjør du følgende:
 2. Erstatter følgende innhold i [App.tsx](/src/App.tsx)
 
 ```typescript
-return <SkattekortAdmin />;
+return <Batcher />;
 ```
 
 med
@@ -47,7 +47,7 @@ med
 ```typescript
 return <BrowserRouter basename="/mikrofrontend">
     <Routes>
-        <Route path="/" element={<SkattekortAdmin />} />
+        <Route path="/" element={<Batcher />} />
         <Route path="/anotherpage" element={<AnotherPage />} />
     </Routes>
   </BrowserRouter>

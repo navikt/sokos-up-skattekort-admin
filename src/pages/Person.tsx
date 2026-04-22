@@ -7,23 +7,21 @@ import {
     Skeleton,
     VStack,
 } from "@navikt/ds-react";
-import BestilleSkattekortButton from "./BestilleSkattekortButton";
-import {useFetchNavn, useFetchSkattekort} from "../api/apiService";
-import Soek from "./Soek";
 import {useState} from "react";
-import ShowSkattekort from "./ShowSkattekort";
-import Errorhandler from "./Errorhandler";
-import AlertWithCloseButton from "./AlertWithCloseButton";
-import LabelText from "./LabelText";
-import ShowAuditLogg from "./ShowAuditLogg";
-
-export type ShowPersonProps = {};
+import {useFetchNavn, useFetchSkattekort} from "../api/apiService";
+import AlertWithCloseButton from "../components/AlertWithCloseButton";
+import BestilleSkattekortButton from "../components/BestilleSkattekortButton";
+import Errorhandler from "../components/Errorhandler";
+import LabelText from "../components/LabelText";
+import ShowAuditLogg from "../components/ShowAuditLogg";
+import ShowSkattekort from "../components/ShowSkattekort";
+import Soek from "../components/Soek";
 
 function formatterFnr(fnr: string) {
     return `${fnr.substring(0, 6)} ${fnr.substring(6)}`;
 }
 
-export default function ShowPerson({}: Readonly<ShowPersonProps>) {
+export default function Person() {
     const [isSubmit, setIsSubmit] = useState<boolean>(false);
     const [fnr, setFnr] = useState<string>("");
     const [skattekortstatus, setSkattekortstatus] = useState<string>("UKJENT");
