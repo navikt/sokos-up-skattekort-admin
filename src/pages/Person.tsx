@@ -1,25 +1,13 @@
-import {
-    BodyShort,
-    Box,
-    CopyButton, Heading, HGrid,
-    HStack,
-    Label,
-    Skeleton,
-    VStack,
-} from "@navikt/ds-react";
+import {Box, Heading, HGrid, VStack,} from "@navikt/ds-react";
 import {useState} from "react";
-import {useFetchNavn, useFetchSkattekort} from "../api/apiService";
+import {useFetchSkattekort} from "../api/apiService";
 import AlertWithCloseButton from "../components/AlertWithCloseButton";
-import BestilleSkattekortButton from "../components/BestilleSkattekortButton";
 import Errorhandler from "../components/Errorhandler";
-import LabelText from "../components/LabelText";
 import ShowAuditLogg from "../components/ShowAuditLogg";
 import ShowSkattekort from "../components/ShowSkattekort";
 import Soek from "../components/Soek";
-
-function formatterFnr(fnr: string) {
-    return `${fnr.substring(0, 6)} ${fnr.substring(6)}`;
-}
+import LabelText from "../components/LabelText";
+import BestilleSkattekortButton from "../components/BestilleSkattekortButton";
 
 export default function Person() {
     const [isSubmit, setIsSubmit] = useState<boolean>(false);
@@ -30,11 +18,6 @@ export default function Person() {
         message: string;
         variant: "success" | "error" | "warning";
     } | null>(null);
-    const {
-        data: navn,
-        error: navnError,
-        isLoading: navnIsLoading,
-    } = useFetchNavn(fnr);
     return (
         <HGrid gap="space-24" columns={2}>
             <Box margin={"space-24"}>
@@ -42,7 +25,7 @@ export default function Person() {
                 <Soek
                     setFnr={setFnr}
                     setIsSubmit={setIsSubmit}
-                    isLoading={navnIsLoading}
+                    isLoading={isLoading}
                 />
                 <Errorhandler error={error}/>
                 {!!alertMessage && (
@@ -54,56 +37,28 @@ export default function Person() {
                         {alertMessage.message}
                     </AlertWithCloseButton>
                 )}
-                {navn && (
                     <VStack padding="space-8">
-                        {navn && (
                             <Box
                                 background={"surface-default"}
                                 padding="space-16"
                                 paddingInline="space-32"
                                 borderRadius="large"
                             >
-                                <HStack>
-                                    <HStack gap="space-16" align="center">
-                                        <BodyShort size="medium">Søkeresultatet gjelder:</BodyShort>
-                                        <Label>{navn},</Label>
-                                        <Label>{formatterFnr(fnr)}</Label>
-                                    </HStack>
-                                    <CopyButton
-                                        size={"medium"}
-                                        copyText={fnr}
-                                        iconPosition={"left"}
-                                    />
-                                </HStack>
-                                <Box>{skattekortstatus && (
-                                    <LabelText
+                                <Box>
+                                    {skattekortstatus && (<LabelText
                                         label={"Skattekort status"}
                                         text={skattekortstatus}
                                     />
-                                )}</Box>
+                                )}
+                                </Box>
                                 <BestilleSkattekortButton
                                     gjelderId={fnr}
-                                    error={navnError}
+                                    error={error}
                                     setSkattekortstatus={setSkattekortstatus}
                                     setAlertMessage={setAlertMessage}
                                 />
                             </Box>
-                        )}
                     </VStack>
-                )}
-                {navnIsLoading && (
-                    <VStack padding="space-8">
-                        {navnIsLoading && (
-                            <Box
-                                background={"surface-default"}
-                                padding="space-16"
-                                borderRadius="large"
-                            >
-                                <Skeleton variant="text" width="100%"/>
-                            </Box>
-                        )}
-                    </VStack>
-                )}
                 <ShowSkattekort data={data} isLoading={isLoading}/>
             </Box>
             <ShowAuditLogg fnr={fnr}/>

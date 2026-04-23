@@ -4,7 +4,7 @@ import type {BatchInsightRequest, Bestillingsbatch} from "../types/Bestillingsba
 import {isMoreThan24HoursBetween, now, toLocalDate, toLocalTime} from "../util/dateUtils";
 import SoekBatch from "../components/SoekBatch";
 import {useLayoutEffect, useRef, useState} from "react";
-import {PersonIcon} from "@navikt/aksel-icons";
+import {ClockDashedIcon, PaperplaneIcon} from "@navikt/aksel-icons";
 import JsonModal from "../components/JsonModal";
 
 type BatchCellRefs = Record<string, HTMLTableCellElement | null>;
@@ -43,7 +43,7 @@ export default function Batcher() {
         if (batcher.length === 0) {
             return (<></>)
         }
-        return <Timeline.Row label={title} icon={<PersonIcon aria-hidden/>}>
+        return <Timeline.Row label={title} icon={batcher[0].type === "BESTILLING" ? <PaperplaneIcon aria-hidden/> : <ClockDashedIcon aria-hidden/>}>
             {batcher.map((p) => (
                 <Timeline.Period
                     key={p.id}
@@ -52,8 +52,6 @@ export default function Batcher() {
                     status={p.status === "FERDIG" ? "success"
                         : p.status === "FEILET" ? "danger"
                             : "info"}
-                    icon={<PersonIcon aria-hidden/>}
-                    statusLabel={"foo"}
                     onClick={() => setCurrentCell(batchRefs.current[p.bestillingsreferanse])}
                 >
                     Bestilt fra Skatteetaten {toLocalDate(p.opprettet)}
@@ -68,7 +66,7 @@ export default function Batcher() {
             <SoekBatch isLoading={isLoading} batchInsightRequest={batchInsightRequest}
                        handleBatchInsightRequest={setBatchInsightRequest}/>
             {isLoading && <Skeleton width="100%" height="200px"/>}
-            {!isLoading && data && data.items.length === 0 &&
+            {!isLoading && data?.items.length === 0 &&
                 <BodyShort>Ingen bestillingsbatcher funnet
                     fom {batchInsightRequest?.tidspunktFom} {batchInsightRequest?.tidspunktTom ? "tom {batchInsightRequest?.tidspunktTom}" : ""}</BodyShort>}
             {!isLoading && data && data.items.length > 0 &&
@@ -139,8 +137,9 @@ function showDataSendt(batch: Bestillingsbatch) {
 
 function showDataMottatt(batch: Bestillingsbatch) {
     const dataMottatt = batch.dataMottatt ? JSON.parse(batch.dataMottatt) : null
-    if ((dataMottatt == null) || dataMottatt.status === "INGEN_ENDRINGER") return JSON.stringify(dataMottatt, null, 2)
-    // @ts-expect-error - kanskje jeg legger inn type på data mottatt senere
+    if (!dataMottatt) return ""
+    if (dataMottatt.status === "INGEN_ENDRINGER") return "Ingen endringer"
+    // @ts-expect-error - kanskje legge inn type på data mottatt senere
     const arbeidstakere = dataMottatt?.arbeidsgiver[0]?.arbeidstaker.map(a => a.arbeidstakeridentifikator)
     if (arbeidstakere.length < 5) return `Skattekort for ${arbeidstakere.join(",")}`
     return `Skattekort for ${arbeidstakere.length} personer`

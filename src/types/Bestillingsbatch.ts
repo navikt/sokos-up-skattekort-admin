@@ -42,14 +42,15 @@ const refineString = (shouldAcceptEmpty:boolean) => (dateString:string) => {
     return !Number.isNaN(date.getTime())
 }
 
-const HjemmelagetDatoTid = (shouldAcceptEmpty:boolean) => z.string()
-    .refine(refineString(shouldAcceptEmpty),
-        { message: "Eksempel: 2025-01-01T00:00:00.123456Z" }
-    )
-
 export const BatchInsightRequestSchema = z.object({
-    tidspunktFom: HjemmelagetDatoTid(!ACCEPT_EMPTY).nullable(),
-    tidspunktTom: HjemmelagetDatoTid(ACCEPT_EMPTY).nullable(),
+    tidspunktFom: z.string()
+        .refine(refineString(!ACCEPT_EMPTY),
+            {message: "Må oppgis. Eksempel: 2025-01-01T00:00:00.123456Z"}
+        ).nullable(),
+    tidspunktTom: z.string()
+        .refine(refineString(ACCEPT_EMPTY),
+            {message: "Eksempel: 2025-01-01T00:00:00.123456Z"}
+        ).nullable(),
 })
 
 export type BatchInsightRequest = z.infer<typeof BatchInsightRequestSchema>;
