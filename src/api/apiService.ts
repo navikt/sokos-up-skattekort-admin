@@ -162,7 +162,7 @@ export function useFetchBatcher(batchInsightRequest: BatchInsightRequest|null): 
     isLoading: boolean;
 } {
     const { data, error, isLoading } = useSWR<BatchInsightResponse>(
-        batchInsightRequest ? ["/hentBatcher", batchInsightRequest] : null,
+        batchInsightRequest ? ["/bestillingsbatcher", batchInsightRequest] : null,
         {
             ...swrConfig<BatchInsightResponse, [string, BatchInsightRequest]>(
                 async ([_url, request]: [string, BatchInsightRequest]) => {

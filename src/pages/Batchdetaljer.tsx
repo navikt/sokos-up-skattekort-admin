@@ -9,7 +9,7 @@ import JsonModal from "../components/JsonModal";
 
 type BatchCellRefs = Record<string, HTMLTableCellElement | null>;
 
-export default function Batcher() {
+export default function Batchdetaljer() {
     const [batchInsightRequest, setBatchInsightRequest] = useState<BatchInsightRequest | null>({
         tidspunktFom: null,
         tidspunktTom: null
