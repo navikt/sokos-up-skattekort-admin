@@ -58,7 +58,6 @@ export default function Person() {
                                     setAlertMessage={setAlertMessage}
                                 />
                             </Box>
-                        )
                     </VStack>
                 <ShowSkattekort data={data} isLoading={isLoading}/>
             </Box>
