@@ -47,7 +47,7 @@ export const handlers = [
     http.post("/sokos-skattekort/api/v1/admin/auditlogg", async () => {
         return HttpResponse.json(auditLogg, {status: 200});
     }),
-    http.post("/sokos-skattekort/api/v1/admin/hentBatcher", async ({request}) => {
+    http.post("/sokos-skattekort/api/v1/admin/bestillingsbatcher", async ({request}) => {
         return HttpResponse.json(batcher, {status: 200});
     })
 ];
