@@ -2,7 +2,7 @@ import {useEffect} from "react";
 import Batcher from "./pages/Batcher";
 import {initGrafanaFaro} from "./util/grafanaFaro";
 import {Heading, Tabs} from "@navikt/ds-react";
-import {ClockDashedIcon, PaperplaneIcon} from "@navikt/aksel-icons";
+import {ClockDashedIcon, PersonIcon} from "@navikt/aksel-icons";
 import Person from "./pages/Person";
 
 export default function App() {
@@ -20,7 +20,7 @@ export default function App() {
             <Tabs.Tab
                 value="person"
                 label="Person"
-                icon={<PaperplaneIcon aria-hidden/>}
+                icon={<PersonIcon aria-hidden/>}
             />
         </Tabs.List>
         <Tabs.Panel value="batcher">
