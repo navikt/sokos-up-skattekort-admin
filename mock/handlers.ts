@@ -4,6 +4,9 @@ import type {HentSkattekortRequest} from "../src/types/HentSkattekortRequestSche
 import ingenSkattekort from "./responseUtenSkattekort.json";
 import auditLogg from "./auditLogg.json"
 import batcher from "./batcher_mindre.json"
+import batcherUtenJson from "./batcherUtenJson.json"
+import bestillinger from "./bestillinger.json"
+import utsendinger from "./utsendinger.json"
 import {now} from "../src/util/dateUtils";
 
 export const handlers = [
@@ -49,6 +52,19 @@ export const handlers = [
     }),
     http.post("/sokos-skattekort/api/v1/admin/bestillingsbatcher", async ({request}) => {
         return HttpResponse.json(batcher, {status: 200});
+    }),
+    http.get("/sokos-skattekort/api/v1/admin/bestillingsbatcher", async () => {
+        return HttpResponse.json(batcherUtenJson, {status: 200});
+    }),
+    http.get("/sokos-skattekort/api/v1/admin/bestillinger", async () => {
+        return HttpResponse.json(bestillinger, {status: 200});
+    }),
+    http.get("/sokos-skattekort/api/v1/admin/utsendinger", async () => {
+        return HttpResponse.json(utsendinger, {status: 200});
+    }),
+    http.patch("/sokos-skattekort/api/v1/admin/bestillingsbatcher/:id", async ({request}) => {
+        return new HttpResponse(null, {status: 202})
     })
+    
 ];
 let skattekortBestilt: Date | null = null;

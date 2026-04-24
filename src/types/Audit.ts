@@ -27,7 +27,7 @@ export const AuditSchema = z.object({
     id: z.number().int().nullable().optional(),
     personId: z.number().int(),
     brukerId: z.string(),
-    opprettet: z.string(),
+    opprettet: z.iso.datetime(),
     tag: AuditTagSchema,
     informasjon: z.string().nullable(),
 });

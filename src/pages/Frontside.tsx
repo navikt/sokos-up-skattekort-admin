@@ -1,8 +1,23 @@
-import {Box, Heading, HGrid, Table, VStack} from "@navikt/ds-react";
+import {Box, Button, Heading, HGrid, Table, VStack} from "@navikt/ds-react";
 import LabelText from "../components/LabelText";
+import {
+    rerunBestillingsbatch,
+    useFetchBestillinger,
+    useFetchBestillingsbatcher,
+    useFetchUtsendinger
+} from "../api/apiService";
 
+function handleRerun(id : number | null | undefined) {
+    if (!id) return;
+    id && rerunBestillingsbatch(id)
+}
 
 export function Frontside() {
+    
+    const {data:batchData, error: batchError, isLoading:batchIsLoading} = useFetchBestillingsbatcher()
+    const {data: utsendingerData, error: utsendingerError, isLoading: utsendingerIsLoading} = useFetchUtsendinger()
+    const {data: bestillingerData, error: bestillingerError, isLoading: bestillingerIsLoading} = useFetchBestillinger()
+    
     return (
         <VStack gap={"space-24"} padding={"space-24"}>
             <Box padding="6" background={"surface-default"} borderRadius="large">
@@ -14,7 +29,7 @@ export function Frontside() {
                 <LabelText label={"Ferdige batcher"} text={"1 234"}/>
             </Box>
         <HGrid gap="space-24" columns={2}>
-            <Box padding="6" background={"surface-default"} borderRadius="large">
+            {utsendingerData?.items && <Box padding="6" background={"surface-default"} borderRadius="large">
                 <Heading size={"medium"} spacing>Planlagte utsendinger</Heading>
                 <Table title="Planlagte utsendinger" zebraStripes>
                 <Table.Header>
@@ -24,111 +39,84 @@ export function Frontside() {
                         <Table.HeaderCell>Forsystem</Table.HeaderCell>
                         <Table.HeaderCell>Inntektsår</Table.HeaderCell>
                         <Table.HeaderCell>Opprettet</Table.HeaderCell>
+                        <Table.HeaderCell>Fail count</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
-                
                 <Table.Body>
-                    <Table.Row>
-                        <Table.DataCell>123</Table.DataCell>
-                        <Table.DataCell>123456 12345</Table.DataCell>
-                        <Table.DataCell>OS</Table.DataCell>
-                        <Table.DataCell>2026</Table.DataCell>
-                        <Table.DataCell>20.03.2026
-                            19:27:56,411</Table.DataCell>
-
-                    </Table.Row>
-                    <Table.Row>
-                        <Table.DataCell>124</Table.DataCell>
-                        <Table.DataCell>123456 12345</Table.DataCell>
-                        <Table.DataCell>OS</Table.DataCell>
-                        <Table.DataCell>2026</Table.DataCell>
-                        <Table.DataCell>21.03.2026
-                            19:27:56,411</Table.DataCell>
-
-                    </Table.Row>
-                    <Table.Row>
-                        <Table.DataCell>125</Table.DataCell>
-                        <Table.DataCell>123456 12345</Table.DataCell>
-                        <Table.DataCell>OS</Table.DataCell>
-                        <Table.DataCell>2026</Table.DataCell>
-                        <Table.DataCell>22.03.2026
-                            19:27:56,411</Table.DataCell>
-
-                    </Table.Row>
+                    {utsendingerData.items.map((item) => (
+                        <Table.Row key={item.id}>
+                            <Table.DataCell>{item.id}</Table.DataCell>
+                            <Table.DataCell>{item.fnr}</Table.DataCell>
+                            <Table.DataCell>{item.forsystem}</Table.DataCell>
+                            <Table.DataCell>{item.inntektsaar}</Table.DataCell>
+                            <Table.DataCell>{item.opprettet}</Table.DataCell>
+                            <Table.DataCell>{item.failCount}</Table.DataCell>
+                        </Table.Row>))
+                    }
                 </Table.Body>
             </Table></Box>
+            }
+            {bestillingerData?.items &&
             <Box padding="6" background={"surface-default"} borderRadius="large">
                 <Heading size={"medium"} spacing>Planlagte bestillinger</Heading>
                 <Table title="Planlagte bestillinger" zebraStripes>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>Bestilling</Table.HeaderCell>
+                            <Table.HeaderCell>PersonId</Table.HeaderCell>
                             <Table.HeaderCell>Fødselsnummer</Table.HeaderCell>
                             <Table.HeaderCell>Inntektsår</Table.HeaderCell>
                             <Table.HeaderCell>Bestillingsbatch</Table.HeaderCell>
+                            <Table.HeaderCell>Oppdatert</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
-                        <Table.Row>
-                            <Table.DataCell>123</Table.DataCell>
-                            <Table.DataCell>223456 12345</Table.DataCell>
-                            <Table.DataCell>2026</Table.DataCell>
-                            <Table.DataCell>1234567</Table.DataCell>
-                        </Table.Row>
-                        <Table.Row>
-                            <Table.DataCell>124</Table.DataCell>
-                            <Table.DataCell>323456 12345</Table.DataCell>
-                            <Table.DataCell>2026</Table.DataCell>
-                            <Table.DataCell></Table.DataCell>
-                        </Table.Row>
-                        <Table.Row>
-                            <Table.DataCell>125</Table.DataCell>
-                            <Table.DataCell>423456 12345</Table.DataCell>
-                            <Table.DataCell>2026</Table.DataCell>
-                            <Table.DataCell></Table.DataCell>
-                        </Table.Row>
-                        <Table.Row>
-                            <Table.DataCell>128</Table.DataCell>
-                            <Table.DataCell>523456 12345</Table.DataCell>
-                            <Table.DataCell>2026</Table.DataCell>
-                            <Table.DataCell></Table.DataCell>
-                        </Table.Row>
-                        <Table.Row>
-                            <Table.DataCell>129</Table.DataCell>
-                            <Table.DataCell>623456 12345</Table.DataCell>
-                            <Table.DataCell>2026</Table.DataCell>
-                            <Table.DataCell></Table.DataCell>
-                        </Table.Row>
+                        {bestillingerData.items.map((item) => (
+                                <Table.Row key={item.id}>
+                                    <Table.DataCell>{item.id}</Table.DataCell>
+                                    <Table.DataCell>{item.personId}</Table.DataCell>
+                                    <Table.DataCell>{item.fnr}</Table.DataCell>
+                                    <Table.DataCell>{item.inntektsaar}</Table.DataCell>
+                                    <Table.DataCell>{item.bestillingsbatchId}</Table.DataCell>
+                                    <Table.DataCell>{item.oppdatert}</Table.DataCell>
+                                </Table.Row>
+                            ))}
                     </Table.Body>
                 </Table>
-            </Box>
+            </Box>}
+            {batchData?.items &&
             <Box padding="6" background={"surface-default"} borderRadius="large">
                 <Heading size={"medium"} spacing>Batcher under behandling</Heading>
                 <Table title="Batcher under behandling" zebraStripes>
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell>Ref</Table.HeaderCell>
+                            <Table.HeaderCell>Id</Table.HeaderCell>
+                            <Table.HeaderCell>SKD-Referanse</Table.HeaderCell>
                             <Table.HeaderCell>Status</Table.HeaderCell>
                             <Table.HeaderCell>Type</Table.HeaderCell>
                             <Table.HeaderCell>Opprettet</Table.HeaderCell>
                             <Table.HeaderCell>Oppdatert</Table.HeaderCell>
-                            <Table.HeaderCell>Data sendt</Table.HeaderCell>
+                            <Table.HeaderCell>Handling</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
-                        <Table.Row>
-                            <Table.DataCell>BR12356</Table.DataCell>
-                            <Table.DataCell>NY</Table.DataCell>
-                            <Table.DataCell>BESTILLING</Table.DataCell>
-                            <Table.DataCell>22.03.2026
-                                19:27:56,411</Table.DataCell>
-                            <Table.DataCell>22.03.2026
-                                19:27:56,411</Table.DataCell>
-                            <Table.DataCell>Request(2026, 30819598882)</Table.DataCell>
-                        </Table.Row>
+                        {batchData.items.map((item) => (
+                            <Table.Row key={item.id}>
+                                <Table.DataCell>{item.id}</Table.DataCell>
+                                <Table.DataCell>{item.bestillingsreferanse}</Table.DataCell>
+                                <Table.DataCell>{item.status}</Table.DataCell>
+                                <Table.DataCell>{item.type}</Table.DataCell>
+                                <Table.DataCell>{item.opprettet}</Table.DataCell>
+                                <Table.DataCell>{item.oppdatert}</Table.DataCell>
+                                <Table.DataCell>
+                                    {item.status === "FEILET" &&
+                                        <Button variant="tertiary-neutral"  disabled={!item.id} onClick={() => handleRerun(item.id)}>Kjør om igjen</Button>}
+                                </Table.DataCell>
+                            </Table.Row>
+                        ))}
                     </Table.Body>
                 </Table>
-            </Box>
+            </Box>}
         </HGrid>
         </VStack>
             

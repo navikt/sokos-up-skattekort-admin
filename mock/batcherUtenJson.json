@@ -1,0 +1,36 @@
+{
+  "items": [
+    {
+      "id": 7945,
+      "status": "FEILET",
+      "type": "BESTILLING",
+      "bestillingsreferanse": "BR9711",
+      "oppdatert": "2026-04-16T08:00:19.764359Z",
+      "opprettet": "2026-04-16T06:08:26.694452Z"
+    },
+    {
+      "id": 7922,
+      "status": "FEILET",
+      "type": "OPPDATERING",
+      "bestillingsreferanse": "BR8438",
+      "oppdatert": "2026-03-20T19:29:21.132948Z",
+      "opprettet": "2026-03-20T18:27:56.411114Z"
+    },
+    {
+      "id": 7416,
+      "status": "FEILET",
+      "type": "BESTILLING",
+      "bestillingsreferanse": "BR7822",
+      "oppdatert": "2026-03-19T20:14:24.137162Z",
+      "opprettet": "2026-03-19T14:35:37.695960Z"
+    },
+    {
+      "id": 7413,
+      "status": "FEILET",
+      "type": "OPPDATERING",
+      "bestillingsreferanse": "BR7400",
+      "oppdatert": "2026-03-19T08:45:33.239423Z",
+      "opprettet": "2026-03-16T10:03:50.898334Z"
+    }
+  ]
+}

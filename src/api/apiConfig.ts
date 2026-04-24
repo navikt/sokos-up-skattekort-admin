@@ -36,8 +36,13 @@ export function api(baseUri: string) {
 }
 
 export async function axiosFetcher<T>(baseUri: string, url: string) {
-	const res = await api(baseUri).get<T>(url);
-	return res.data;
+    const res = await api(baseUri).get<T>(url);
+    return res.data;
+}
+
+export async function axiosPatchFetcher(baseUri: string, url: string) {
+    const res = await api(baseUri).patch(url);
+    return res.data;
 }
 
 export async function axiosPostFetcher<T, U>(
