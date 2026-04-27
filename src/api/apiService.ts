@@ -12,11 +12,12 @@ import {BackendError, NoDataError} from "../types/Error";
 import {type Skattekort, SkattekortListSchema} from "../types/SkattekortResponseDTOSchema";
 import type {HentSkattekortRequest} from "../types/HentSkattekortRequestSchema";
 import type {ZodError} from "zod";
-import useSWR, {KeyedMutator} from "swr";
+import useSWR from "swr";
 import type {AuditResponse} from "../types/Audit";
-import type {BatchInsightRequest, BatchInsightResponse, Bestillingsbatch} from "../types/Bestillingsbatch";
-import {BestillingerResponse} from "../types/Bestilling";
-import {UtsendingerResponse} from "../types/Utsending";
+import type {BatchInsightRequest, BatchInsightResponse} from "../types/Bestillingsbatch";
+import type {BestillingerResponse} from "../types/Bestilling";
+import type {UtsendingerResponse} from "../types/Utsending";
+import type {NoekkelinformasjonResponse} from "../types/Noekkelinformasjon";
 
 export type OtherErrors = AxiosError | ZodError<unknown> | BackendError;
 export type AllErrors = OtherErrors | NoDataError;
@@ -98,7 +99,7 @@ export function useFetchSkattekortStatus(
     return {data, error, isLoading};
 }
 
-export function useFetchBestillingsbatcher(): {
+export function useFetchBestillingsbatcher(shouldRefresh: boolean): {
     data: BatchInsightResponse | undefined;
     error: BackendError | NoDataError | null;
     isLoading: boolean;
@@ -113,13 +114,14 @@ export function useFetchBestillingsbatcher(): {
                         .then((response: AxiosResponse<BatchInsightResponse>) => response.data)
                         .then((wrapped: BatchInsightResponse) => wrapped)
                 },
-            )
+            ),
+            refreshInterval: shouldRefresh ? 5000 : 0
         }
     )
     return {data, error, isLoading};
 }
 
-export function useFetchBestillinger(): {
+export function useFetchBestillinger(shouldRefresh: boolean): {
     data: BestillingerResponse | undefined;
     error: BackendError | NoDataError | null;
     isLoading: boolean;
@@ -134,13 +136,14 @@ export function useFetchBestillinger(): {
                         .then((response: AxiosResponse<BestillingerResponse>) => response.data)
                         .then((wrapped: BestillingerResponse) => wrapped)
                 },
-            )
+            ),
+            refreshInterval: shouldRefresh ? 5000 : 0
         }
     )
     return {data, error, isLoading};
 }
 
-export function useFetchUtsendinger(): {
+export function useFetchUtsendinger(shouldRefresh: boolean = false): {
     data: UtsendingerResponse | undefined;
     error: BackendError | NoDataError | null;
     isLoading: boolean;
@@ -155,7 +158,27 @@ export function useFetchUtsendinger(): {
                         .then((response: AxiosResponse<UtsendingerResponse>) => response.data)
                         .then((wrapped: UtsendingerResponse) => wrapped)
                 },
-            )
+            ), refreshInterval: shouldRefresh ? 5000 : 0
+        }
+    )
+    return {data, error, isLoading};
+}
+
+export function useFetchNoekkelinformasjon(shouldRefresh: boolean = false): {
+    data: NoekkelinformasjonResponse | undefined;
+    error: BackendError | NoDataError | null;
+    isLoading: boolean;
+} {
+    const {data, error, isLoading} = useSWR<NoekkelinformasjonResponse>(
+        "/noekkelinformasjon",
+        {
+            ...swrConfig<NoekkelinformasjonResponse, string>(
+                async (_url: string) => {
+                    return api(BASE_URI.SOKOS_SKATTEKORT_ADMIN_API)
+                        .get<NoekkelinformasjonResponse>(_url)
+                        .then((response: AxiosResponse<NoekkelinformasjonResponse>) => response.data)
+                },
+            ), refreshInterval: shouldRefresh ? 5000 : 0
         }
     )
     return {data, error, isLoading};

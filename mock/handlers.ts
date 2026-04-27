@@ -7,7 +7,10 @@ import batcher from "./batcher_mindre.json"
 import batcherUtenJson from "./batcherUtenJson.json"
 import bestillinger from "./bestillinger.json"
 import utsendinger from "./utsendinger.json"
+import noekkelinformasjon from "./noekkelinformasjon.json"
 import {now} from "../src/util/dateUtils";
+
+let refNr = 9000
 
 export const handlers = [
     http.post("/sokos-skattekort/api/v2/person/hent-navn", () => {
@@ -54,7 +57,20 @@ export const handlers = [
         return HttpResponse.json(batcher, {status: 200});
     }),
     http.get("/sokos-skattekort/api/v1/admin/bestillingsbatcher", async () => {
-        return HttpResponse.json(batcherUtenJson, {status: 200});
+        const nowStamp = now();
+        return HttpResponse.json(
+            {
+                items: [...batcherUtenJson.items, {
+                    id: 8128,
+                    status: "NY",
+                    type: "OPPDATERING",
+                    bestillingsreferanse: `BR${refNr++}`,
+                    oppdatert: nowStamp.toISOString(),
+                    opprettet: nowStamp.toISOString()
+                }]
+            },
+
+            {status: 200});
     }),
     http.get("/sokos-skattekort/api/v1/admin/bestillinger", async () => {
         return HttpResponse.json(bestillinger, {status: 200});
@@ -62,9 +78,14 @@ export const handlers = [
     http.get("/sokos-skattekort/api/v1/admin/utsendinger", async () => {
         return HttpResponse.json(utsendinger, {status: 200});
     }),
+    http.get("/sokos-skattekort/api/v1/admin/noekkelinformasjon", async () => {
+        return HttpResponse.json(noekkelinformasjon, {status: 200});
+    }),
     http.patch("/sokos-skattekort/api/v1/admin/bestillingsbatcher/:id", async ({request}) => {
         return new HttpResponse(null, {status: 202})
     })
     
+    
+
 ];
 let skattekortBestilt: Date | null = null;
