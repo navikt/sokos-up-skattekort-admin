@@ -7,6 +7,7 @@ import {
     useFetchUtsendinger
 } from "../api/apiService";
 import {useState} from "react";
+import Errorhandler from "../components/Errorhandler";
 
 function handleRerun(id: number | null | undefined) {
     if (!id) return;
@@ -16,7 +17,7 @@ function handleRerun(id: number | null | undefined) {
 export function Frontside() {
     const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
 
-    const {data: noekkelData} = useFetchNoekkelinformasjon(shouldRefresh)
+    const {data: noekkeldata, error: noekkeldataError} = useFetchNoekkelinformasjon(shouldRefresh)
     
     const {data: batchData, error: batchError, isLoading: batchIsLoading} = useFetchBestillingsbatcher(shouldRefresh)
     const {
@@ -33,11 +34,15 @@ export function Frontside() {
 
     return (
         <VStack gap={"space-24"} padding={"space-24"}>
-            {noekkelData && <Box padding="6" background={"surface-default"} borderRadius="large">
+            <Errorhandler heading="noekkeldata" error={noekkeldataError} />
+            <Errorhandler heading="batch" error={batchError} />
+            <Errorhandler heading="bestillinger" error={bestillingerError} />
+            <Errorhandler heading="utsendinger" error={utsendingerError} />
+            {noekkeldata && <Box padding="6" background={"surface-default"} borderRadius="large">
                 <Heading size={"large"} spacing>Informasjon om Sokos-skattekort</Heading>
-                <LabelText label={"Antall skattekort for 2025"} text={noekkelData.antallAvHver["2025"] ?? ""}/>
-                <LabelText label={"Antall skattekort for 2026"} text={noekkelData.antallAvHver["2026"] ?? ""}/>
-                <LabelText label={"Antall personer"} text={noekkelData.antallAvHver["personer"] ?? ""}/>
+                <LabelText label={"Antall skattekort for 2025"} text={noekkeldata.antallAvHver["2025"] ?? ""}/>
+                <LabelText label={"Antall skattekort for 2026"} text={noekkeldata.antallAvHver["2026"] ?? ""}/>
+                <LabelText label={"Antall personer"} text={noekkeldata.antallAvHver["personer"] ?? ""}/>
             </Box>}
             <Switch
                 value="live"
@@ -72,34 +77,6 @@ export function Frontside() {
                         </Table.Body>
                     </Table></Box>
                 }
-                {bestillingerData?.items &&
-                    <Box padding="6" background={"surface-default"} borderRadius="large">
-                        <Heading size={"medium"} spacing>Planlagte bestillinger</Heading>
-                        <Table title="Planlagte bestillinger" zebraStripes>
-                            <Table.Header>
-                                <Table.Row>
-                                    <Table.HeaderCell>Bestilling</Table.HeaderCell>
-                                    <Table.HeaderCell>PersonId</Table.HeaderCell>
-                                    <Table.HeaderCell>Fødselsnummer</Table.HeaderCell>
-                                    <Table.HeaderCell>Inntektsår</Table.HeaderCell>
-                                    <Table.HeaderCell>Bestillingsbatch</Table.HeaderCell>
-                                    <Table.HeaderCell>Oppdatert</Table.HeaderCell>
-                                </Table.Row>
-                            </Table.Header>
-                            <Table.Body>
-                                {bestillingerData.items.map((item) => (
-                                    <Table.Row key={item.id}>
-                                        <Table.DataCell>{item.id}</Table.DataCell>
-                                        <Table.DataCell>{item.personId}</Table.DataCell>
-                                        <Table.DataCell>{item.fnr}</Table.DataCell>
-                                        <Table.DataCell>{item.inntektsaar}</Table.DataCell>
-                                        <Table.DataCell>{item.bestillingsbatchId}</Table.DataCell>
-                                        <Table.DataCell>{item.oppdatert}</Table.DataCell>
-                                    </Table.Row>
-                                ))}
-                            </Table.Body>
-                        </Table>
-                    </Box>}
                 {batchData?.items &&
                     <Box padding="6" background={"surface-default"} borderRadius="large">
                         <Heading size={"medium"} spacing>Batcher under behandling</Heading>
@@ -129,6 +106,34 @@ export function Frontside() {
                                                 <Button variant="tertiary" disabled={!item.id}
                                                         onClick={() => handleRerun(item.id)}>Kjør om igjen</Button>}
                                         </Table.DataCell>
+                                    </Table.Row>
+                                ))}
+                            </Table.Body>
+                        </Table>
+                    </Box>}
+                {bestillingerData?.items &&
+                    <Box padding="6" background={"surface-default"} borderRadius="large">
+                        <Heading size={"medium"} spacing>Planlagte bestillinger</Heading>
+                        <Table title="Planlagte bestillinger" zebraStripes>
+                            <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell>Bestilling</Table.HeaderCell>
+                                    <Table.HeaderCell>PersonId</Table.HeaderCell>
+                                    <Table.HeaderCell>Fødselsnummer</Table.HeaderCell>
+                                    <Table.HeaderCell>Inntektsår</Table.HeaderCell>
+                                    <Table.HeaderCell>Bestillingsbatch</Table.HeaderCell>
+                                    <Table.HeaderCell>Oppdatert</Table.HeaderCell>
+                                </Table.Row>
+                            </Table.Header>
+                            <Table.Body>
+                                {bestillingerData.items.map((item) => (
+                                    <Table.Row key={item.id}>
+                                        <Table.DataCell>{item.id}</Table.DataCell>
+                                        <Table.DataCell>{item.personId}</Table.DataCell>
+                                        <Table.DataCell>{item.fnr}</Table.DataCell>
+                                        <Table.DataCell>{item.inntektsaar}</Table.DataCell>
+                                        <Table.DataCell>{item.bestillingsbatchId}</Table.DataCell>
+                                        <Table.DataCell>{item.oppdatert}</Table.DataCell>
                                     </Table.Row>
                                 ))}
                             </Table.Body>

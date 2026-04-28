@@ -39,15 +39,11 @@ export const handlers = [
         return HttpResponse.json({data: "", errorMessage: ""}, {status: 201});
     }),
     http.post("/sokos-skattekort/api/v1/skattekort/status", async () => {
-        const status = !skattekortBestilt
-            ? "IKKE_FORESPURT"
-            : Date.now() < skattekortBestilt?.getTime() + 5 * 1000
-                ? "IKKE_BESTILT"
-                : Date.now() < skattekortBestilt?.getTime() + 10 * 1000
-                    ? "BESTILT"
-                    : Date.now() < skattekortBestilt?.getTime() + 15 * 1000
-                        ? "VENTER_PAA_UTSENDING"
-                        : /* Og hvis det er mer enn 15s siden man trykket:  */ "SENDT_FORSYSTEM";
+        const status = !skattekortBestilt ? "IKKE_FORESPURT"
+            : Date.now() < skattekortBestilt?.getTime() + 5 * 1000             ? "IKKE_BESTILT"
+            : Date.now() < skattekortBestilt?.getTime() + 10 * 1000            ? "BESTILT"
+            : Date.now() < skattekortBestilt?.getTime() + 15 * 1000            ? "VENTER_PAA_UTSENDING"
+            : /* Og hvis det er mer enn 15s siden man trykket:                */ "SENDT_FORSYSTEM";
         return HttpResponse.json({data: status}, {status: 200});
     }),
     http.post("/sokos-skattekort/api/v1/admin/auditlogg", async () => {
@@ -84,8 +80,5 @@ export const handlers = [
     http.patch("/sokos-skattekort/api/v1/admin/bestillingsbatcher/:id", async ({request}) => {
         return new HttpResponse(null, {status: 202})
     })
-    
-    
-
 ];
 let skattekortBestilt: Date | null = null;

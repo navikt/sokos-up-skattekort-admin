@@ -14,10 +14,10 @@ import type {HentSkattekortRequest} from "../types/HentSkattekortRequestSchema";
 import type {ZodError} from "zod";
 import useSWR from "swr";
 import type {AuditResponse} from "../types/Audit";
-import type {BatchInsightRequest, BatchInsightResponse} from "../types/Bestillingsbatch";
-import type {BestillingerResponse} from "../types/Bestilling";
-import type {UtsendingerResponse} from "../types/Utsending";
-import type {NoekkelinformasjonResponse} from "../types/Noekkelinformasjon";
+import {type BatchInsightRequest, type BatchInsightResponse, BatchInsightResponseSchema} from "../types/Bestillingsbatch";
+import {type BestillingerResponse, BestillingerResponseSchema} from "../types/Bestilling";
+import {type UtsendingerResponse, UtsendingerResponseSchema} from "../types/Utsending";
+import {type NoekkelinformasjonResponse, NoekkelinformasjonResponseSchema} from "../types/Noekkelinformasjon";
 
 export type OtherErrors = AxiosError | ZodError<unknown> | BackendError;
 export type AllErrors = OtherErrors | NoDataError;
@@ -112,7 +112,10 @@ export function useFetchBestillingsbatcher(shouldRefresh: boolean): {
                     return api(BASE_URI.SOKOS_SKATTEKORT_ADMIN_API)
                         .get<BatchInsightResponse>(_url)
                         .then((response: AxiosResponse<BatchInsightResponse>) => response.data)
-                        .then((wrapped: BatchInsightResponse) => wrapped)
+                        .then((wrapped: BatchInsightResponse) => {
+                            BatchInsightResponseSchema.parse(wrapped);
+                            return wrapped
+                        })
                 },
             ),
             refreshInterval: shouldRefresh ? 5000 : 0
@@ -134,7 +137,10 @@ export function useFetchBestillinger(shouldRefresh: boolean): {
                     return api(BASE_URI.SOKOS_SKATTEKORT_ADMIN_API)
                         .get<BestillingerResponse>(_url)
                         .then((response: AxiosResponse<BestillingerResponse>) => response.data)
-                        .then((wrapped: BestillingerResponse) => wrapped)
+                        .then((wrapped: BestillingerResponse) => {
+                            BestillingerResponseSchema.parse(wrapped);
+                            return wrapped
+                        })
                 },
             ),
             refreshInterval: shouldRefresh ? 5000 : 0
@@ -156,7 +162,10 @@ export function useFetchUtsendinger(shouldRefresh: boolean = false): {
                     return api(BASE_URI.SOKOS_SKATTEKORT_ADMIN_API)
                         .get<UtsendingerResponse>(_url)
                         .then((response: AxiosResponse<UtsendingerResponse>) => response.data)
-                        .then((wrapped: UtsendingerResponse) => wrapped)
+                        .then((wrapped: UtsendingerResponse) => {
+                            UtsendingerResponseSchema.parse(wrapped);
+                            return wrapped
+                        })
                 },
             ), refreshInterval: shouldRefresh ? 5000 : 0
         }
@@ -177,6 +186,10 @@ export function useFetchNoekkelinformasjon(shouldRefresh: boolean = false): {
                     return api(BASE_URI.SOKOS_SKATTEKORT_ADMIN_API)
                         .get<NoekkelinformasjonResponse>(_url)
                         .then((response: AxiosResponse<NoekkelinformasjonResponse>) => response.data)
+                        .then(wrapped => {
+                            NoekkelinformasjonResponseSchema.parse(wrapped);
+                            return wrapped;
+                        })
                 },
             ), refreshInterval: shouldRefresh ? 5000 : 0
         }

@@ -1,6 +1,5 @@
-import { z } from "zod";
+import {z} from "zod";
 import {FoedselsnummerSchema} from "./SokParameter";
-import {BestillingsbatchSchema} from "./Bestillingsbatch";
 
 export const UtsendingDTOSchema = z.object({
     id: z.number().int(),
@@ -8,7 +7,7 @@ export const UtsendingDTOSchema = z.object({
     inntektsaar: z.number().int(),
     forsystem: z.string(),
     failCount: z.number().int(),
-    failMessage: z.string().nullable(),
+    failMessage: z.string().nullable().optional(),
     opprettet: z.iso.datetime(),
 });
 
