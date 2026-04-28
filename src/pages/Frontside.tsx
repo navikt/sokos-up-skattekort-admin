@@ -3,7 +3,8 @@ import LabelText from "../components/LabelText";
 import {
     rerunBestillingsbatch,
     useFetchBestillinger,
-    useFetchBestillingsbatcher, useFetchNoekkelinformasjon,
+    useFetchBestillingsbatcher,
+    useFetchNoekkelinformasjon,
     useFetchUtsendinger
 } from "../api/apiService";
 import {useState} from "react";
@@ -34,15 +35,18 @@ export function Frontside() {
 
     return (
         <VStack gap={"space-24"} padding={"space-24"}>
+            <Heading size={"large"} spacing>Informasjon om Sokos-skattekort</Heading>
+            
             <Errorhandler heading="noekkeldata" error={noekkeldataError} />
             <Errorhandler heading="batch" error={batchError} />
             <Errorhandler heading="bestillinger" error={bestillingerError} />
             <Errorhandler heading="utsendinger" error={utsendingerError} />
+            
             {noekkeldata && <Box padding="6" background={"surface-default"} borderRadius="large">
-                <Heading size={"large"} spacing>Informasjon om Sokos-skattekort</Heading>
-                <LabelText label={"Antall skattekort for 2025"} text={noekkeldata.antallAvHver["2025"] ?? ""}/>
-                <LabelText label={"Antall skattekort for 2026"} text={noekkeldata.antallAvHver["2026"] ?? ""}/>
-                <LabelText label={"Antall personer"} text={noekkeldata.antallAvHver["personer"] ?? ""}/>
+                {Object.keys(noekkeldata.antallAvHver).map((antallAv) => (
+                    <LabelText key={antallAv} label={`Antall ${Number.isNaN(Number(antallAv)) ? "" : "skattekort for "}${antallAv}`} 
+                               text={noekkeldata.antallAvHver[antallAv] ?? "0"}/>
+                ))}                
             </Box>}
             <Switch
                 value="live"

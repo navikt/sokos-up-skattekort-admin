@@ -11,6 +11,7 @@ import noekkelinformasjon from "./noekkelinformasjon.json"
 import {now} from "../src/util/dateUtils";
 
 let refNr = 9000
+let skattekortnstuff: number = refNr*(Math.round(Math.random()*100))
 
 export const handlers = [
     http.post("/sokos-skattekort/api/v2/person/hent-navn", () => {
@@ -75,7 +76,13 @@ export const handlers = [
         return HttpResponse.json(utsendinger, {status: 200});
     }),
     http.get("/sokos-skattekort/api/v1/admin/noekkelinformasjon", async () => {
-        return HttpResponse.json(noekkelinformasjon, {status: 200});
+        skattekortnstuff += (Math.round(Math.random()*10))
+        return HttpResponse.json(
+            {"antallAvHver": {...noekkelinformasjon.antallAvHver,
+                "2026": noekkelinformasjon.antallAvHver["2026"]+skattekortnstuff,
+                "personer": noekkelinformasjon.antallAvHver["personer"]+Math.round(skattekortnstuff/2)
+            }},
+            {status: 200});
     }),
     http.patch("/sokos-skattekort/api/v1/admin/bestillingsbatcher/:id", async ({request}) => {
         return new HttpResponse(null, {status: 202})
