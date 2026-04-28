@@ -27,7 +27,7 @@ export default function Person() {
                     setIsSubmit={setIsSubmit}
                     isLoading={isLoading}
                 />
-                <Errorhandler error={error}/>
+                <Errorhandler heading={"Feil ved henting av person:"} error={error}/>
                 {!!alertMessage && (
                     <AlertWithCloseButton
                         show={!!alertMessage}
