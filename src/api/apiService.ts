@@ -12,7 +12,7 @@ import {BackendError, NoDataError} from "../types/Error";
 import {type Skattekort, SkattekortListSchema} from "../types/SkattekortResponseDTOSchema";
 import type {HentSkattekortRequest} from "../types/HentSkattekortRequestSchema";
 import type {ZodError} from "zod";
-import useSWR from "swr";
+import useSWR, {type KeyedMutator} from "swr";
 import type {AuditResponse} from "../types/Audit";
 import {type BatchInsightRequest, type BatchInsightResponse, BatchInsightResponseSchema} from "../types/Bestillingsbatch";
 import {type BestillingerResponse, BestillingerResponseSchema} from "../types/Bestilling";
@@ -53,12 +53,9 @@ export async function rerunBestillingsbatch(id: number) {
     return await axiosPatchFetcher(
         BASE_URI.SOKOS_SKATTEKORT_ADMIN_API,
         `/bestillingsbatcher/${id}`,
-    ).then((response) => {
-        if (response.errorMessage) {
-            return response.errorMessage;
-        }
+    ).then(() => {
         return "Success";
-    });
+    })
 }
 
 export function useFetchSkattekortStatus(
@@ -101,10 +98,11 @@ export function useFetchSkattekortStatus(
 
 export function useFetchBestillingsbatcher(shouldRefresh: boolean): {
     data: BatchInsightResponse | undefined;
-    error: BackendError | NoDataError | null;
+    error: Error;
     isLoading: boolean;
+    mutate: KeyedMutator<BatchInsightResponse>;
 } {
-    const {data, error, isLoading} = useSWR<BatchInsightResponse>(
+    const {data, error, isLoading, mutate} = useSWR<BatchInsightResponse>(
         "/bestillingsbatcher",
         {
             ...swrConfig<BatchInsightResponse, string>(
@@ -121,12 +119,12 @@ export function useFetchBestillingsbatcher(shouldRefresh: boolean): {
             refreshInterval: shouldRefresh ? 5000 : 0
         }
     )
-    return {data, error, isLoading};
+    return {data, error, isLoading, mutate};
 }
 
 export function useFetchBestillinger(shouldRefresh: boolean): {
     data: BestillingerResponse | undefined;
-    error: BackendError | NoDataError | null;
+    error: Error;
     isLoading: boolean;
 } {
     const {data, error, isLoading} = useSWR<BestillingerResponse>(
@@ -151,7 +149,7 @@ export function useFetchBestillinger(shouldRefresh: boolean): {
 
 export function useFetchUtsendinger(shouldRefresh: boolean = false): {
     data: UtsendingerResponse | undefined;
-    error: BackendError | NoDataError | null;
+    error: Error;
     isLoading: boolean;
 } {
     const {data, error, isLoading} = useSWR<UtsendingerResponse>(
@@ -175,7 +173,7 @@ export function useFetchUtsendinger(shouldRefresh: boolean = false): {
 
 export function useFetchNoekkelinformasjon(shouldRefresh: boolean = false): {
     data: NoekkelinformasjonResponse | undefined;
-    error: BackendError | NoDataError | null;
+    error: Error;
     isLoading: boolean;
 } {
     const {data, error, isLoading} = useSWR<NoekkelinformasjonResponse>(
@@ -200,7 +198,7 @@ export function useFetchNoekkelinformasjon(shouldRefresh: boolean = false): {
 
 export function useFetchSkattekort(fnr: string): {
     data: Skattekort[] | undefined;
-    error: BackendError | NoDataError | null;
+    error: Error;
     isLoading: boolean;
 } {
     const shouldFetch = fnr?.trim().length > 0;
@@ -239,7 +237,7 @@ export function useFetchSkattekort(fnr: string): {
 
 export function useFetchAuditLogg(fnr: string): {
     data: AuditResponse | undefined;
-    error: BackendError | NoDataError | null;
+    error: Error;
     isLoading: boolean;
 } {
     const shouldFetch = fnr?.trim().length > 0;
@@ -268,7 +266,7 @@ export function useFetchAuditLogg(fnr: string): {
 
 export function useFetchBatcher(batchInsightRequest: BatchInsightRequest | null): {
     data: BatchInsightResponse | undefined;
-    error: BackendError | NoDataError | null;
+    error: Error;
     isLoading: boolean;
 } {
     const {data, error, isLoading} = useSWR<BatchInsightResponse>(

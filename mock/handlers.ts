@@ -12,6 +12,7 @@ import {now} from "../src/util/dateUtils";
 
 let refNr = 9000
 let skattekortnstuff: number = refNr*(Math.round(Math.random()*100))
+const reranIds: Array<number> = []
 
 export const handlers = [
     http.post("/sokos-skattekort/api/v2/person/hent-navn", () => {
@@ -50,7 +51,7 @@ export const handlers = [
     http.post("/sokos-skattekort/api/v1/admin/auditlogg", async () => {
         return HttpResponse.json(auditLogg, {status: 200});
     }),
-    http.post("/sokos-skattekort/api/v1/admin/bestillingsbatcher", async ({request}) => {
+    http.post("/sokos-skattekort/api/v1/admin/bestillingsbatcher", async () => {
         return HttpResponse.json(batcher, {status: 200});
     }),
     http.get("/sokos-skattekort/api/v1/admin/bestillingsbatcher", async () => {
@@ -64,7 +65,7 @@ export const handlers = [
                     bestillingsreferanse: `BR${refNr++}`,
                     oppdatert: nowStamp.toISOString(),
                     opprettet: nowStamp.toISOString()
-                }]
+                }].filter(batch => !reranIds.includes(batch.id)),
             },
 
             {status: 200});
@@ -84,7 +85,9 @@ export const handlers = [
             }},
             {status: 200});
     }),
-    http.patch("/sokos-skattekort/api/v1/admin/bestillingsbatcher/:id", async ({request}) => {
+    http.patch("/sokos-skattekort/api/v1/admin/bestillingsbatcher/:id", async ({params}) => {
+        const id = Number(params.id)
+        reranIds.push(id)
         return new HttpResponse(null, {status: 202})
     })
 ];
