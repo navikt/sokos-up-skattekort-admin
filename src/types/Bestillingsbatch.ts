@@ -19,9 +19,9 @@ export const BestillingsbatchSchema = z.object({
     status: BestillingsbatchStatusSchema,
     type: BestillingsbatchTypeSchema,
     bestillingsreferanse: z.string(),
-    oppdatert: z.string(),
-    opprettet: z.string(),
-    dataSendt: z.string(),
+    oppdatert: z.iso.datetime(),
+    opprettet: z.iso.datetime(),
+    dataSendt: z.string().nullable().optional(),
     dataMottatt: z.string().nullable().optional(),
     showFullRequest: z.boolean().optional(),
 });

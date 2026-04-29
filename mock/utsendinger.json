@@ -1,0 +1,28 @@
+{
+  "items": [
+    {
+      "id": 223095,
+      "fnr": "01410112345",
+      "inntektsaar": 2026,
+      "forsystem": "OS",
+      "failCount": 0,
+      "opprettet": "2026-04-23T12:19:18.822586Z"
+    },
+    {
+      "id": 223096,
+      "fnr": "02410112345",
+      "inntektsaar": 2026,
+      "forsystem": "OS",
+      "failCount": 0,
+      "opprettet": "2026-04-24T12:19:18.822586Z"
+    },
+    {
+      "id": 223097,
+      "fnr": "03410112345",
+      "inntektsaar": 2026,
+      "forsystem": "OS",
+      "failCount": 0,
+      "opprettet": "2026-04-25T12:19:18.822586Z"
+    }
+  ]
+}

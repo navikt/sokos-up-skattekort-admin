@@ -45,7 +45,9 @@ export default function BestilleSkattekortButton(
 			} else if (["UGYLDIG_FNR", "SENDT_FORSYSTEM"].includes(data.data)) {
 				setShouldRefreshStatus(false);
 			}
+            return
 		}
+        setShouldRefreshStatus(false);
 	}, [data, props]);
 
 	function handleClick() {

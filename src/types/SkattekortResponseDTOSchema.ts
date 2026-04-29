@@ -28,7 +28,7 @@ export const ForskuddstrekkSchema = z.object({
 export const SkattekortResponseDTOSchema = z.object({
 	utstedtDato: z.optional(z.string()),
 	identifikator: z.optional(z.string()),
-	opprettet: z.string(),
+	opprettet: z.iso.datetime(),
 	id: z.number(),
 	inntektsaar: z.number(),
 	kilde: z.string(),

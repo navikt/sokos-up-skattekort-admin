@@ -1,12 +1,8 @@
 import useSWRImmutable from "swr/immutable";
-import {api, axiosPostFetcher} from "./apiConfig";
+import {api, axiosPatchFetcher, axiosPostFetcher} from "./apiConfig";
 import type {ForespoerselRequest} from "./models/ForespoerselRequest";
-import {type HentNavnResponse, HentNavnResponseSchema} from "../types/HentNavnResponse";
 import type {AxiosError, AxiosResponse} from "axios";
-import type {HentNavnRequest} from "../types/HentNavnRequest";
 import {
-    type WrappedHentNavnResponseWithError,
-    WrappedHentNavnResponseWithErrorSchema,
     type WrappedSkattekortResponseDTOWithError,
     WrappedSkattekortResponseDTOWithErrorSchema,
     type WrappedStatusResponseWithError,
@@ -16,9 +12,12 @@ import {BackendError, NoDataError} from "../types/Error";
 import {type Skattekort, SkattekortListSchema} from "../types/SkattekortResponseDTOSchema";
 import type {HentSkattekortRequest} from "../types/HentSkattekortRequestSchema";
 import type {ZodError} from "zod";
-import useSWR from "swr";
+import useSWR, {type KeyedMutator} from "swr";
 import type {AuditResponse} from "../types/Audit";
-import type {BatchInsightRequest, BatchInsightResponse} from "../types/Bestillingsbatch";
+import {type BatchInsightRequest, type BatchInsightResponse, BatchInsightResponseSchema} from "../types/Bestillingsbatch";
+import {type BestillingerResponse, BestillingerResponseSchema} from "../types/Bestilling";
+import {type UtsendingerResponse, UtsendingerResponseSchema} from "../types/Utsending";
+import {type NoekkelinformasjonResponse, NoekkelinformasjonResponseSchema} from "../types/Noekkelinformasjon";
 
 export type OtherErrors = AxiosError | ZodError<unknown> | BackendError;
 export type AllErrors = OtherErrors | NoDataError;
@@ -50,6 +49,15 @@ export async function bestillSkattekort(request: ForespoerselRequest) {
     });
 }
 
+export async function rerunBestillingsbatch(id: number) {
+    return await axiosPatchFetcher(
+        BASE_URI.SOKOS_SKATTEKORT_ADMIN_API,
+        `/bestillingsbatcher/${id}`,
+    ).then(() => {
+        return "Success";
+    })
+}
+
 export function useFetchSkattekortStatus(
     request: ForespoerselRequest,
     shouldRefresh: boolean
@@ -57,7 +65,7 @@ export function useFetchSkattekortStatus(
     const key = request.personIdent?.length === 11 ? ["/skattekort/status", request] : null;
     // useSWR skal være mutable slik at vi kan polle status mens bestilling og henting pågår
     const {data, error, isLoading} = useSWR<WrappedStatusResponseWithError>(
-         key,
+        key,
         {
             ...swrConfig<WrappedStatusResponseWithError, [string, string]>(
                 async ([_url, request]: [string, string]) => {
@@ -68,7 +76,7 @@ export function useFetchSkattekortStatus(
                         >(_url, request)
                         .then((response: AxiosResponse<WrappedStatusResponseWithError>) => response.data)
                         .then((wrapped: WrappedStatusResponseWithError) => {
-                            const error = 
+                            const error =
                                 WrappedStatusResponseWithErrorSchema.safeParse(wrapped);
                             if (error.success) {
                                 throw new BackendError(error.data.errorMessage);
@@ -81,20 +89,120 @@ export function useFetchSkattekortStatus(
                 },
             ),
             onError: (error) => {
-                return {data:{data:"API_ERROR"}, error, isLoading: false};
+                return {data: {data: "API_ERROR"}, error, isLoading: false};
             },
             refreshInterval: shouldRefresh ? 1000 : 0,
         });
     return {data, error, isLoading};
 }
 
+export function useFetchBestillingsbatcher(shouldRefresh: boolean): {
+    data: BatchInsightResponse | undefined;
+    error: Error;
+    isLoading: boolean;
+    mutate: KeyedMutator<BatchInsightResponse>;
+} {
+    const {data, error, isLoading, mutate} = useSWR<BatchInsightResponse>(
+        "/bestillingsbatcher",
+        {
+            ...swrConfig<BatchInsightResponse, string>(
+                async (_url: string) => {
+                    return api(BASE_URI.SOKOS_SKATTEKORT_ADMIN_API)
+                        .get<BatchInsightResponse>(_url)
+                        .then((response: AxiosResponse<BatchInsightResponse>) => response.data)
+                        .then((wrapped: BatchInsightResponse) => {
+                            BatchInsightResponseSchema.parse(wrapped);
+                            return wrapped
+                        })
+                },
+            ),
+            refreshInterval: shouldRefresh ? 5000 : 0
+        }
+    )
+    return {data, error, isLoading, mutate};
+}
+
+export function useFetchBestillinger(shouldRefresh: boolean): {
+    data: BestillingerResponse | undefined;
+    error: Error;
+    isLoading: boolean;
+} {
+    const {data, error, isLoading} = useSWR<BestillingerResponse>(
+        "/bestillinger",
+        {
+            ...swrConfig<BestillingerResponse, string>(
+                async (_url: string) => {
+                    return api(BASE_URI.SOKOS_SKATTEKORT_ADMIN_API)
+                        .get<BestillingerResponse>(_url)
+                        .then((response: AxiosResponse<BestillingerResponse>) => response.data)
+                        .then((wrapped: BestillingerResponse) => {
+                            BestillingerResponseSchema.parse(wrapped);
+                            return wrapped
+                        })
+                },
+            ),
+            refreshInterval: shouldRefresh ? 5000 : 0
+        }
+    )
+    return {data, error, isLoading};
+}
+
+export function useFetchUtsendinger(shouldRefresh: boolean = false): {
+    data: UtsendingerResponse | undefined;
+    error: Error;
+    isLoading: boolean;
+} {
+    const {data, error, isLoading} = useSWR<UtsendingerResponse>(
+        "/utsendinger",
+        {
+            ...swrConfig<UtsendingerResponse, string>(
+                async (_url: string) => {
+                    return api(BASE_URI.SOKOS_SKATTEKORT_ADMIN_API)
+                        .get<UtsendingerResponse>(_url)
+                        .then((response: AxiosResponse<UtsendingerResponse>) => response.data)
+                        .then((wrapped: UtsendingerResponse) => {
+                            UtsendingerResponseSchema.parse(wrapped);
+                            return wrapped
+                        })
+                },
+            ), refreshInterval: shouldRefresh ? 5000 : 0
+        }
+    )
+    return {data, error, isLoading};
+}
+
+export function useFetchNoekkelinformasjon(shouldRefresh: boolean = false): {
+    data: NoekkelinformasjonResponse | undefined;
+    error: Error;
+    isLoading: boolean;
+} {
+    const {data, error, isLoading} = useSWR<NoekkelinformasjonResponse>(
+        "/noekkelinformasjon",
+        {
+            ...swrConfig<NoekkelinformasjonResponse, string>(
+                async (_url: string) => {
+                    return api(BASE_URI.SOKOS_SKATTEKORT_ADMIN_API)
+                        .get<NoekkelinformasjonResponse>(_url)
+                        .then((response: AxiosResponse<NoekkelinformasjonResponse>) => response.data)
+                        .then(wrapped => {
+                            NoekkelinformasjonResponseSchema.parse(wrapped);
+                            return wrapped;
+                        })
+                },
+            ), refreshInterval: shouldRefresh ? 5000 : 0
+        }
+    )
+    return {data, error, isLoading};
+}
+
+
 export function useFetchSkattekort(fnr: string): {
     data: Skattekort[] | undefined;
-    error:  BackendError | NoDataError | null;
+    error: Error;
     isLoading: boolean;
 } {
     const shouldFetch = fnr?.trim().length > 0;
-    const { data, error, isLoading } = useSWRImmutable<Skattekort[]>(
+    const {data, error, isLoading} = useSWRImmutable<Skattekort[]>(
         shouldFetch ? ["/hent-skattekort", fnr] : null,
         {
             ...swrConfig<Skattekort[], [string, string]>(
@@ -103,7 +211,7 @@ export function useFetchSkattekort(fnr: string): {
                         .post<
                             HentSkattekortRequest,
                             AxiosResponse<WrappedSkattekortResponseDTOWithError>
-                        >(_url, { fnr, hentAlle: true })
+                        >(_url, {fnr, hentAlle: true})
                         .then((response) => response.data)
                         .then((wrapped) => {
                             const error =
@@ -119,56 +227,56 @@ export function useFetchSkattekort(fnr: string): {
                 },
             ),
             onError: (error) => {
-                return { data: [], error, isValidating: false };
+                return {data: [], error, isValidating: false};
             },
             shouldRetryOnError: false,
         },
     );
-    return { data, error, isLoading };
+    return {data, error, isLoading};
 }
 
 export function useFetchAuditLogg(fnr: string): {
     data: AuditResponse | undefined;
-    error:  BackendError | NoDataError | null;
+    error: Error;
     isLoading: boolean;
 } {
     const shouldFetch = fnr?.trim().length > 0;
-    const { data, error, isLoading } = useSWRImmutable<AuditResponse>(
+    const {data, error, isLoading} = useSWRImmutable<AuditResponse>(
         shouldFetch ? ["/auditLogg", fnr] : null,
         {
             ...swrConfig<AuditResponse, [string, string]>(
                 async ([_url, fnr]: [string, string]) => {
                     return api(BASE_URI.SOKOS_SKATTEKORT_ADMIN_API)
                         .post<
-                            {fnr: string},
+                            { fnr: string },
                             AxiosResponse<AuditResponse>
-                        >(_url, { fnr, hentAlle: true })
+                        >(_url, {fnr, hentAlle: true})
                         .then((response: AxiosResponse<AuditResponse>) => response.data)
                         .then((wrapped: AuditResponse) => wrapped)
                 },
             ),
             onError: (error) => {
-                return { data: {}, error, isValidating: false };
+                return {data: {}, error, isValidating: false};
             },
             shouldRetryOnError: false,
         },
     );
-    return { data, error, isLoading };
+    return {data, error, isLoading};
 }
 
-export function useFetchBatcher(batchInsightRequest: BatchInsightRequest|null): {
+export function useFetchBatcher(batchInsightRequest: BatchInsightRequest | null): {
     data: BatchInsightResponse | undefined;
-    error:  BackendError | NoDataError | null;
+    error: Error;
     isLoading: boolean;
 } {
-    const { data, error, isLoading } = useSWR<BatchInsightResponse>(
+    const {data, error, isLoading} = useSWR<BatchInsightResponse>(
         batchInsightRequest ? ["/bestillingsbatcher", batchInsightRequest] : null,
         {
             ...swrConfig<BatchInsightResponse, [string, BatchInsightRequest]>(
                 async ([_url, request]: [string, BatchInsightRequest]) => {
                     return api(BASE_URI.SOKOS_SKATTEKORT_ADMIN_API)
                         .post<
-                            {datoFom: string, datoTom: string},
+                            { datoFom: string, datoTom: string },
                             AxiosResponse<BatchInsightResponse>
                         >(_url, request)
                         .then((response: AxiosResponse<BatchInsightResponse>) => response.data)
@@ -176,11 +284,11 @@ export function useFetchBatcher(batchInsightRequest: BatchInsightRequest|null): 
                 },
             ),
             onError: (error) => {
-                return { data: {}, error, isValidating: false };
+                return {data: {}, error, isValidating: false};
             },
             shouldRetryOnError: false,
         },
     );
-    return { data, error, isLoading };
+    return {data, error, isLoading};
 }
 
