@@ -116,7 +116,8 @@ export function useFetchBestillingsbatcher(shouldRefresh: boolean): {
                         })
                 },
             ),
-            refreshInterval: shouldRefresh ? 5000 : 0
+            refreshInterval: shouldRefresh ? 5000 : 0,
+            shouldRetryOnError: false,
         }
     )
     return {data, error, isLoading, mutate};
@@ -141,7 +142,8 @@ export function useFetchBestillinger(shouldRefresh: boolean): {
                         })
                 },
             ),
-            refreshInterval: shouldRefresh ? 5000 : 0
+            refreshInterval: shouldRefresh ? 5000 : 0,
+            shouldRetryOnError: false,
         }
     )
     return {data, error, isLoading};
@@ -165,7 +167,8 @@ export function useFetchUtsendinger(shouldRefresh: boolean = false): {
                             return wrapped
                         })
                 },
-            ), refreshInterval: shouldRefresh ? 5000 : 0
+            ), refreshInterval: shouldRefresh ? 5000 : 0,
+            shouldRetryOnError: false,
         }
     )
     return {data, error, isLoading};
@@ -189,7 +192,8 @@ export function useFetchNoekkelinformasjon(shouldRefresh: boolean = false): {
                             return wrapped;
                         })
                 },
-            ), refreshInterval: shouldRefresh ? 5000 : 0
+            ), refreshInterval: shouldRefresh ? 5000 : 0,
+            shouldRetryOnError: false,
         }
     )
     return {data, error, isLoading};

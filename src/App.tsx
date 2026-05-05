@@ -1,7 +1,7 @@
 import {useEffect} from "react";
 import Batchdetaljer from "./pages/Batchdetaljer";
 import {initGrafanaFaro} from "./util/grafanaFaro";
-import {Heading, Tabs} from "@navikt/ds-react";
+import {Tabs} from "@navikt/ds-react";
 import {ClockDashedIcon, HouseIcon, PersonIcon} from "@navikt/aksel-icons";
 import Person from "./pages/Person";
 import {Frontside} from "./pages/Frontside";
@@ -30,13 +30,12 @@ export default function App() {
             />
         </Tabs.List>
         <Tabs.Panel value="home">
-            <Frontside />
+            <Frontside/>
         </Tabs.Panel>
         <Tabs.Panel value="batcher">
             <Batchdetaljer/>
         </Tabs.Panel>
         <Tabs.Panel value="person">
-            <Heading size={"medium"} spacing>Personspesifikk informasjon</Heading>
             <Person/>
         </Tabs.Panel>
     </Tabs>

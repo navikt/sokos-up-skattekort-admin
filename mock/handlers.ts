@@ -56,18 +56,19 @@ export const handlers = [
     }),
     http.get("/sokos-skattekort/api/v1/admin/bestillingsbatcher", async () => {
         const nowStamp = now();
+        const terningkast = Math.round(Math.random() * 2) 
+        const saltaBatcher = terningkast === 0 ? batcherUtenJson.items : [{
+            id: 8128,
+            status: "NY",
+            type: "OPPDATERING",
+            bestillingsreferanse: `BR${refNr++}`,
+            oppdatert: nowStamp.toISOString(),
+            opprettet: nowStamp.toISOString()
+        }, ...batcherUtenJson.items]
         return HttpResponse.json(
             {
-                items: [...batcherUtenJson.items, {
-                    id: 8128,
-                    status: "NY",
-                    type: "OPPDATERING",
-                    bestillingsreferanse: `BR${refNr++}`,
-                    oppdatert: nowStamp.toISOString(),
-                    opprettet: nowStamp.toISOString()
-                }].filter(batch => !reranIds.includes(batch.id)),
+                items: saltaBatcher.filter(batch => !reranIds.includes(batch.id)),
             },
-
             {status: 200});
     }),
     http.get("/sokos-skattekort/api/v1/admin/bestillinger", async () => {

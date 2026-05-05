@@ -1,22 +1,42 @@
 import {zodResolver} from "@hookform/resolvers/zod";
 import {EraserIcon, MagnifyingGlassIcon} from "@navikt/aksel-icons";
-import {Box, Button, HelpText, HStack, TextField, VStack,} from "@navikt/ds-react";
+import {Box, Button, Checkbox, CheckboxGroup, DatePicker, HStack, ReadMore, TextField, VStack,} from "@navikt/ds-react";
 import {useForm} from "react-hook-form";
 import {type BatchInsightRequest, BatchInsightRequestSchema} from "../types/Bestillingsbatch";
 import {now} from "../util/dateUtils";
+import {useCallback} from "react";
+
+export type DateRange = {
+    from: Date | undefined;
+    to: Date | undefined;
+}
 
 export type SoekProps = {
     isLoading?: boolean;
     batchInsightRequest: BatchInsightRequest | null;
     handleBatchInsightRequest: (request: BatchInsightRequest) => void;
+    filters: string[];
+    setFilters: (filters: Array<string>) => void;
+    batchTyper: string[];
+    setBatchTyper: (batchTyper: string[]) => void;
+    handleOpenChange: (e: boolean) => void;
 };
 
-export default function SoekBatch({isLoading, handleBatchInsightRequest}: Readonly<SoekProps>) {
+export default function SoekBatch({
+                                      isLoading,
+                                      handleBatchInsightRequest,
+                                      batchTyper,
+                                      setBatchTyper,
+                                      filters,
+                                      setFilters,
+                                      handleOpenChange
+                                  }: Readonly<SoekProps>) {
     const {
         register,
         handleSubmit,
         reset,
         formState: {errors},
+        setValue,
     } = useForm<BatchInsightRequest>({
         resolver: zodResolver(BatchInsightRequestSchema),
         defaultValues: {tidspunktFom: new Date(now().getTime() - 60 * 60 * 1000 * 3).toISOString(), tidspunktTom: null},
@@ -28,28 +48,29 @@ export default function SoekBatch({isLoading, handleBatchInsightRequest}: Readon
 
     function onSubmit(data: BatchInsightRequest) {
         handleBatchInsightRequest({
-            tidspunktFom: data?.tidspunktFom ? new Date(data.tidspunktFom).toISOString() : null,
-            tidspunktTom: data?.tidspunktTom ? new Date(data.tidspunktTom).toISOString() : null
+            tidspunktFom: data?.tidspunktFom ? new Date(data.tidspunktFom.replace(",", ".")).toISOString() : null,
+            tidspunktTom: data?.tidspunktTom ? new Date(data.tidspunktTom.replace(",", ".")).toISOString() : null
         });
     }
 
+    const handlePickDate = useCallback((dateRange: DateRange) => {
+        setValue("tidspunktFom", dateRange?.from?.toISOString() ?? null);
+        setValue("tidspunktTom", dateRange?.to ? new Date(dateRange?.to?.getTime() + 1000 * 24 * 60 * 60 - 1).toISOString() : null);
+    }, [setValue])
+
     return (
         <Box padding="6" background={"surface-alt-1-subtle"} borderRadius="large">
-
             <form onSubmit={handleSubmit(onSubmit)}>
-                <VStack gap={"4"}>
-                    <HStack justify="space-between">
-                        <VStack>
-                            <TextField
-                                {...register("tidspunktFom")}
-                                size={"small"}
-                                htmlSize={30}
-                                maxLength={27}
-                                label="Dato FOM"
-                                error={errors.tidspunktFom?.message}
-                            />
-                        </VStack>
-                        <VStack>
+                <HStack justify={"space-between"} gap={"space-16"}>
+                    <VStack>
+                        <HStack gap={"space-8"}><TextField
+                            {...register("tidspunktFom")}
+                            size={"small"}
+                            htmlSize={30}
+                            maxLength={27}
+                            label="Dato FOM"
+                            error={errors.tidspunktFom?.message}
+                        />
                             <TextField
                                 {...register("tidspunktTom")}
                                 size={"small"}
@@ -57,65 +78,83 @@ export default function SoekBatch({isLoading, handleBatchInsightRequest}: Readon
                                 maxLength={27}
                                 label="Dato TOM"
                                 error={errors.tidspunktTom?.message}
-                            />
-                        </VStack>
-                        <HelpText placement="left" title="Om arbeidsflaten skattekort">
-                            Datoformat eksempler: 2026-01-01, 2026-01-01T01:01, 2026-01-01T01:01,
-                            2026-01-01T01:01:01.123456.
-                            Kan også ha stor Z til slutt for å spesifisere tidspunkt på samme tidssone som i databasen.
-                            Standardsøk er de 20 siste batchene pluss eventuelle batcher som ikke er i status FERDIG som
-                            ikke er blant de 20 siste.
-                            Man må oppgi en fra og med-dato.
-                        </HelpText>
-                    </HStack>
-                    <HStack gap="space-16" justify="end">
-                        <Button
-                            disabled={isLoading}
-                            variant="secondary"
-                            size={"small"}
-                            type="button"
-                            icon={<EraserIcon aria-hidden={"true"}/>}
-                            iconPosition={"right"}
-                            title={"Nytt søk"}
-                            onClick={() => {
-                                handleSoekReset();
-                            }}
+                            /></HStack> </VStack>
+
+                    <VStack minWidth={"420px"}>
+                        <ReadMore onOpenChange={handleOpenChange} header={"Datovelger"} size={"small"}>
+                            <DatePicker.Standalone mode={"range"} onSelect={(dateRange) =>
+                                dateRange ? handlePickDate({from: dateRange.from, to: dateRange.to}) : null}/>
+                        </ReadMore>
+                    </VStack>
+                    <VStack><HStack gap={"space-8"}><Box
+                        padding={"space-16"}
+                        borderWidth={"2"}
+                    >
+                        <CheckboxGroup legend="Vis" value={batchTyper} onChange={setBatchTyper}>
+                            <Checkbox value="OPPDATERING">Oppdatering</Checkbox>
+                            <Checkbox value="BESTILLING">Bestilling</Checkbox>
+                        </CheckboxGroup>
+                    </Box>
+                        <Box
+                            padding={"space-16"}
+                            borderWidth={"2"}
                         >
-                            Nytt søk
-                        </Button>
-                        <Button
-                            disabled={isLoading}
-                            size={"small"}
-                            variant={"primary"}
-                            type={"submit"}
-                            title={"Søk"}
-                            iconPosition={"right"}
-                            icon={<MagnifyingGlassIcon aria-hidden={"true"}/>}
-                        >
-                            Søk
-                        </Button>
-                    </HStack>
-                </VStack>
+                            <CheckboxGroup legend="Skjul" value={filters} onChange={setFilters}>
+                                <Checkbox value="Ingen endringer"
+                                          disabled={!batchTyper.includes("OPPDATERING") || filters.includes("FERDIG")}>
+                                    Oppdateringsbatcher uten endringer</Checkbox>
+                                <Checkbox value="FERDIG">Ferdige batcher</Checkbox>
+                            </CheckboxGroup>
+                        </Box></HStack></VStack>
+
+                    <VStack justify={"end"}>
+                        <HStack gap={"space-16"}>
+                            <Button
+                                disabled={isLoading}
+                                variant="secondary"
+                                size={"small"}
+                                type="button"
+                                icon={<EraserIcon aria-hidden={"true"}/>}
+                                iconPosition={"right"}
+                                title={"Nytt søk"}
+                                onClick={() => {
+                                    handleSoekReset();
+                                }}
+                            >
+                                Nytt søk
+                            </Button>
+                            <Button
+                                disabled={isLoading}
+                                size={"small"}
+                                variant={"primary"}
+                                type={"submit"}
+                                title={"Søk"}
+                                iconPosition={"right"}
+                                icon={<MagnifyingGlassIcon aria-hidden={"true"}/>}
+                            >
+                                Søk
+                            </Button>
+                            <Button
+                                disabled={isLoading}
+                                variant="primary"
+                                size={"small"}
+                                type="button"
+                                icon={<EraserIcon aria-hidden={"true"}/>}
+                                iconPosition={"right"}
+                                title={"Standardsøk"}
+                                onClick={() => {
+                                    handleBatchInsightRequest({
+                                        tidspunktFom: null,
+                                        tidspunktTom: null,
+                                    })
+                                }}
+                            >
+                                Standardsøk
+                            </Button>
+                        </HStack>
+                    </VStack>
+                </HStack>
             </form>
-            <HStack padding={"1"} justify={"end"}>
-                <Button
-                    disabled={isLoading}
-                    variant="primary"
-                    size={"small"}
-                    type="button"
-                    icon={<EraserIcon aria-hidden={"true"}/>}
-                    iconPosition={"right"}
-                    title={"Standardsøk"}
-                    onClick={() => {
-                        handleBatchInsightRequest({
-                            tidspunktFom: null,
-                            tidspunktTom: null,
-                        })
-                    }}
-                >
-                    Standardsøk
-                </Button>
-            </HStack>
         </Box>
     );
 }

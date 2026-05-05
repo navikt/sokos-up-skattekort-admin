@@ -33,13 +33,15 @@ export function Tidslinjer({batcher, handleScrollTo}: Readonly<TidslinjerProps>)
             if (oppdatert > latest) return oppdatert; else return latest;
         }, new Date("1970-01-01")
     )
-    
+
+    let bestillingerByDay = Object.entries(groupByDay(batcher.filter(it => it.type === "BESTILLING")));
+    let oppdateringerByDay = Object.entries(groupByDay(batcher.filter(it => it.type === "OPPDATERING")));
     return (<>
-        {earliestBatch && latestBatch && isMoreThan24HoursBetween(earliestBatch, latestBatch) &&
-        <Box marginInline="auto" maxWidth="800px">
+        {earliestBatch && latestBatch && isMoreThan24HoursBetween(earliestBatch, latestBatch) && (bestillingerByDay.length > 0 || oppdateringerByDay.length > 0) && 
+        <Box marginInline="auto" minWidth={"1024px"}>
             <Timeline startDate={earliestBatch} endDate={latestBatch}>
-                <Timeline.Row label={"Bestillinger"} icon={<PaperplaneIcon aria-hidden/>}>
-                    {Object.entries(groupByDay(batcher.filter(it => it.type === "BESTILLING")))
+                {bestillingerByDay.length > 0 && <Timeline.Row label={"Bestillinger"} icon={<PaperplaneIcon aria-hidden/>}>
+                    {bestillingerByDay
                         .map(([dato, bbs]) => (
                             <Timeline.Period
                                 key={bbs[0].id} start={new Date(dato)} end={new Date(dato)}
@@ -49,9 +51,9 @@ export function Tidslinjer({batcher, handleScrollTo}: Readonly<TidslinjerProps>)
                                 Bestilt fra Skatteetaten {toLocalDate(dato)}
                             </Timeline.Period>
                         ))}
-                </Timeline.Row>
-                <Timeline.Row label={"Oppdateringer"} icon={<ClockDashedIcon aria-hidden/>}>
-                    {Object.entries(groupByDay(batcher.filter(it => it.type === "OPPDATERING")))
+                </Timeline.Row>}
+                {oppdateringerByDay.length > 0 && <Timeline.Row label={"Oppdateringer"} icon={<ClockDashedIcon aria-hidden/>}>
+                    {oppdateringerByDay
                         .map(([dato, bbs]) => (
                             <Timeline.Period
                                 key={bbs[0].id} start={new Date(dato)} end={new Date(dato)}
@@ -61,7 +63,7 @@ export function Tidslinjer({batcher, handleScrollTo}: Readonly<TidslinjerProps>)
                                 Bestilt fra Skatteetaten {toLocalDate(dato)}
                             </Timeline.Period>
                         ))}
-                </Timeline.Row>
+                </Timeline.Row>}
             </Timeline>
         </Box>}
     </>)
