@@ -1,20 +1,33 @@
 import {zodResolver} from "@hookform/resolvers/zod";
 import {EraserIcon, MagnifyingGlassIcon} from "@navikt/aksel-icons";
-import {Box, Button, Checkbox, CheckboxGroup, DatePicker, HStack, ReadMore, TextField, VStack,} from "@navikt/ds-react";
+import {
+    BodyLong,
+    Box,
+    Button,
+    Checkbox,
+    CheckboxGroup,
+    DatePicker,
+    Dialog,
+    HStack,
+    ReadMore,
+    TextField,
+    VStack,
+} from "@navikt/ds-react";
 import {useForm} from "react-hook-form";
 import {type BatchInsightRequest, BatchInsightRequestSchema} from "../types/Bestillingsbatch";
-import {now} from "../util/dateUtils";
-import {useCallback} from "react";
+import {A_DAY, plus23H59m59s, timeBetweenIsoStrings} from "../util/dateUtils";
+import {useCallback, useEffect, useState} from "react";
 
 export type DateRange = {
     from: Date | undefined;
     to: Date | undefined;
+
 }
 
 export type SoekProps = {
     isLoading?: boolean;
     batchInsightRequest: BatchInsightRequest | null;
-    handleBatchInsightRequest: (request: BatchInsightRequest) => void;
+    setBatchInsightRequest: (insightRequest: BatchInsightRequest) => void;
     filters: string[];
     setFilters: (filters: Array<string>) => void;
     batchTyper: string[];
@@ -24,42 +37,104 @@ export type SoekProps = {
 
 export default function SoekBatch({
                                       isLoading,
-                                      handleBatchInsightRequest,
+                                      batchInsightRequest,
+                                      setBatchInsightRequest,
                                       batchTyper,
                                       setBatchTyper,
                                       filters,
                                       setFilters,
                                       handleOpenChange
                                   }: Readonly<SoekProps>) {
+    const [showLongRangeWarning, setShowLongRangeWarning] = useState(false);
+    const [pendingSubmit, setPendingSubmit] = useState<BatchInsightRequest | null>(null);
+    const defaultBatchInsightRequest = {
+        tidspunktFom: null,
+        tidspunktTom: null
+    }
     const {
         register,
         handleSubmit,
-        reset,
         formState: {errors},
         setValue,
+        reset,
     } = useForm<BatchInsightRequest>({
         resolver: zodResolver(BatchInsightRequestSchema),
-        defaultValues: {tidspunktFom: new Date(now().getTime() - 60 * 60 * 1000 * 3).toISOString(), tidspunktTom: null},
-    });
+        defaultValues: defaultBatchInsightRequest
+    })
 
     function handleSoekReset() {
-        reset()
+        setBatchInsightRequest(defaultBatchInsightRequest);
+        reset();
     }
 
-    function onSubmit(data: BatchInsightRequest) {
-        handleBatchInsightRequest({
-            tidspunktFom: data?.tidspunktFom ? new Date(data.tidspunktFom.replace(",", ".")).toISOString() : null,
-            tidspunktTom: data?.tidspunktTom ? new Date(data.tidspunktTom.replace(",", ".")).toISOString() : null
+    function executeSearch(data: BatchInsightRequest) {
+        setBatchInsightRequest({
+            tidspunktFom: data?.tidspunktFom ?
+                new Date(data.tidspunktFom.replace(",", ".")).toISOString() : null,
+            tidspunktTom: data?.tidspunktTom ?
+                new Date(data.tidspunktTom.replace(",", ".")).toISOString() : null
         });
+    }
+
+    function onSubmit(formData: BatchInsightRequest) {
+        if (!formData.tidspunktFom) {
+            throw new Error("TidspunktFom should have been enforced");
+        }
+
+        const diffMs = timeBetweenIsoStrings(formData.tidspunktFom, formData.tidspunktTom);
+
+        if (diffMs > 3 * A_DAY) {
+            setPendingSubmit(formData);
+            setShowLongRangeWarning(true);
+        }
+
+        executeSearch(formData);
+    }
+
+    function handleConfirmProceed() {
+        if (!pendingSubmit) return;
+        executeSearch(pendingSubmit); // "Jeg vet hva jeg gjør"
+        setShowLongRangeWarning(false);
+        setPendingSubmit(null);
+    }
+
+    function handleSetTomToThreeDaysAfterFom() {
+        if (!pendingSubmit?.tidspunktFom) return;
+
+        const fom = new Date(pendingSubmit.tidspunktFom.replace(",", "."));
+        const omTreDager = new Date(fom.getTime() + 3 * A_DAY);
+
+        const next: BatchInsightRequest = {
+            ...pendingSubmit,
+            tidspunktTom: omTreDager.toISOString(),
+        };
+
+        setValue("tidspunktTom", next.tidspunktTom); // oppdater feltet i skjema
+        executeSearch(next);
+
+        setShowLongRangeWarning(false);
+        setPendingSubmit(null);
+    }
+
+    function handleCancelSearch() {
+        setShowLongRangeWarning(false);
+        setPendingSubmit(null);
     }
 
     const handlePickDate = useCallback((dateRange: DateRange) => {
         setValue("tidspunktFom", dateRange?.from?.toISOString() ?? null);
-        setValue("tidspunktTom", dateRange?.to ? new Date(dateRange?.to?.getTime() + 1000 * 24 * 60 * 60 - 1).toISOString() : null);
+        setValue("tidspunktTom", dateRange?.to ? plus23H59m59s(dateRange.to).toISOString() : null);
     }, [setValue])
 
+    useEffect(() => {
+        if (batchInsightRequest != null) {
+            setValue("tidspunktFom", batchInsightRequest.tidspunktFom ?? null);
+            setValue("tidspunktTom", batchInsightRequest.tidspunktTom ?? null);
+        }
+    }, [batchInsightRequest, setValue]);
+
     return (
-        <Box padding="6" background={"surface-alt-1-subtle"} borderRadius="large">
+        <><Box padding="6" background={"surface-alt-1-subtle"} borderRadius="large">
             <form onSubmit={handleSubmit(onSubmit)}>
                 <HStack justify={"space-between"} gap={"space-16"}>
                     <VStack>
@@ -69,6 +144,7 @@ export default function SoekBatch({
                             htmlSize={30}
                             maxLength={27}
                             label="Dato FOM"
+                            defaultValue={batchInsightRequest?.tidspunktFom ?? ""}
                             error={errors.tidspunktFom?.message}
                         />
                             <TextField
@@ -77,6 +153,7 @@ export default function SoekBatch({
                                 htmlSize={30}
                                 maxLength={27}
                                 label="Dato TOM"
+                                defaultValue={batchInsightRequest?.tidspunktTom ?? ""}
                                 error={errors.tidspunktTom?.message}
                             /></HStack> </VStack>
 
@@ -117,9 +194,7 @@ export default function SoekBatch({
                                 icon={<EraserIcon aria-hidden={"true"}/>}
                                 iconPosition={"right"}
                                 title={"Nytt søk"}
-                                onClick={() => {
-                                    handleSoekReset();
-                                }}
+                                onClick={handleSoekReset}
                             >
                                 Nytt søk
                             </Button>
@@ -134,27 +209,30 @@ export default function SoekBatch({
                             >
                                 Søk
                             </Button>
-                            <Button
-                                disabled={isLoading}
-                                variant="primary"
-                                size={"small"}
-                                type="button"
-                                icon={<EraserIcon aria-hidden={"true"}/>}
-                                iconPosition={"right"}
-                                title={"Standardsøk"}
-                                onClick={() => {
-                                    handleBatchInsightRequest({
-                                        tidspunktFom: null,
-                                        tidspunktTom: null,
-                                    })
-                                }}
-                            >
-                                Standardsøk
-                            </Button>
                         </HStack>
                     </VStack>
                 </HStack>
             </form>
         </Box>
+
+            <Dialog open={showLongRangeWarning} onOpenChange={handleCancelSearch}>
+                <Dialog.Popup id={"long time interval"}>
+                    <Dialog.Header>
+                        <Dialog.Title>Lang tidsperiode</Dialog.Title>
+                        <Dialog.Description>Du har valgt en tidsperiode på mer enn 3 dager.</Dialog.Description>
+                    </Dialog.Header>
+                    <Dialog.Body>
+                        <BodyLong>Dette kan gi svært mye data.</BodyLong>
+                    </Dialog.Body>
+                    <Dialog.Footer>
+                        <Dialog.CloseTrigger>
+                            <Button variant="secondary">Avbryt</Button>
+                        </Dialog.CloseTrigger>
+                        <Button onClick={handleSetTomToThreeDaysAfterFom}>Gi meg bacher for 3 dager</Button>
+                        <Button variant={"danger"} onClick={handleConfirmProceed}>Jeg vet hva jeg gjør</Button>
+                    </Dialog.Footer>
+
+                </Dialog.Popup>
+            </Dialog></>
     );
 }

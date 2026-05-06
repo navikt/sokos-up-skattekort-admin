@@ -2,17 +2,21 @@ import {BodyShort, Box, Skeleton, Table, VStack} from "@navikt/ds-react";
 import {useFetchBatcher} from "../api/apiService";
 import type {BatchInsightRequest, Bestillingsbatch} from "../types/Bestillingsbatch";
 import {toLocalDate, toLocalTime} from "../util/dateUtils";
-import SoekBatch from "../components/SoekBatch";
+import SoekBatch, {type DateRange} from "../components/SoekBatch";
 import {useLayoutEffect, useMemo, useRef, useState} from "react";
 import JsonModal from "../components/JsonModal";
 import {Tidslinjer} from "../components/Tidslinjer";
 
 type BatchCellRefs = Record<string, HTMLTableCellElement | null>;
 
-export default function Batchdetaljer() {
+export type BatchdetaljerProps = {
+    dateRange: DateRange | null;
+}
+
+export default function Batchdetaljer({dateRange}: Readonly<BatchdetaljerProps>) {
     const [batchInsightRequest, setBatchInsightRequest] = useState<BatchInsightRequest | null>({
-        tidspunktFom: null,
-        tidspunktTom: null
+        tidspunktFom: dateRange?.from?.toISOString() ?? null,
+        tidspunktTom: dateRange?.to?.toISOString() ?? null,
     });
     const [currentCell, setCurrentCell] = useState<HTMLTableCellElement | null>(null)
     useLayoutEffect(() => {
@@ -56,12 +60,12 @@ export default function Batchdetaljer() {
         filteredBatches.length,
         soekBatchOpenState
     ]);
-    
+
     return (
         <>
             <div ref={soekBatchY}>
                 <SoekBatch isLoading={isLoading} batchInsightRequest={batchInsightRequest}
-                           handleBatchInsightRequest={setBatchInsightRequest}
+                           setBatchInsightRequest={setBatchInsightRequest}
                            filters={filters}
                            setFilters={setFilters}
                            batchTyper={batchTyper}

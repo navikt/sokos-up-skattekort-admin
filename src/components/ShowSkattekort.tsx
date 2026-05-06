@@ -9,11 +9,13 @@ import Skattekortdata from "./Skattekortdata";
 export type ShowSkattekortProps = {
 	data: Skattekort[] | undefined;
 	isLoading: boolean;
+    jumpToBatches: (date: Date) => void;
 };
 
 export default function ShowSkattekort({
 	data,
 	isLoading,
+    jumpToBatches
 }: Readonly<ShowSkattekortProps>) {
 	return (
 		<>
@@ -39,7 +41,7 @@ export default function ShowSkattekort({
 							</ExpansionCard.Title>
 						</ExpansionCard.Header>
 						<ExpansionCard.Content>
-							<Skattekortdata skattekort={skattekort} />
+							<Skattekortdata skattekort={skattekort} jumpToBatches={jumpToBatches}/>
 						</ExpansionCard.Content>
 					</ExpansionCard>
 				</VStack>

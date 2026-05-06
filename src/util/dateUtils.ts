@@ -44,5 +44,29 @@ export function nowDate() {
     return new Date().toISOString().slice(0, 10)
 }
 
+export function plus23H59m59s(date: Date):Date {
+    return new Date(date.getTime() + 1000 * 24 * 60 * 60 - 1)
+}
+
 export const isMoreThan24HoursBetween = (from: Date, to: Date) =>
     to.getTime() - from.getTime() > 24 * 60 * 60 * 1000;
+
+export function addHours(date: Date, hours: number): Date {
+    return new Date(date.getTime() + hours * 60 * 60 * 1000);
+}
+
+export function addSeconds(date: Date, seconds: number): Date {
+    return new Date(date.getTime() + seconds * 1000)
+}
+
+export function timeBetweenIsoStrings(dateA: string, dateB: string | null) {
+    const fom = new Date(dateA.replace(",", "."));
+    const tom = dateB ? new Date(dateB.replace(",", ".")) : now();
+    return tom.getTime() - fom.getTime()
+}
+
+export const A_DAY =  1000 * 60 * 60 * 24;
+
+export function toIsoOrNull(value: string | null | undefined) {
+    return value ? new Date(value.replace(",", ".")).toISOString() : null;
+}

@@ -8,7 +8,7 @@ import batcherUtenJson from "./batcherUtenJson.json"
 import bestillinger from "./bestillinger.json"
 import utsendinger from "./utsendinger.json"
 import noekkelinformasjon from "./noekkelinformasjon.json"
-import {now} from "../src/util/dateUtils";
+import {addSeconds, now} from "../src/util/dateUtils";
 
 let refNr = 9000
 let skattekortnstuff: number = refNr*(Math.round(Math.random()*100))
@@ -42,11 +42,11 @@ export const handlers = [
     }),
     http.post("/sokos-skattekort/api/v1/skattekort/status", async () => {
         const status = !skattekortBestilt ? "IKKE_FORESPURT"
-            : Date.now() < skattekortBestilt?.getTime() + 5 * 1000             ? "IKKE_BESTILT"
-            : Date.now() < skattekortBestilt?.getTime() + 10 * 1000            ? "BESTILT"
-            : Date.now() < skattekortBestilt?.getTime() + 15 * 1000            ? "VENTER_PAA_UTSENDING"
+            : now() < addSeconds(skattekortBestilt, 5)                ? "IKKE_BESTILT"
+            : now() < addSeconds(skattekortBestilt, 10)               ? "BESTILT"
+            : now() < addSeconds(skattekortBestilt, 15)               ? "VENTER_PAA_UTSENDING"
             : /* Og hvis det er mer enn 15s siden man trykket:                */ "SENDT_FORSYSTEM";
-        return HttpResponse.json({data: status}, {status: 200});
+        return HttpResponse.json({status}, {status: 404});
     }),
     http.post("/sokos-skattekort/api/v1/admin/auditlogg", async () => {
         return HttpResponse.json(auditLogg, {status: 200});

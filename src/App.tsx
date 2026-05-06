@@ -1,17 +1,35 @@
-import {useEffect} from "react";
 import Batchdetaljer from "./pages/Batchdetaljer";
 import {initGrafanaFaro} from "./util/grafanaFaro";
 import {Tabs} from "@navikt/ds-react";
 import {ClockDashedIcon, HouseIcon, PersonIcon} from "@navikt/aksel-icons";
 import Person from "./pages/Person";
 import {Frontside} from "./pages/Frontside";
+import {useEffect, useState} from "react";
+import type {DateRange} from "./components/SoekBatch";
 
 export default function App() {
     useEffect(() => {
         initGrafanaFaro();
     }, []);
+    const [activeTab, setActiveTab] = useState<string>("home");
+    const [activeFnr, setActiveFnr] = useState<string| null>(null);
+    const [activeDateRange, setActiveDateRange] = useState<DateRange | null>(null);
+    function handleVisPerson(fnr: string) {
+        setActiveFnr(fnr);
+        setActiveTab("person");
+    }
+    
+    function handleShowBatchesAround(date: Date) {
+        setActiveDateRange({from: new Date(date.getTime() - 1000 * 60 * 60), to: new Date(date.getTime() + 1000 * 60 * 60)} );
+        setActiveTab("batcher");
+    }
 
-    return <Tabs defaultValue="home">
+    function handleShowBatchesAt(date: Date) {
+        setActiveDateRange({from: date, to: date});
+        setActiveTab("batcher");
+    }
+
+    return <Tabs value={activeTab} onChange={setActiveTab}>
         <Tabs.List>
             <Tabs.Tab
                 value="home"
@@ -30,13 +48,13 @@ export default function App() {
             />
         </Tabs.List>
         <Tabs.Panel value="home">
-            <Frontside/>
+            <Frontside handleVisPerson={handleVisPerson} handleShowBatchesAround={handleShowBatchesAround} />
         </Tabs.Panel>
         <Tabs.Panel value="batcher">
-            <Batchdetaljer/>
+            <Batchdetaljer dateRange={activeDateRange}/>
         </Tabs.Panel>
         <Tabs.Panel value="person">
-            <Person/>
+            <Person fnr={activeFnr} handleShowBatchesAt={handleShowBatchesAt}/>
         </Tabs.Panel>
     </Tabs>
 }

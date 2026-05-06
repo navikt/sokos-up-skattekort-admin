@@ -32,17 +32,17 @@ export default function BestilleSkattekortButton(
 	const { data, error, isLoading } = useFetchSkattekortStatus(request, shouldRefreshStatus);
 
 	useEffect(() => {
-		if (data?.data) {
-			props.setSkattekortstatus(data.data);
+		if (data) {
+			props.setSkattekortstatus(data);
 			if (
 				["IKKE_BESTILT", "BESTILT", "VENTER_PAA_UTSENDING"].includes(
-					data.data,
+					data,
 				)
 			) {
 				// Det er først når data kommer tilbake fra kallet at vi evt rerendrer basert på shouldRefreshStatus
 				// Derfor er det trygt å sette state her uten at vi risikerer en uendelig loop
 				setShouldRefreshStatus(true);
-			} else if (["UGYLDIG_FNR", "SENDT_FORSYSTEM"].includes(data.data)) {
+			} else if (["UGYLDIG_FNR", "SENDT_FORSYSTEM"].includes(data)) {
 				setShouldRefreshStatus(false);
 			}
             return
@@ -78,10 +78,10 @@ export default function BestilleSkattekortButton(
 					onClick={handleClick}
 					loading={shouldRefreshStatus}
 					disabled={
-						!data?.data ||
+						!data ||
 						!!props.error ||
 						["API_ERROR", "UGYLDIG_FNR", "SENDT_FORSYSTEM"].includes(
-							data.data ?? "",
+							data ?? "",
 						) ||
 						shouldRefreshStatus
 					}

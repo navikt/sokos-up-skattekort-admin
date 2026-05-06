@@ -9,10 +9,16 @@ import Soek from "../components/Soek";
 import LabelText from "../components/LabelText";
 import BestilleSkattekortButton from "../components/BestilleSkattekortButton";
 
-export default function Person() {
+export type PersonProps = {
+    fnr: string|null;
+    handleShowBatchesAt: (date: Date) => void;
+}
+
+export default function Person(props: Readonly<PersonProps>) {
     const [isSubmit, setIsSubmit] = useState<boolean>(false);
-    const [fnr, setFnr] = useState<string>("");
+    const [fnr, setFnr] = useState<string|null>(props.fnr);
     const [skattekortstatus, setSkattekortstatus] = useState<string>("UKJENT");
+    
     const {data, error, isLoading} = useFetchSkattekort(fnr);
     const [alertMessage, setAlertMessage] = useState<{
         message: string;
@@ -23,9 +29,11 @@ export default function Person() {
             <Box margin={"space-24"}>
                 <Heading spacing level="3" size="medium">Personinformasjon</Heading>
                 <Soek
+                    fnr={fnr}
                     setFnr={setFnr}
                     setIsSubmit={setIsSubmit}
                     isLoading={isLoading}
+                    nullstillStatus={() => setSkattekortstatus("UKJENT")}
                 />
                 <Errorhandler heading={"Feil ved henting av person:"} error={error}/>
                 {!!alertMessage && (
@@ -38,14 +46,14 @@ export default function Person() {
                     </AlertWithCloseButton>
                 )}
                     <VStack padding="space-8">
-                            <Box
+                        {fnr && <Box
                                 background={"surface-default"}
                                 padding="space-16"
                                 paddingInline="space-32"
                                 borderRadius="large"
                             >
                                 <Box>
-                                    {skattekortstatus && (<LabelText
+                                    {skattekortstatus && fnr && (<LabelText
                                         label={"Skattekort status"}
                                         text={skattekortstatus}
                                     />
@@ -58,10 +66,11 @@ export default function Person() {
                                     setAlertMessage={setAlertMessage}
                                 />
                             </Box>
+                        }
                     </VStack>
-                <ShowSkattekort data={data} isLoading={isLoading}/>
+                <ShowSkattekort data={data} isLoading={isLoading} jumpToBatches={props.handleShowBatchesAt}/>
             </Box>
-            <ShowAuditLogg fnr={fnr}/>
+            {fnr && <ShowAuditLogg fnr={fnr} jumpToBatches={props.handleShowBatchesAt}/>}
         </HGrid>
     );
 }
