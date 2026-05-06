@@ -10,13 +10,14 @@ import {
 } from "../api/apiService";
 import {useState} from "react";
 import AlertWithCloseButton from "../components/AlertWithCloseButton";
+import {toLocalDateTime} from "../util/dateUtils";
 
 export type FrontsideProps = {
     handleVisPerson: (fnr: string) => void;
     handleShowBatchesAround: (date: Date) => void;
 }
 
-export function Frontside({ handleVisPerson, handleShowBatchesAround }: Readonly<FrontsideProps>) {
+export function Frontside({handleVisPerson, handleShowBatchesAround}: Readonly<FrontsideProps>) {
     const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
 
     const {
@@ -70,7 +71,7 @@ export function Frontside({ handleVisPerson, handleShowBatchesAround }: Readonly
             return error.message;
         }
     }
-    
+
     return (
         <VStack gap={"space-24"} padding={"space-24"}>
             <Heading size={"large"} spacing>Informasjon om Sokos-skattekort</Heading>
@@ -146,8 +147,8 @@ export function Frontside({ handleVisPerson, handleShowBatchesAround }: Readonly
                                     <Table.DataCell>{item.bestillingsreferanse}</Table.DataCell>
                                     <Table.DataCell>{item.status}</Table.DataCell>
                                     <Table.DataCell>{item.type}</Table.DataCell>
-                                    <Table.DataCell>{item.opprettet}</Table.DataCell>
-                                    <Table.DataCell>{item.oppdatert}</Table.DataCell>
+                                    <Table.DataCell>{toLocalDateTime(item.opprettet)}</Table.DataCell>
+                                    <Table.DataCell>{toLocalDateTime(item.oppdatert)}</Table.DataCell>
                                     <Table.DataCell>
                                         {item.status === "FEILET" &&
                                             <Button variant="tertiary" disabled={!item.id}
@@ -192,10 +193,11 @@ export function Frontside({ handleVisPerson, handleShowBatchesAround }: Readonly
                             {utsendingerData.items.map((item) => (
                                 <Table.Row key={item.id}>
                                     <Table.DataCell>{item.id}</Table.DataCell>
-                                    <Table.DataCell><Button variant={"tertiary"} onClick={() => handleVisPerson(item.fnr)}>{item.fnr}</Button></Table.DataCell>
+                                    <Table.DataCell><Button variant={"tertiary"}
+                                                            onClick={() => handleVisPerson(item.fnr)}>{item.fnr}</Button></Table.DataCell>
                                     <Table.DataCell>{item.forsystem}</Table.DataCell>
                                     <Table.DataCell>{item.inntektsaar}</Table.DataCell>
-                                    <Table.DataCell>{item.opprettet}</Table.DataCell>
+                                    <Table.DataCell>{toLocalDateTime(item.opprettet)}</Table.DataCell>
                                     <Table.DataCell>{item.failCount}</Table.DataCell>
                                 </Table.Row>))
                             }
@@ -236,10 +238,12 @@ export function Frontside({ handleVisPerson, handleShowBatchesAround }: Readonly
                                     <Table.Row key={item.id}>
                                         <Table.DataCell>{item.id}</Table.DataCell>
                                         <Table.DataCell>{item.personId}</Table.DataCell>
-                                        <Table.DataCell><Button variant={"tertiary"} onClick={() => handleVisPerson(item.fnr)}>{item.fnr}</Button></Table.DataCell>
+                                        <Table.DataCell><Button variant={"tertiary"}
+                                                                onClick={() => handleVisPerson(item.fnr)}>{item.fnr}</Button></Table.DataCell>
                                         <Table.DataCell>{item.inntektsaar}</Table.DataCell>
                                         <Table.DataCell>{item.bestillingsbatchId}</Table.DataCell>
-                                        <Table.DataCell><Button variant={"tertiary"} onClick={() => handleShowBatchesAround(new Date(item.oppdatert))}>{item.oppdatert}</Button></Table.DataCell>
+                                        <Table.DataCell><Button variant={"tertiary"}
+                                                                onClick={() => handleShowBatchesAround(new Date(item.oppdatert))}>{toLocalDateTime(item.oppdatert)}</Button></Table.DataCell>
                                     </Table.Row>
                                 ))}
                             </Table.Body>

@@ -15,7 +15,7 @@ import {
 } from "@navikt/ds-react";
 import {useForm} from "react-hook-form";
 import {type BatchInsightRequest, BatchInsightRequestSchema} from "../types/Bestillingsbatch";
-import {A_DAY, plus23H59m59s, timeBetweenIsoStrings} from "../util/dateUtils";
+import {A_DAY, plus23H59m59s, timeBetweenIsoStrings, toZulu} from "../util/dateUtils";
 import {useCallback, useEffect, useState} from "react";
 
 export type DateRange = {
@@ -144,6 +144,10 @@ export default function SoekBatch({
                             htmlSize={30}
                             maxLength={27}
                             label="Dato FOM"
+                            onPaste={(event: React.ClipboardEvent<HTMLInputElement>) => {
+                                event.preventDefault();
+                                setValue("tidspunktFom", toZulu(event.clipboardData.getData("text/plain")));
+                            }}
                             defaultValue={batchInsightRequest?.tidspunktFom ?? ""}
                             error={errors.tidspunktFom?.message}
                         />
@@ -153,6 +157,10 @@ export default function SoekBatch({
                                 htmlSize={30}
                                 maxLength={27}
                                 label="Dato TOM"
+                                onPaste={(event: React.ClipboardEvent<HTMLInputElement>) => {
+                                    event.preventDefault();
+                                    setValue("tidspunktTom", toZulu(event.clipboardData.getData("text/plain")));
+                                }}
                                 defaultValue={batchInsightRequest?.tidspunktTom ?? ""}
                                 error={errors.tidspunktTom?.message}
                             /></HStack> </VStack>
@@ -222,13 +230,14 @@ export default function SoekBatch({
                         <Dialog.Description>Du har valgt en tidsperiode på mer enn 3 dager.</Dialog.Description>
                     </Dialog.Header>
                     <Dialog.Body>
-                        <BodyLong>Dette kan gi svært mye data.</BodyLong>
+                        <BodyLong>Dette kan gi svært mye data. Bruk knappen "3 dager" for å sette
+                            til-og-med-dato til 3 dager etter fra-og-med-dato.</BodyLong>
                     </Dialog.Body>
                     <Dialog.Footer>
                         <Dialog.CloseTrigger>
                             <Button variant="secondary">Avbryt</Button>
                         </Dialog.CloseTrigger>
-                        <Button onClick={handleSetTomToThreeDaysAfterFom}>Gi meg bacher for 3 dager</Button>
+                        <Button onClick={handleSetTomToThreeDaysAfterFom}>3 dager</Button>
                         <Button variant={"danger"} onClick={handleConfirmProceed}>Jeg vet hva jeg gjør</Button>
                     </Dialog.Footer>
 

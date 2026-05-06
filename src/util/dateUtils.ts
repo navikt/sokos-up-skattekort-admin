@@ -5,16 +5,27 @@ export function toLocalDate(zulu: string) {
         day: "2-digit",
     }).format(new Date(zulu));
 }
+let NORSK_FORMAT = Intl.DateTimeFormat("no-NO", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    fractionalSecondDigits: 3,
+    hourCycle: "h23",
+});
 
 export function toLocalTime(zulu: string) {
-    return Intl.DateTimeFormat("no-NO", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        fractionalSecondDigits: 3,
-        hourCycle: "h23",
-    }).format(new Date(zulu));
+    return NORSK_FORMAT.format(new Date(zulu));
 }
+export function toZulu(t: string){
+    if (/\d{2}\.\d{2}\.\d{4}[\sT]\d{2}:\d{2}:\d{2}[,.]?\d*/.test(t)) {
+        return new Date(
+            `${t.substring(6, 10)}-${t.substring(3, 5)}-${t.substring(0, 2)}`
+                +`T${t.substring(11).replace(",", ".")}`)
+            .toISOString()
+    }
+    return null;
+}
+
 
 export function toLocalDateTime(zulu: string|null) {
     return zulu ? toLocalDate(zulu) + " " + toLocalTime(zulu) : null;
