@@ -3,11 +3,12 @@ import {useState} from "react";
 import {useFetchSkattekort} from "../api/apiService";
 import AlertWithCloseButton from "../components/AlertWithCloseButton";
 import Errorhandler from "../components/Errorhandler";
-import ShowAuditLogg from "../components/ShowAuditLogg";
+import ShowAuditLoggAlt2 from "../components/ShowAuditLoggAlt2";
 import ShowSkattekort from "../components/ShowSkattekort";
 import Soek from "../components/Soek";
 import LabelText from "../components/LabelText";
 import BestilleSkattekortButton from "../components/BestilleSkattekortButton";
+import ShowAuditLogg from "../components/ShowAuditLogg";
 
 export type PersonProps = {
     fnr: string|null;

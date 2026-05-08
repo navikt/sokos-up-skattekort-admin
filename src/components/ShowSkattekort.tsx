@@ -1,10 +1,6 @@
-import { ExpansionCard, Skeleton, VStack } from "@navikt/ds-react";
-import {
-	type Skattekort,
-	skattekortTittel,
-} from "../types/SkattekortResponseDTOSchema";
-import { toLocalDate } from "../util/dateUtils";
-import Skattekortdata from "./Skattekortdata";
+import {Skeleton, VStack} from "@navikt/ds-react";
+import type {Skattekort} from "../types/SkattekortResponseDTOSchema";
+import VisSkattekort from "./VisSkattekort";
 
 export type ShowSkattekortProps = {
 	data: Skattekort[] | undefined;
@@ -32,18 +28,7 @@ export default function ShowSkattekort({
 					key={`${skattekort.opprettet}${skattekort.id}`}
 					padding="space-8"
 				>
-					<ExpansionCard defaultOpen={index === 0} aria-label="Skattekort">
-						<ExpansionCard.Header>
-							<ExpansionCard.Title as="h4" size="small">
-								{skattekortTittel(skattekort)} {skattekort.inntektsaar}.{" "}
-								{(skattekort.utstedtDato ?? "") !== "" &&
-									`Utstedt ${toLocalDate(skattekort.utstedtDato ?? "")}`}
-							</ExpansionCard.Title>
-						</ExpansionCard.Header>
-						<ExpansionCard.Content>
-							<Skattekortdata skattekort={skattekort} jumpToBatches={jumpToBatches}/>
-						</ExpansionCard.Content>
-					</ExpansionCard>
+					<VisSkattekort skattekort={skattekort} jumpToBatches={jumpToBatches} open={index === 0} />
 				</VStack>
 			))}
 		</>
