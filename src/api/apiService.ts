@@ -233,7 +233,7 @@ export function useFetchSkattekort(fnr: string|null): {
     return {data, error, isLoading};
 }
 
-export function useFetchAuditLogg(fnr: string): {
+export function useFetchAuditLogg(fnr: string, shouldRefresh: boolean): {
     data: AuditResponse | undefined;
     error: Error;
     isLoading: boolean;
@@ -257,6 +257,7 @@ export function useFetchAuditLogg(fnr: string): {
                 return {data: {}, error, isValidating: false};
             },
             shouldRetryOnError: false,
+            refreshInterval: shouldRefresh ? 5000 : 0,
         },
     );
     return {data, error, isLoading};

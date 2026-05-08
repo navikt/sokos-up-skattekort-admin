@@ -6,7 +6,7 @@ import {useForm} from "react-hook-form";
 import {UtsendingRequest, UtsendingRequestSchema} from "../types/UtsendingRequest";
 
 export type SoekFlereFnrProps = {
-    // fnr: string[] |null;
+    fnr: string[] |null;
     // setIsSubmit: (isSubmit: boolean) => void;
     // setFnr: (fnr: string[]) => void;
     // isLoading?: boolean;

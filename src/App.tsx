@@ -2,12 +2,10 @@ import Batchdetaljer from "./pages/Batchdetaljer";
 import {initGrafanaFaro} from "./util/grafanaFaro";
 import {Tabs} from "@navikt/ds-react";
 import {ClockDashedIcon, HouseIcon, PersonGroupIcon, PersonIcon} from "@navikt/aksel-icons";
-import PersonAlt2 from "./pages/PersonAlt2";
+import Person from "./pages/Person";
 import {Frontside} from "./pages/Frontside";
 import {useEffect, useState} from "react";
 import type {DateRange} from "./components/SoekBatch";
-import Personer from "./pages/Personer";
-import Person from "./pages/Person";
 
 export default function App() {
     useEffect(() => {
@@ -48,16 +46,11 @@ export default function App() {
                 label="Person"
                 icon={<PersonIcon aria-hidden/>}
             />
-            <Tabs.Tab
-                value="personAlt2"
-                label="Person Alt 2"
-                icon={<PersonIcon aria-hidden/>}
-            />
-            <Tabs.Tab
-                value="personer"
-                label="Flere personer"
-                icon={<PersonGroupIcon title="a11y-title" fontSize="1.5rem" />}
-            />
+            {/*<Tabs.Tab*/}
+            {/*    value="personer"*/}
+            {/*    label="Flere personer"*/}
+            {/*    icon={<PersonGroupIcon title="a11y-title" fontSize="1.5rem" />}*/}
+            {/*/>*/}
         </Tabs.List>
         <Tabs.Panel value="home">
             <Frontside handleVisPerson={handleVisPerson} handleShowBatchesAround={handleShowBatchesAround} />
@@ -65,14 +58,11 @@ export default function App() {
         <Tabs.Panel value="batcher">
             <Batchdetaljer dateRange={activeDateRange}/>
         </Tabs.Panel>
-        <Tabs.Panel value="personAlt2">
-            <PersonAlt2 fnr={activeFnr} handleShowBatchesAt={handleShowBatchesAt}/>
-        </Tabs.Panel>
         <Tabs.Panel value="person">
             <Person fnr={activeFnr} handleShowBatchesAt={handleShowBatchesAt}/>
         </Tabs.Panel>
-        <Tabs.Panel value="personer">
-            <Personer />
-        </Tabs.Panel>
+        {/*<Tabs.Panel value="personer">*/}
+        {/*    <Personer />*/}
+        {/*</Tabs.Panel>*/}
     </Tabs>
 }
