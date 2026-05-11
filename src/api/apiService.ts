@@ -20,6 +20,7 @@ import {type BestillingerResponse, BestillingerResponseSchema} from "../types/Be
 import {type UtsendingerResponse, UtsendingerResponseSchema} from "../types/Utsending";
 import {type NoekkelinformasjonResponse, NoekkelinformasjonResponseSchema} from "../types/Noekkelinformasjon";
 import {type SkattekortStatusResponse, SkattekortStatusResponseSchema} from "../types/SkattekortStatusResponse";
+import {FileObject} from "@navikt/ds-react";
 
 export type OtherErrors = AxiosError | ZodError<unknown> | BackendError;
 export type AllErrors = OtherErrors | NoDataError;
@@ -60,6 +61,22 @@ export async function rerunBestillingsbatch(id: number) {
     })
 }
 
+export async function postForesoerselfil(file: FileObject, forsystem: "OS" | "DARE_POC", year: number):Promise<{data: string, error:BackendError|null}> {
+    return await axiosPostFetcher(
+        BASE_URI.SOKOS_SKATTEKORT_API,
+        `/skattekort/bestille/${forsystem}/${year}`
+    )
+        .catch(error => {
+            if (error.response?.data?.message) {
+                return {data:"", error:new BackendError(error.response.data.message)};
+            }
+            throw error;
+        })
+        .then(() => {
+            return {data:"Success", error:null};
+        })
+}
+
 export function useFetchSkattekortStatus(
     request: ForespoerselRequest | null,
     shouldRefresh: boolean
@@ -83,7 +100,7 @@ export function useFetchSkattekortStatus(
                 },
             ),
             onError: (error) => {
-                return {data:"API_ERROR", error, isLoading: false};
+                return {data: "API_ERROR", error, isLoading: false};
             },
             refreshInterval: shouldRefresh ? 1000 : 0,
         });
@@ -194,7 +211,7 @@ export function useFetchNoekkelinformasjon(shouldRefresh: boolean = false): {
 }
 
 
-export function useFetchSkattekort(fnr: string|null): {
+export function useFetchSkattekort(fnr: string | null): {
     data: Skattekort[] | undefined;
     error: Error;
     isLoading: boolean;
@@ -290,4 +307,3 @@ export function useFetchBatcher(batchInsightRequest: BatchInsightRequest | null)
     );
     return {data, error, isLoading};
 }
-
