@@ -61,7 +61,8 @@ export async function rerunBestillingsbatch(id: number) {
     })
 }
 
-export async function postForesoerselfil(file: FileObject, forsystem: "OS" | "DARE_POC", year: number):Promise<{data: string, error:BackendError|null}> {
+export async function postForesoerselfil(file: FileObject |null, forsystem: "OS" | "DARE_POC", year: number):Promise<{data: string, error:BackendError|null}> {
+    if(!file) {return {data:"", error: new BackendError("Ingen fil valgt")};}
     const formData = new FormData();
     formData.append("file", file.file);
     formData.append("forsystem", forsystem);

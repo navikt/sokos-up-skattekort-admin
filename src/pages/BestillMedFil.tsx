@@ -10,6 +10,7 @@ export default function BestillMedFil() {
     const [files, setFiles] = useState<FileObject[]>([])
     const [fileStatus, setFileStatus] = useState<string>(INGEN_FIL)
     const [fileContent, setFileContent] = useState<string | null>(null)
+    const [alert, setAlert] = useState<string | null>(null)
 
     const file = files.length > 0 ? files[0] : null;
 
@@ -44,6 +45,14 @@ export default function BestillMedFil() {
         setFileStatus(INGEN_FIL)            
         setFileContent(null)
     }
+    
+    async function handlePostFile(file: FileObject | null) {
+        const {data, error} = await postForesoerselfil(file, "OS", 2026)
+            .then(response => ({data:"Success", error:null}))
+            .catch(error => ({data:null, error}))
+        if (error) setError(error instanceof Error ? error : new Error("Ukjent feil ved opplasting av fil"))
+        else setAlert("Fil lastet opp og bestilling sendt!")
+    }
 
     return (
         <Box margin={"space-24"}>
@@ -75,7 +84,7 @@ export default function BestillMedFil() {
                 </Box>
             </Box>
             {error && <Errorhandler heading={"Feil fra backend"} error={error}/>}
-            {file && <Button disabled={!file} onClick={() => postForesoerselfil(file, "OS", 2026)}>Bestill</Button>}
+            {file && <Button disabled={!file} onClick={() => handlePostFile(file)}>Bestill</Button>}
         </Box>
     )
 }
