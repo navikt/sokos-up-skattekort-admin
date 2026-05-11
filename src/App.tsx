@@ -1,7 +1,7 @@
 import Batchdetaljer from "./pages/Batchdetaljer";
 import {initGrafanaFaro} from "./util/grafanaFaro";
 import {Tabs} from "@navikt/ds-react";
-import {ClockDashedIcon, FileIcon, HouseIcon, PersonGroupIcon, PersonIcon} from "@navikt/aksel-icons";
+import {ClockDashedIcon, FileIcon, HouseIcon, PersonIcon} from "@navikt/aksel-icons";
 import Person from "./pages/Person";
 import {Frontside} from "./pages/Frontside";
 import {useEffect, useState} from "react";
@@ -68,7 +68,7 @@ export default function App() {
             <Person fnr={activeFnr} handleShowBatchesAt={handleShowBatchesAt}/>
         </Tabs.Panel>
         {/*<Tabs.Panel value="personer">*/}
-        {/*    <Personer />*/}
+        {/*    <Personer fnr={[]} handleShowBatchesAt={() => {return null}} />*/}
         {/*</Tabs.Panel>*/}
         <Tabs.Panel value="bolk">
             <BestillMedFil />

@@ -1,6 +1,7 @@
-import {BodyLong, BodyShort, Box, FileObject, FileUpload, Heading, Label} from "@navikt/ds-react";
+import {BodyLong, BodyShort, Box, Button, FileObject, FileUpload, Heading, Label} from "@navikt/ds-react";
 import Errorhandler from "../components/Errorhandler";
 import {useState} from "react";
+import {postForesoerselfil} from "../api/apiService";
 
 const INGEN_FIL = "Ingen fil"
 
@@ -13,7 +14,7 @@ export default function BestillMedFil() {
     const file = files.length > 0 ? files[0] : null;
 
     async function parseFile(file: FileObject | null) {
-        handleDelete();
+        handleReset();
         if (file?.file) {
             const blob = new Blob([file.file], {type: "text/plain"});
             const text = await blob.text();
@@ -38,7 +39,7 @@ export default function BestillMedFil() {
         if (parsedOK) setFiles(files);
     }
 
-    function handleDelete() {
+    function handleReset() {
         setFiles([])
         setFileStatus(INGEN_FIL)            
         setFileContent(null)
@@ -61,7 +62,7 @@ export default function BestillMedFil() {
                         file={file.file}
                         button={{
                             action: "delete",
-                            onClick: () => handleDelete(),
+                            onClick: () => handleReset(),
                         }}
                     />}
                 <Box overflow={"hidden"} background={"surface-default"} padding={"space-16"} marginBlock={"space-16 0"} borderRadius="medium">
@@ -74,6 +75,7 @@ export default function BestillMedFil() {
                 </Box>
             </Box>
             {error && <Errorhandler heading={"Feil fra backend"} error={error}/>}
+            {file && <Button disabled={!file} onClick={() => postForesoerselfil(file, "OS", 2026)}>Bestill</Button>}
         </Box>
     )
 }

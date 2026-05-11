@@ -62,10 +62,15 @@ export async function rerunBestillingsbatch(id: number) {
 }
 
 export async function postForesoerselfil(file: FileObject, forsystem: "OS" | "DARE_POC", year: number):Promise<{data: string, error:BackendError|null}> {
-    return await axiosPostFetcher(
-        BASE_URI.SOKOS_SKATTEKORT_API,
-        `/skattekort/bestille/${forsystem}/${year}`
-    )
+    const formData = new FormData();
+    formData.append("file", file.file);
+    formData.append("forsystem", forsystem);
+    formData.append("year", year.toString());
+    
+    return api(BASE_URI.SOKOS_SKATTEKORT_API)
+        .post(`/skattekort/bestille/${forsystem}/${year}`, formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        })
         .catch(error => {
             if (error.response?.data?.message) {
                 return {data:"", error:new BackendError(error.response.data.message)};
