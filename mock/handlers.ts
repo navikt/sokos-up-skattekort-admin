@@ -46,10 +46,15 @@ export const handlers = [
             : now() < addSeconds(skattekortBestilt, 10)               ? "BESTILT"
             : now() < addSeconds(skattekortBestilt, 15)               ? "VENTER_PAA_UTSENDING"
             : /* Og hvis det er mer enn 15s siden man trykket:                */ "SENDT_FORSYSTEM";
-        return HttpResponse.json({status}, {status: 404});
+        return HttpResponse.json({status}, {status: 200});
     }),
-    http.post("/sokos-skattekort/api/v1/admin/auditlogg", async () => {
-        return HttpResponse.json(auditLogg, {status: 200});
+    http.post("/sokos-skattekort/api/v1/admin/auditlogg", async ({request}) => {
+        const sokeParameter = (await request.json()) as {fnr:string};
+        const res =
+            sokeParameter.fnr === "11111111111" 
+                ? []
+                : auditLogg;
+        return HttpResponse.json(res, {status: 200});
     }),
     http.post("/sokos-skattekort/api/v1/admin/bestillingsbatcher", async () => {
         return HttpResponse.json(batcher, {status: 200});

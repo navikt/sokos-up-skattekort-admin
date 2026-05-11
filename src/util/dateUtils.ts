@@ -23,9 +23,11 @@ export function toZulu(t: string){
                 +`T${t.substring(11).replace(",", ".")}`)
             .toISOString()
     }
+    
+    const parsed = new Date(t.replace(",", "."));
+    if (parsed.getTime()) return parsed.toISOString();
     return null;
 }
-
 
 export function toLocalDateTime(zulu: string|null) {
     return zulu ? toLocalDate(zulu) + " " + toLocalTime(zulu) : null;

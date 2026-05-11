@@ -2,22 +2,11 @@ import type {Bestillingsbatch} from "../types/Bestillingsbatch";
 import {Box, Timeline} from "@navikt/ds-react";
 import {ClockDashedIcon, PaperplaneIcon} from "@navikt/aksel-icons";
 import {isMoreThan24HoursBetween, now, toLocalDate} from "../util/dateUtils";
+import {groupByDay} from "../util/listUtils";
 
 export type TidslinjerProps = {
     batcher: Bestillingsbatch[];
     handleScrollTo: (bestillingsreferanse: string) => void;
-}
-
-function groupByDay(batcher: Bestillingsbatch[]) {
-    const byDay: Record<string, Bestillingsbatch[]> = {};
-    for (const curr of batcher) {
-        const dato = new Date(curr.opprettet).toISOString().substring(0, 10);
-        if (!byDay[dato]) {
-            byDay[dato] = [];
-        }
-        byDay[dato].push(curr);
-    }
-    return byDay;
 }
 
 export function Tidslinjer({batcher, handleScrollTo}: Readonly<TidslinjerProps>) {

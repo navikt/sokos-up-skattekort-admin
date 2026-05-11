@@ -21,8 +21,8 @@
       "personId": 123,
       "brukerId": "system",
       "opprettet": "2026-01-23T09:01:51.879369Z",
-      "tag": "MOTTATT_FORESPOERSEL",
-      "informasjon": "Skattekort manuelt opprettet for tidligere ukjent person"
+      "tag": "SYNTETISERT_SKATTEKORT",
+      "informasjon": "Skattekort syntetisert med manglende trekkoder Prosentkort(trekkode=PENSJON_FRA_NAV, prosentSats=15.00, antallMndForTrekk=null),Prosentkort(trekkode=UFOERETRYGD_FRA_NAV, prosentSats=15.00, antallMndForTrekk=null) pga mottatt tilleggsinformasjon KILDESKATT_PAA_PENSJON"
     },
     {
       "id": 9646,
