@@ -8,22 +8,26 @@ import {
 	TextField,
 	VStack,
 } from "@navikt/ds-react";
-import type React from "react";
+import {useEffect} from "react";
 import { useForm } from "react-hook-form";
 import { type SokParameter, SokParameterSchema } from "../types/SokParameter";
 
 export type SoekProps = {
+    fnr: string |null;
 	setIsSubmit: (isSubmit: boolean) => void;
 	setFnr: (fnr: string) => void;
 	isLoading?: boolean;
+    nullstillStatus: () => void;
 };
 function formaterFnr(fnr: string) {
 	return fnr.replaceAll(/\D/g, "");
 }
 export default function Soek({
+    fnr,
 	setIsSubmit,
 	setFnr,
 	isLoading,
+    nullstillStatus
 }: Readonly<SoekProps>) {
 	const {
 		register,
@@ -39,13 +43,22 @@ export default function Soek({
 	function handleSoekReset() {
 		setIsSubmit(false);
 		setFnr("");
+        nullstillStatus();
 		reset();
 	}
 	function handleSoekSubmit(parameter: SokParameter) {
+        nullstillStatus();
 		setIsSubmit(true);
 		const fnr = parameter.fnr ?? "";
 		setFnr(fnr);
 	}
+
+    useEffect(() => {
+        if (fnr) {
+            setValue("fnr", fnr);
+        }
+    }, [fnr, setValue]);
+    
 	return (
 		<Box padding="6" background={"surface-alt-1-subtle"} borderRadius="large">
 			<form onSubmit={handleSubmit(handleSoekSubmit)}>
