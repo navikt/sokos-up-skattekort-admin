@@ -32,6 +32,10 @@ export const AuditSchema = z.object({
     informasjon: z.string().nullable(),
 });
 
+export const AuditLoggSchema = z.object({items:z.array(AuditSchema)});
+
+export type AuditLogg = z.infer<typeof AuditLoggSchema>;
+
 export type Audit = z.infer<typeof AuditSchema>;
 
 const AuditResponseSchema = z.object({items: z.array(AuditSchema)})

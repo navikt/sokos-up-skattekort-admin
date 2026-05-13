@@ -3,6 +3,8 @@ import {api, axiosPatchFetcher, axiosPostFetcher} from "./apiConfig";
 import type {ForespoerselRequest} from "./models/ForespoerselRequest";
 import type {AxiosError, AxiosResponse} from "axios";
 import {
+    WrappedAuditLoggWithError,
+    WrappedAuditLoggWithErrorSchema,
     type WrappedSkattekortResponseDTOWithError,
     WrappedSkattekortResponseDTOWithErrorSchema,
     type WrappedStatusResponseWithError,
@@ -13,7 +15,7 @@ import {type Skattekort, SkattekortListSchema} from "../types/SkattekortResponse
 import type {HentSkattekortRequest} from "../types/HentSkattekortRequestSchema";
 import type {ZodError} from "zod";
 import useSWR, {type KeyedMutator} from "swr";
-import type {AuditResponse} from "../types/Audit";
+import {AuditLogg, AuditLoggSchema, AuditResponse} from "../types/Audit";
 import {type BatchInsightRequest, type BatchInsightResponse, BatchInsightResponseSchema} from "../types/Bestillingsbatch";
 import {type BestillingerResponse, BestillingerResponseSchema} from "../types/Bestilling";
 import {type UtsendingerResponse, UtsendingerResponseSchema} from "../types/Utsending";
@@ -235,30 +237,36 @@ export function useFetchSkattekort(fnr: string): {
     return {data, error, isLoading};
 }
 
-export function useFetchAuditLogg(fnr: string): {
-    data: AuditResponse | undefined;
+export function useFetchAuditLogg(fnr: string, shouldRefresh: boolean): {
+    data: AuditLogg | undefined;
     error: Error;
     isLoading: boolean;
 } {
     const shouldFetch = fnr?.trim().length > 0;
-    const {data, error, isLoading} = useSWRImmutable<AuditResponse>(
+    const {data, error, isLoading} = useSWR<AuditLogg>(
         shouldFetch ? ["/auditLogg", fnr] : null,
         {
-            ...swrConfig<AuditResponse, [string, string]>(
+            ...swrConfig<AuditLogg, [string, string]>(
                 async ([_url, fnr]: [string, string]) => {
                     return api(BASE_URI.SOKOS_SKATTEKORT_ADMIN_API)
                         .post<
                             { fnr: string },
-                            AxiosResponse<AuditResponse>
+                            AxiosResponse<WrappedAuditLoggWithError>
                         >(_url, {fnr, hentAlle: true})
-                        .then((response: AxiosResponse<AuditResponse>) => response.data)
-                        .then((wrapped: AuditResponse) => wrapped)
+                        .then((response: AxiosResponse<WrappedAuditLoggWithError>) => response.data)
+                        .then((wrapped: WrappedAuditLoggWithError) => {
+                            if (WrappedAuditLoggWithErrorSchema.safeParse(wrapped).success) {
+                                throw new BackendError(wrapped.errorMessage);
+                            }
+                            return AuditLoggSchema.parse({items: wrapped.data.items})
+                        })
                 },
             ),
             onError: (error) => {
                 return {data: {}, error, isValidating: false};
             },
             shouldRetryOnError: false,
+            refreshInterval: shouldRefresh ? 5000 : 0,
         },
     );
     return {data, error, isLoading};

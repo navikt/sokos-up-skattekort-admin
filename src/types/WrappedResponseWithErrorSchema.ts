@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { SkattekortResponseDTOSchema } from "./SkattekortResponseDTOSchema";
+import {AuditSchema} from "./Audit";
 
 export const WrappedHentNavnResponseWithErrorSchema = z.object({
 	errorMessage: z.string().refine((s) => s.length > 0),
@@ -18,6 +19,13 @@ export const WrappedStatusResponseWithErrorSchema = z.object({
 export type WrappedStatusResponseWithError = z.infer<
     typeof WrappedStatusResponseWithErrorSchema
 >;
+
+export const WrappedAuditLoggWithErrorSchema = z.object({
+    errorMessage: z.string().refine((s) => s.length > 0),
+    data: z.object({items: z.optional(z.array(AuditSchema))}),
+})
+
+export type WrappedAuditLoggWithError = z.infer<typeof WrappedAuditLoggWithErrorSchema>;
 
 export const WrappedSkattekortResponseDTOWithErrorSchema = z.object({
 	errorMessage: z.string().refine((s) => s.length > 0),
