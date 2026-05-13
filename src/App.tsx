@@ -1,7 +1,7 @@
 import Batchdetaljer from "./pages/Batchdetaljer";
 import {initGrafanaFaro} from "./util/grafanaFaro";
 import {Tabs} from "@navikt/ds-react";
-import {ClockDashedIcon, HouseIcon, PersonIcon} from "@navikt/aksel-icons";
+import {ClockDashedIcon, HouseIcon, PersonGroupIcon, PersonIcon} from "@navikt/aksel-icons";
 import Person from "./pages/Person";
 import {Frontside} from "./pages/Frontside";
 import {useEffect, useState} from "react";
