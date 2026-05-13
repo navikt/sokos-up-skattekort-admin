@@ -198,12 +198,12 @@ export function useFetchNoekkelinformasjon(shouldRefresh: boolean = false): {
 }
 
 
-export function useFetchSkattekort(fnr: string): {
+export function useFetchSkattekort(fnr: string|null): {
     data: Skattekort[] | undefined;
     error: Error;
     isLoading: boolean;
 } {
-    const shouldFetch = fnr?.trim().length > 0;
+    const shouldFetch = fnr && fnr?.trim().length > 0;
     const {data, error, isLoading} = useSWRImmutable<Skattekort[]>(
         shouldFetch ? ["/hent-skattekort", fnr] : null,
         {
