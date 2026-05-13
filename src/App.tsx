@@ -1,12 +1,13 @@
 import Batchdetaljer from "./pages/Batchdetaljer";
 import {initGrafanaFaro} from "./util/grafanaFaro";
 import {Tabs} from "@navikt/ds-react";
-import {ClockDashedIcon, FileIcon, HouseIcon, PersonIcon} from "@navikt/aksel-icons";
+import {ClockDashedIcon, FileIcon, HouseIcon, PersonGroupIcon, PersonIcon} from "@navikt/aksel-icons";
 import Person from "./pages/Person";
 import {Frontside} from "./pages/Frontside";
 import {useEffect, useState} from "react";
 import type {DateRange} from "./components/SoekBatch";
 import BestillMedFil from "./pages/BestillMedFil";
+import Personer from "./pages/Personer";
 
 export default function App() {
     useEffect(() => {
@@ -47,11 +48,11 @@ export default function App() {
                 label="Person"
                 icon={<PersonIcon aria-hidden/>}
             />
-            {/*<Tabs.Tab*/}
-            {/*    value="personer"*/}
-            {/*    label="Flere personer"*/}
-            {/*    icon={<PersonGroupIcon title="personer" fontSize="1.5rem" />}*/}
-            {/*/>*/}
+            <Tabs.Tab
+                value="personer"
+                label="Flere personer"
+                icon={<PersonGroupIcon title="personer" fontSize="1.5rem" />}
+            />
             <Tabs.Tab
                 value="bolk"
                 label="Bestill med fil"
@@ -67,9 +68,9 @@ export default function App() {
         <Tabs.Panel value="person">
             <Person fnr={activeFnr} handleShowBatchesAt={handleShowBatchesAt}/>
         </Tabs.Panel>
-        {/*<Tabs.Panel value="personer">*/}
-        {/*    <Personer fnr={[]} handleShowBatchesAt={() => {return null}} />*/}
-        {/*</Tabs.Panel>*/}
+        <Tabs.Panel value="personer">
+            <Personer fnr={[]} handleShowBatchesAt={() => {return null}} />
+        </Tabs.Panel>
         <Tabs.Panel value="bolk">
             <BestillMedFil />
         </Tabs.Panel>

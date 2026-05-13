@@ -2,6 +2,8 @@ import {BodyLong, BodyShort, Box, Button, FileObject, FileUpload, Heading, Label
 import Errorhandler from "../components/Errorhandler";
 import {useState} from "react";
 import {postForesoerselfil} from "../api/apiService";
+import AlertWithCloseButton from "../components/AlertWithCloseButton";
+import {BackendError} from "../types/Error";
 
 const INGEN_FIL = "Ingen fil"
 
@@ -42,16 +44,20 @@ export default function BestillMedFil() {
 
     function handleReset() {
         setFiles([])
-        setFileStatus(INGEN_FIL)            
+        setFileStatus(INGEN_FIL)
         setFileContent(null)
     }
-    
+
     async function handlePostFile(file: FileObject | null) {
-        const {data, error} = await postForesoerselfil(file, "OS", 2026)
-            .then(response => ({data:"Success", error:null}))
-            .catch(error => ({data:null, error}))
-        if (error) setError(error instanceof Error ? error : new Error("Ukjent feil ved opplasting av fil"))
-        else setAlert("Fil lastet opp og bestilling sendt!")
+        await postForesoerselfil(file, "OS", 2026)
+            .then(response => {
+                setAlert(response.data)
+                if (error) setError(new BackendError(error.message))
+            })
+            .catch(error => {
+                setAlert(JSON.stringify(error))
+                setError(error)
+            })
     }
 
     return (
@@ -74,16 +80,26 @@ export default function BestillMedFil() {
                             onClick: () => handleReset(),
                         }}
                     />}
-                <Box overflow={"hidden"} background={"surface-default"} padding={"space-16"} marginBlock={"space-16 0"} borderRadius="medium">
+                <Box overflow={"hidden"} background={"surface-default"} padding={"space-16"} marginBlock={"space-16 0"}
+                     borderRadius="medium">
                     <BodyShort>Filstatus: {fileStatus}</BodyShort>
                 </Box>
-                <Box overflow={"hidden"} background={"surface-default"} padding={"space-16"} marginBlock={"space-16 0"} borderRadius="medium">
+                <Box overflow={"hidden"} background={"surface-default"} padding={"space-16"} marginBlock={"space-16 0"}
+                     borderRadius="medium">
                     <Label>Innhold i fil:</Label>
                     <BodyLong
                         style={{overflow: "hidden", textOverflow: "ellipsis"}}>{fileContent}</BodyLong>
                 </Box>
             </Box>
-            {error && <Errorhandler heading={"Feil fra backend"} error={error}/>}
+
+            {alert && <AlertWithCloseButton
+                show={!!alert}
+                setShow={() => setAlert(null)}
+                variant={"info"}
+            >
+                {alert}
+            </AlertWithCloseButton>}
+            {error && <Errorhandler heading={"Feil under kommunikasjon med sokos-skattekort"} error={error}/>}
             {file && <Button disabled={!file} onClick={() => handlePostFile(file)}>Bestill</Button>}
         </Box>
     )
