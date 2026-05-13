@@ -38,7 +38,7 @@ export type BatchInsightResponse = z.infer<typeof BatchInsightResponseSchema>;
 const refineString = (shouldAcceptEmpty:boolean) => (dateString:string) => {
     if (!dateString) return shouldAcceptEmpty;
 
-    const date = new Date(dateString);
+    const date = new Date(dateString.replace(",","."));
     return !Number.isNaN(date.getTime())
 }
 

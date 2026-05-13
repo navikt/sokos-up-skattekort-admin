@@ -1,11 +1,8 @@
-import { ExclamationmarkTriangleFillIcon } from "@navikt/aksel-icons";
-import { Button, Tooltip } from "@navikt/ds-react";
-import React, { useEffect, useState } from "react";
-import {
-	bestillSkattekort,
-	useFetchSkattekortStatus,
-} from "../api/apiService";
-import type { ForespoerselRequest } from "../api/models/ForespoerselRequest";
+import {ExclamationmarkTriangleFillIcon} from "@navikt/aksel-icons";
+import {Button, Tooltip} from "@navikt/ds-react";
+import React, {useEffect} from "react";
+import {bestillSkattekort, useFetchSkattekortStatus,} from "../api/apiService";
+import type {ForespoerselRequest} from "../api/models/ForespoerselRequest";
 
 interface BestilleSkattekortButtonProps {
 	gjelderId: string;
@@ -17,6 +14,8 @@ interface BestilleSkattekortButtonProps {
 			variant: "success" | "error" | "warning";
 		} | null,
 	) => void;
+    shouldRefreshStatus?: boolean;
+    setShouldRefreshStatus: (should: boolean) => void;
 }
 
 export default function BestilleSkattekortButton(
@@ -28,30 +27,29 @@ export default function BestilleSkattekortButton(
 		forsystem: "OS",
 	};
 
-	const [shouldRefreshStatus, setShouldRefreshStatus] = useState(false);
-	const { data, error, isLoading } = useFetchSkattekortStatus(request, shouldRefreshStatus);
+	const { data, error, isLoading } = useFetchSkattekortStatus(request, !!props.shouldRefreshStatus);
 
 	useEffect(() => {
-		if (data?.data) {
-			props.setSkattekortstatus(data.data);
+		if (data) {
+			props.setSkattekortstatus(data);
 			if (
 				["IKKE_BESTILT", "BESTILT", "VENTER_PAA_UTSENDING"].includes(
-					data.data,
+					data,
 				)
 			) {
 				// Det er først når data kommer tilbake fra kallet at vi evt rerendrer basert på shouldRefreshStatus
 				// Derfor er det trygt å sette state her uten at vi risikerer en uendelig loop
-				setShouldRefreshStatus(true);
-			} else if (["UGYLDIG_FNR", "SENDT_FORSYSTEM"].includes(data.data)) {
-				setShouldRefreshStatus(false);
+				props.setShouldRefreshStatus(true);
+			} else if (["UGYLDIG_FNR", "SENDT_FORSYSTEM"].includes(data)) {
+				props.setShouldRefreshStatus(false);
 			}
             return
 		}
-        setShouldRefreshStatus(false);
+        props.setShouldRefreshStatus(false);
 	}, [data, props]);
 
 	function handleClick() {
-		shouldRefreshStatus || setShouldRefreshStatus(true);
+		props.shouldRefreshStatus || props.setShouldRefreshStatus(true);
         
 		bestillSkattekort(request)
 			.then((response) => {
@@ -76,14 +74,14 @@ export default function BestilleSkattekortButton(
 					size={"small"}
 					variant={"secondary-neutral"}
 					onClick={handleClick}
-					loading={shouldRefreshStatus}
+					loading={props.shouldRefreshStatus}
 					disabled={
-						!data?.data ||
+						!data ||
 						!!props.error ||
 						["API_ERROR", "UGYLDIG_FNR", "SENDT_FORSYSTEM"].includes(
-							data.data ?? "",
+							data ?? "",
 						) ||
-						shouldRefreshStatus
+						props.shouldRefreshStatus
 					}
 					icon={!!props.error && <ExclamationmarkTriangleFillIcon />}
 				>

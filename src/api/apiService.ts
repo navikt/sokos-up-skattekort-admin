@@ -1,4 +1,3 @@
-import useSWRImmutable from "swr/immutable";
 import {api, axiosPatchFetcher, axiosPostFetcher} from "./apiConfig";
 import type {ForespoerselRequest} from "./models/ForespoerselRequest";
 import type {AxiosError, AxiosResponse} from "axios";
@@ -6,9 +5,7 @@ import {
     WrappedAuditLoggWithError,
     WrappedAuditLoggWithErrorSchema,
     type WrappedSkattekortResponseDTOWithError,
-    WrappedSkattekortResponseDTOWithErrorSchema,
-    type WrappedStatusResponseWithError,
-    WrappedStatusResponseWithErrorSchema
+    WrappedSkattekortResponseDTOWithErrorSchema
 } from "../types/WrappedResponseWithErrorSchema";
 import {BackendError, NoDataError} from "../types/Error";
 import {type Skattekort, SkattekortListSchema} from "../types/SkattekortResponseDTOSchema";
@@ -16,10 +13,15 @@ import type {HentSkattekortRequest} from "../types/HentSkattekortRequestSchema";
 import type {ZodError} from "zod";
 import useSWR, {type KeyedMutator} from "swr";
 import {AuditLogg, AuditLoggSchema, AuditResponse} from "../types/Audit";
-import {type BatchInsightRequest, type BatchInsightResponse, BatchInsightResponseSchema} from "../types/Bestillingsbatch";
+import {
+    type BatchInsightRequest,
+    type BatchInsightResponse,
+    BatchInsightResponseSchema
+} from "../types/Bestillingsbatch";
 import {type BestillingerResponse, BestillingerResponseSchema} from "../types/Bestilling";
 import {type UtsendingerResponse, UtsendingerResponseSchema} from "../types/Utsending";
 import {type NoekkelinformasjonResponse, NoekkelinformasjonResponseSchema} from "../types/Noekkelinformasjon";
+import {type SkattekortStatusResponse, SkattekortStatusResponseSchema} from "../types/SkattekortStatusResponse";
 
 export type OtherErrors = AxiosError | ZodError<unknown> | BackendError;
 export type AllErrors = OtherErrors | NoDataError;
@@ -61,37 +63,29 @@ export async function rerunBestillingsbatch(id: number) {
 }
 
 export function useFetchSkattekortStatus(
-    request: ForespoerselRequest,
+    request: ForespoerselRequest | null,
     shouldRefresh: boolean
 ) {
-    const key = request.personIdent?.length === 11 ? ["/skattekort/status", request] : null;
-    // useSWR skal være mutable slik at vi kan polle status mens bestilling og henting pågår
-    const {data, error, isLoading} = useSWR<WrappedStatusResponseWithError>(
+    const key = request?.personIdent?.length === 11 ? ["/skattekort/status", request] : null;
+    const {data, error, isLoading} = useSWR<string>(
         key,
         {
-            ...swrConfig<WrappedStatusResponseWithError, [string, string]>(
+            ...swrConfig<string, [string, string]>(
                 async ([_url, request]: [string, string]) => {
                     return api(BASE_URI.SOKOS_SKATTEKORT_API)
                         .post<
                             ForespoerselRequest,
-                            AxiosResponse<WrappedStatusResponseWithError>
+                            AxiosResponse<SkattekortStatusResponse>
                         >(_url, request)
-                        .then((response: AxiosResponse<WrappedStatusResponseWithError>) => response.data)
-                        .then((wrapped: WrappedStatusResponseWithError) => {
-                            const error =
-                                WrappedStatusResponseWithErrorSchema.safeParse(wrapped);
-                            if (error.success) {
-                                throw new BackendError(error.data.errorMessage);
-                            }
-                            if (!wrapped.data || wrapped.data.length === 0) {
-                                throw new NoDataError();
-                            }
-                            return wrapped;
+                        .then((response: AxiosResponse<SkattekortStatusResponse>) => response.data)
+                        .then((data: SkattekortStatusResponse) => {
+                            SkattekortStatusResponseSchema.parse(data);
+                            return data.status;
                         });
                 },
             ),
             onError: (error) => {
-                return {data: {data: "API_ERROR"}, error, isLoading: false};
+                return {data:"API_ERROR", error, isLoading: false};
             },
             refreshInterval: shouldRefresh ? 1000 : 0,
         });
@@ -118,7 +112,8 @@ export function useFetchBestillingsbatcher(shouldRefresh: boolean): {
                         })
                 },
             ),
-            refreshInterval: shouldRefresh ? 5000 : 0
+            refreshInterval: shouldRefresh ? 5000 : 0,
+            shouldRetryOnError: false,
         }
     )
     return {data, error, isLoading, mutate};
@@ -143,7 +138,8 @@ export function useFetchBestillinger(shouldRefresh: boolean): {
                         })
                 },
             ),
-            refreshInterval: shouldRefresh ? 5000 : 0
+            refreshInterval: shouldRefresh ? 5000 : 0,
+            shouldRetryOnError: false,
         }
     )
     return {data, error, isLoading};
@@ -167,7 +163,8 @@ export function useFetchUtsendinger(shouldRefresh: boolean = false): {
                             return wrapped
                         })
                 },
-            ), refreshInterval: shouldRefresh ? 5000 : 0
+            ), refreshInterval: shouldRefresh ? 5000 : 0,
+            shouldRetryOnError: false,
         }
     )
     return {data, error, isLoading};
@@ -191,7 +188,8 @@ export function useFetchNoekkelinformasjon(shouldRefresh: boolean = false): {
                             return wrapped;
                         })
                 },
-            ), refreshInterval: shouldRefresh ? 5000 : 0
+            ), refreshInterval: shouldRefresh ? 5000 : 0,
+            shouldRetryOnError: false,
         }
     )
     return {data, error, isLoading};
@@ -203,8 +201,8 @@ export function useFetchSkattekort(fnr: string|null): {
     error: Error;
     isLoading: boolean;
 } {
-    const shouldFetch = fnr && fnr?.trim().length > 0;
-    const {data, error, isLoading} = useSWRImmutable<Skattekort[]>(
+    const shouldFetch = fnr != null && fnr.trim().length > 0;
+    const {data, error, isLoading} = useSWR<Skattekort[]>(
         shouldFetch ? ["/hent-skattekort", fnr] : null,
         {
             ...swrConfig<Skattekort[], [string, string]>(
@@ -243,7 +241,7 @@ export function useFetchAuditLogg(fnr: string, shouldRefresh: boolean): {
     isLoading: boolean;
 } {
     const shouldFetch = fnr?.trim().length > 0;
-    const {data, error, isLoading} = useSWR<AuditLogg>(
+    const {data, error, isLoading} = useSWR<AuditResponse>(
         shouldFetch ? ["/auditLogg", fnr] : null,
         {
             ...swrConfig<AuditLogg, [string, string]>(

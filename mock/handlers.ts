@@ -8,7 +8,7 @@ import batcherUtenJson from "./batcherUtenJson.json"
 import bestillinger from "./bestillinger.json"
 import utsendinger from "./utsendinger.json"
 import noekkelinformasjon from "./noekkelinformasjon.json"
-import {now} from "../src/util/dateUtils";
+import {addSeconds, now} from "../src/util/dateUtils";
 
 let refNr = 9000
 let skattekortnstuff: number = refNr*(Math.round(Math.random()*100))
@@ -42,32 +42,38 @@ export const handlers = [
     }),
     http.post("/sokos-skattekort/api/v1/skattekort/status", async () => {
         const status = !skattekortBestilt ? "IKKE_FORESPURT"
-            : Date.now() < skattekortBestilt?.getTime() + 5 * 1000             ? "IKKE_BESTILT"
-            : Date.now() < skattekortBestilt?.getTime() + 10 * 1000            ? "BESTILT"
-            : Date.now() < skattekortBestilt?.getTime() + 15 * 1000            ? "VENTER_PAA_UTSENDING"
+            : now() < addSeconds(skattekortBestilt, 5)                ? "IKKE_BESTILT"
+            : now() < addSeconds(skattekortBestilt, 10)               ? "BESTILT"
+            : now() < addSeconds(skattekortBestilt, 15)               ? "VENTER_PAA_UTSENDING"
             : /* Og hvis det er mer enn 15s siden man trykket:                */ "SENDT_FORSYSTEM";
-        return HttpResponse.json({data: status}, {status: 200});
+        return HttpResponse.json({status}, {status: 200});
     }),
-    http.post("/sokos-skattekort/api/v1/admin/auditlogg", async () => {
-        return HttpResponse.json(auditLogg, {status: 200});
+    http.post("/sokos-skattekort/api/v1/admin/auditlogg", async ({request}) => {
+        const sokeParameter = (await request.json()) as {fnr:string};
+        const res =
+            sokeParameter.fnr === "11111111111" 
+                ? []
+                : auditLogg;
+        return HttpResponse.json(res, {status: 200});
     }),
     http.post("/sokos-skattekort/api/v1/admin/bestillingsbatcher", async () => {
         return HttpResponse.json(batcher, {status: 200});
     }),
     http.get("/sokos-skattekort/api/v1/admin/bestillingsbatcher", async () => {
         const nowStamp = now();
+        const terningkast = Math.round(Math.random() * 2) 
+        const saltaBatcher = terningkast === 0 ? batcherUtenJson.items : [{
+            id: 8128,
+            status: "NY",
+            type: "OPPDATERING",
+            bestillingsreferanse: `BR${refNr++}`,
+            oppdatert: nowStamp.toISOString(),
+            opprettet: nowStamp.toISOString()
+        }, ...batcherUtenJson.items]
         return HttpResponse.json(
             {
-                items: [...batcherUtenJson.items, {
-                    id: 8128,
-                    status: "NY",
-                    type: "OPPDATERING",
-                    bestillingsreferanse: `BR${refNr++}`,
-                    oppdatert: nowStamp.toISOString(),
-                    opprettet: nowStamp.toISOString()
-                }].filter(batch => !reranIds.includes(batch.id)),
+                items: saltaBatcher.filter(batch => !reranIds.includes(batch.id)),
             },
-
             {status: 200});
     }),
     http.get("/sokos-skattekort/api/v1/admin/bestillinger", async () => {
