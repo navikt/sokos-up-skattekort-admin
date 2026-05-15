@@ -97,7 +97,7 @@ export const handlers = [
         return new HttpResponse(null, {status: 202})
     }),
     http.post("/sokos-skattekort/api/v1/skattekort/bestille/:forsystem/:year", async () => {
-        return new HttpResponse(null, {status: 403})
+        return new HttpResponse(null, {status: 202})
     })
 ];
 let skattekortBestilt: Date | null = null;
