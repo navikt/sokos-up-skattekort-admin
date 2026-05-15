@@ -46,7 +46,7 @@ export default function Person(props: Readonly<PersonProps>) {
                     {alertMessage.message}
                 </AlertWithCloseButton>
             )}
-            <VStack padding="space-8">
+            {!error && <VStack padding="space-8">
                 {fnr && <Box
                     background={"surface-default"}
                     padding="space-16"
@@ -71,8 +71,10 @@ export default function Person(props: Readonly<PersonProps>) {
                 </Box>
                 }
                 {fnr &&
-                    <ShowAuditLogg shouldRefresh={shouldRefresh} fnr={fnr} skattekort={skattekortData} jumpToBatches={props.handleShowBatchesAt} />}
+                    <ShowAuditLogg shouldRefresh={shouldRefresh} fnr={fnr} skattekort={skattekortData}
+                                   jumpToBatches={props.handleShowBatchesAt}/>}
             </VStack>
+            }
         </Box>
     );
 }

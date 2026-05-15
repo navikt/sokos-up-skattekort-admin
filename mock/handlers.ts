@@ -15,15 +15,6 @@ let skattekortnstuff: number = refNr*(Math.round(Math.random()*100))
 const reranIds: Array<number> = []
 
 export const handlers = [
-    http.post("/sokos-skattekort/api/v2/person/hent-navn", () => {
-        return HttpResponse.json(
-            {
-                errorMessage: null,
-                data: "Hent Navn"
-            },
-            {status: 200},
-        );
-    }),
     http.post(
         "/sokos-skattekort/api/v2/person/hent-skattekort",
         async ({request}) => {
