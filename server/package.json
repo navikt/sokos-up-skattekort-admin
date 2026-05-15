@@ -1,30 +1,28 @@
 {
-	"name": "sokos-up-skattekort-admin-server",
-	"version": "1.0.0",
-	"description": "Server for sokos-up-skattekort-admin",
-	"type": "module",
-	"main": "build/server.js",
-	"scripts": {
-		"dev": "tsx watch src/server.ts",
-		"build": "tsc --build"
-	},
-	"author": "navikt",
-	"license": "MIT",
-	"dependencies": {
-		"express": "5.2.1",
-		"express-static-gzip": "3.0.0"
-	},
-	"devDependencies": {
-		"@types/express": "5.0.6",
-		"@types/node": "25.6.0",
-		"tsx": "4.21.0",
-		"typescript": "6.0.3"
-	},
+  "name": "sokos-up-skattekort-admin-server",
+  "version": "1.0.0",
+  "description": "Server for sokos-up-skattekort-admin",
+  "type": "module",
+  "main": "build/server.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc --build"
+  },
+  "author": "navikt",
+  "license": "MIT",
+  "dependencies": {
+    "express": "5.2.1",
+    "express-static-gzip": "3.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "5.0.6",
+    "@types/node": "25.6.0",
+    "tsx": "4.21.0",
+    "typescript": "6.0.3"
+  },
 	"engines": {
-		"pnpm": ">=10.16.0",
-		"node": ">=24.13.0"
+		"pnpm": ">=11.0.8",
+		"node": ">=24.14.1"
 	},
-	"pnpm": {
-		"overrides": {}
-	}
+	"packageManager": "pnpm@11.0.8+sha512.4c4097e1dd2d42372c4e7fa5a791ff28fc75a484c7ac192e64b1df0fdef17594ba982f9b4fed9adfb3c757846f565b799b2763fb3733d1de1bcb82cf46684912"
 }
