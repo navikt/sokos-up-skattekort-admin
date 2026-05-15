@@ -1,4 +1,5 @@
 {
+  "errorMessage_disabled": "En feil som blir satt av backend",
 	"data": [
 		{
 			"forskuddstrekkList": [

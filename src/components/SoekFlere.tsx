@@ -1,22 +1,19 @@
 import {zodResolver} from "@hookform/resolvers/zod";
 import {EraserIcon, MagnifyingGlassIcon} from "@navikt/aksel-icons";
-import {Box, Button, FileObject, FileUpload, HelpText, HStack, VStack,} from "@navikt/ds-react";
+import {Box, Button, HelpText, HStack, Textarea, VStack,} from "@navikt/ds-react";
 import {useState} from "react";
 import {useForm} from "react-hook-form";
-import {UtsendingRequest, UtsendingRequestSchema} from "../types/UtsendingRequest";
+import {FlereFnrFormValues, FlereFnrRequest, FlereFnrRequestSchema} from "../types/FlereFnrRequest";
 
-export type SoekFlereFnrProps = {
-    fnr: string[] |null;
-    // setIsSubmit: (isSubmit: boolean) => void;
-    // setFnr: (fnr: string[]) => void;
-    // isLoading?: boolean;
-};
-
-function formaterFnr(fnr: string) {
-    return fnr.replaceAll(/\D/g, "");
+function ekstraherFnr(fnr: string): string {
+    const bareTallOgMellomrom = fnr.replaceAll(/[^\d\s]/g, "");
+    if (/^\s*(\d{11})(\s+\d{11})*\s*$/.test(bareTallOgMellomrom)) {
+        return bareTallOgMellomrom.match(/\d{11}/g)?.join(" \n") ?? ""
+    }
+    return "";
 }
 
-export default function SoekFlereFnr(props: Readonly<SoekFlereFnrProps>) {
+export default function SoekFlere() {
     const {
         register,
         handleSubmit,
@@ -24,43 +21,41 @@ export default function SoekFlereFnr(props: Readonly<SoekFlereFnrProps>) {
         reset,
         setValue,
         formState: {errors},
-    } = useForm<UtsendingRequest>({
-        resolver: zodResolver(UtsendingRequestSchema),
+    } = useForm<FlereFnrFormValues, unknown, FlereFnrRequest>({
+        resolver: zodResolver(FlereFnrRequestSchema),
     });
 
     function handleSoekReset() {
         reset();
     }
 
-    function handleSoekSubmit(parameter: UtsendingRequest) {
-        const fnr = parameter.fnr ?? [];
+    const [request, setRequest] = useState<FlereFnrRequest | null>(null);
+    
+    const {data} = {data:null} //useFetchFlereFnr(request);
+    
+    function handleSoekSubmit(parameter: FlereFnrRequest) {
+        setRequest(parameter)
     }
 
-    const [files, setFiles] = useState<FileObject[]>([])
-
     return (
-        <Box padding="6" background={"surface-alt-1-subtle"} borderRadius="large">
+        <>
+            <Box padding="6" background={"surface-alt-1-subtle"} borderRadius="large">
             <form onSubmit={handleSubmit(handleSoekSubmit)}>
                 <VStack gap={"4"}>
                     <HStack justify="space-between">
-                        <VStack gap={"4"}>
-                        {files.length === 0 && <FileUpload.Dropzone
-                            label="Last opp fil"
-                            fileLimit={{max: 1, current: files.length}}
-                            multiple={false}
-                            onSelect={setFiles}
-                        />}
-                        {files.map((file) => (
-                            <FileUpload.Item
-                                key={file.file.name}
-                                file={file.file}
-                                button={{
-                                    action: "delete",
-                                    onClick: () => setFiles([]),
-                                }}
-                            />
-                        ))}
-                        </VStack>           
+                        <Textarea
+                            {...register("fnr")}
+                            size={"small"}
+                            autoComplete={"off"}
+                            label="Fødselsnumre"
+                            error={errors.fnr?.message}
+                            onPaste={(event: React.ClipboardEvent<HTMLTextAreaElement>) => {
+                                event.preventDefault();
+                                const fraUtklippstavle = event.clipboardData.getData("text/plain");
+                                const bareSiffer = ekstraherFnr(fraUtklippstavle);
+                                setValue("fnr", bareSiffer);
+                            }}
+                        />
                         <HelpText placement="left" title="Om arbeidsflaten skattekort">
                             Du kan se skattekort 24 mnd tilbake i tid.
                             <br/>
@@ -99,5 +94,7 @@ export default function SoekFlereFnr(props: Readonly<SoekFlereFnrProps>) {
                 </VStack>
             </form>
         </Box>
+            {data && <div>{JSON.stringify(data)}</div>}
+        </>
     );
 }

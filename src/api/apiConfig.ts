@@ -29,6 +29,9 @@ export function api(baseUri: string) {
             if (error.response?.status === 403) {
                 return Promise.reject(error);
             }
+            if (error.response?.status === 404) {
+                return Promise.reject(new ApiError("Fant ikke endepunkt"));;
+            }
             if (error.response?.status === 500) {
                 throw new HttpStatusCodeError(error.response?.status, "Serverfeil.");
             }

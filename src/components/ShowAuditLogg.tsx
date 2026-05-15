@@ -5,6 +5,7 @@ import {type Skattekort, SkattekortResponseDTOSchema, skattekortTittel} from "..
 import {groupByDate, Periode} from "../util/listUtils";
 import {toLocalDate, toLocalDateTime} from "../util/dateUtils";
 import Skattekortdata from "./Skattekortdata";
+import Errorhandler from "./Errorhandler";
 
 type ShowAuditLoggProps = {
     fnr: string;
@@ -24,7 +25,7 @@ function isASkattekort(periode: Periode<any>): periode is Periode<Skattekort> {
 }
 
 export default function ShowAuditLogg({fnr, shouldRefresh, jumpToBatches, skattekort}: Readonly<ShowAuditLoggProps>) {
-    const {data: auditData} = useFetchAuditLogg(fnr, shouldRefresh)
+    const {data: auditData, error} = useFetchAuditLogg(fnr, shouldRefresh)
 
     const skattekortPerioder =
         skattekort?.map(skattekort => new Periode(skattekort, new Date(skattekort.opprettet), undefined)) ?? []
@@ -73,6 +74,7 @@ export default function ShowAuditLogg({fnr, shouldRefresh, jumpToBatches, skatte
                                         <HStack align={"center"} wrap={false} gap="space-8" justify={"space-evenly"}>
                                             <BodyShort> {auditLogg.brukerId} </BodyShort>
                                             <Button variant={"tertiary-neutral"}
+                                                    style={{ whiteSpace: "nowrap" }}
                                                     onClick={() => jumpToBatches(new Date(auditLogg.opprettet))}> {toLocalDateTime(auditLogg.opprettet)}</Button>
                                         </HStack>
                                         <BodyLong><b>{auditLogg.tag}:</b> {auditLogg.informasjon}</BodyLong>
@@ -88,6 +90,7 @@ export default function ShowAuditLogg({fnr, shouldRefresh, jumpToBatches, skatte
 
     return (
         <VStack padding="space-8" gap="space-16">
+            <Errorhandler heading={"Feil ved henting av auditlogg"} error={error} />
             <Process>{esah}</Process>
         </VStack>)
 }
