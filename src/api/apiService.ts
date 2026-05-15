@@ -219,6 +219,10 @@ export function useFetchNoekkelinformasjon(shouldRefresh: boolean = false): {
 }
 
 
+function itIsSkattekortArray(data:string | Skattekort[]):data is Skattekort[]{
+    return true
+}
+
 export function useFetchSkattekort(fnr: string | null): {
     data: Skattekort[] | undefined;
     error: Error;
@@ -242,7 +246,9 @@ export function useFetchSkattekort(fnr: string | null): {
                             if (error.success) {
                                 throw new BackendError(error.data.errorMessage);
                             }
-                            if (!wrapped.data || wrapped.data.length === 0) {
+                            const data = wrapped.data;
+                            
+                            if (itIsSkattekortArray(data) && (!data || data.length === 0)) {
                                 throw new NoDataError();
                             }
                             return SkattekortListSchema.parse(wrapped.data);
@@ -257,6 +263,12 @@ export function useFetchSkattekort(fnr: string | null): {
     );
     return {data, error, isLoading};
 }
+
+
+function itIsAuditLogg(data: string | AuditLogg): data is AuditLogg {
+    return true
+} 
+
 
 export function useFetchAuditLogg(fnr: string, shouldRefresh: boolean): {
     data: AuditLogg | undefined;
@@ -279,7 +291,9 @@ export function useFetchAuditLogg(fnr: string, shouldRefresh: boolean): {
                             if (WrappedAuditLoggWithErrorSchema.safeParse(wrapped).success) {
                                 throw new BackendError(wrapped.errorMessage);
                             }
-                            return AuditLoggSchema.parse({items: wrapped.data.items})
+                            const data = wrapped.data;
+                            
+                            return AuditLoggSchema.parse({items: itIsAuditLogg(data) ? data.items : null})
                         })
                 },
             ),
