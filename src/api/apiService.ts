@@ -2,8 +2,7 @@ import {api, axiosPatchFetcher, axiosPostFetcher} from "./apiConfig";
 import type {ForespoerselRequest} from "./models/ForespoerselRequest";
 import type {AxiosError, AxiosResponse} from "axios";
 import {
-    WrappedAuditLoggWithError,
-    WrappedAuditLoggWithErrorSchema,
+    WrappedAuditLoggWithError, WrappedAuditLoggWithErrorSchema,
     type WrappedSkattekortResponseDTOWithError,
     WrappedSkattekortResponseDTOWithErrorSchema
 } from "../types/WrappedResponseWithErrorSchema";
@@ -22,6 +21,7 @@ import {type BestillingerResponse, BestillingerResponseSchema} from "../types/Be
 import {type UtsendingerResponse, UtsendingerResponseSchema} from "../types/Utsending";
 import {type NoekkelinformasjonResponse, NoekkelinformasjonResponseSchema} from "../types/Noekkelinformasjon";
 import {type SkattekortStatusResponse, SkattekortStatusResponseSchema} from "../types/SkattekortStatusResponse";
+import type {FileObject} from "@navikt/ds-react";
 
 export type OtherErrors = AxiosError | ZodError<unknown> | BackendError;
 export type AllErrors = OtherErrors | NoDataError;
@@ -62,6 +62,29 @@ export async function rerunBestillingsbatch(id: number) {
     })
 }
 
+export async function postForesoerselfil(file: FileObject | null, forsystem: "OS" | "DARE_POC", inntektsaar: number): Promise<{
+    data: string,
+    error: BackendError | null
+}> {
+    if (!file) return {data: "", error: new BackendError("Ingen fil valgt")};
+
+    try {
+        const bytes = await file.file.arrayBuffer();
+        const response = await api(BASE_URI.SOKOS_SKATTEKORT_API)
+            .post(
+                `/skattekort/bestille/${encodeURIComponent(forsystem)}/${encodeURIComponent(String(inntektsaar))}`,
+                bytes, {
+                headers: {"Content-Type": "application/octet-stream"},
+            })
+        return { data: typeof response.data === "string" ? response.data : "Success", error : null}
+    } catch (error) {
+        if (error instanceof Error) {
+            return {data: "", error: new BackendError(error.message)};
+        }
+        return {data: "", error: new BackendError("Ukjent feil ved opplasting")};
+    }
+}
+
 export function useFetchSkattekortStatus(
     request: ForespoerselRequest | null,
     shouldRefresh: boolean
@@ -85,7 +108,7 @@ export function useFetchSkattekortStatus(
                 },
             ),
             onError: (error) => {
-                return {data:"API_ERROR", error, isLoading: false};
+                return {data: "API_ERROR", error, isLoading: false};
             },
             refreshInterval: shouldRefresh ? 1000 : 0,
         });
@@ -106,9 +129,9 @@ export function useFetchBestillingsbatcher(shouldRefresh: boolean): {
                     return api(BASE_URI.SOKOS_SKATTEKORT_ADMIN_API)
                         .get<BatchInsightResponse>(_url)
                         .then((response: AxiosResponse<BatchInsightResponse>) => response.data)
-                        .then((wrapped: BatchInsightResponse) => {
-                            BatchInsightResponseSchema.parse(wrapped);
-                            return wrapped
+                        .then((batchInsightResponse: BatchInsightResponse) => {
+                            BatchInsightResponseSchema.parse(batchInsightResponse);
+                            return batchInsightResponse
                         })
                 },
             ),
@@ -132,9 +155,9 @@ export function useFetchBestillinger(shouldRefresh: boolean): {
                     return api(BASE_URI.SOKOS_SKATTEKORT_ADMIN_API)
                         .get<BestillingerResponse>(_url)
                         .then((response: AxiosResponse<BestillingerResponse>) => response.data)
-                        .then((wrapped: BestillingerResponse) => {
-                            BestillingerResponseSchema.parse(wrapped);
-                            return wrapped
+                        .then((bestillinger: BestillingerResponse) => {
+                            BestillingerResponseSchema.parse(bestillinger);
+                            return bestillinger
                         })
                 },
             ),
@@ -158,9 +181,9 @@ export function useFetchUtsendinger(shouldRefresh: boolean = false): {
                     return api(BASE_URI.SOKOS_SKATTEKORT_ADMIN_API)
                         .get<UtsendingerResponse>(_url)
                         .then((response: AxiosResponse<UtsendingerResponse>) => response.data)
-                        .then((wrapped: UtsendingerResponse) => {
-                            UtsendingerResponseSchema.parse(wrapped);
-                            return wrapped
+                        .then((utsendinger: UtsendingerResponse) => {
+                            UtsendingerResponseSchema.parse(utsendinger);
+                            return utsendinger
                         })
                 },
             ), refreshInterval: shouldRefresh ? 5000 : 0,
@@ -196,7 +219,7 @@ export function useFetchNoekkelinformasjon(shouldRefresh: boolean = false): {
 }
 
 
-export function useFetchSkattekort(fnr: string|null): {
+export function useFetchSkattekort(fnr: string | null): {
     data: Skattekort[] | undefined;
     error: Error;
     isLoading: boolean;
@@ -241,7 +264,7 @@ export function useFetchAuditLogg(fnr: string, shouldRefresh: boolean): {
     isLoading: boolean;
 } {
     const shouldFetch = fnr?.trim().length > 0;
-    const {data, error, isLoading} = useSWR<AuditResponse>(
+    const {data, error, isLoading} = useSWR<AuditLogg>(
         shouldFetch ? ["/auditLogg", fnr] : null,
         {
             ...swrConfig<AuditLogg, [string, string]>(
@@ -286,7 +309,7 @@ export function useFetchBatcher(batchInsightRequest: BatchInsightRequest | null)
                             AxiosResponse<BatchInsightResponse>
                         >(_url, request)
                         .then((response: AxiosResponse<BatchInsightResponse>) => response.data)
-                        .then((wrapped: BatchInsightResponse) => wrapped)
+                        .then((batchInsightResponse: BatchInsightResponse) => batchInsightResponse)
                 },
             ),
             onError: (error) => {
@@ -298,3 +321,31 @@ export function useFetchBatcher(batchInsightRequest: BatchInsightRequest | null)
     return {data, error, isLoading};
 }
 
+/*export function useFetchFlereFnr(request: FlereFnrRequest | null, shouldRefresh?: boolean): {
+    data: AuditResponse | undefined;
+    error: Error;
+    isLoading: boolean;
+} {
+    const {data, error, isLoading} = useSWR<AuditResponse>(
+        request ? [`status`, request] : null,
+        {
+            ...swrConfig<FlereFnrResponse, [string, string]>(
+                async ([_url, request]: [string, string]) => {
+                    return api(BASE_URI.SOKOS_SKATTEKORT_API)
+                        .post<
+                            FlereFnrRequest,
+                            AxiosResponse<AuditResponse>
+                        >(_url, request)
+                        .then((response: AxiosResponse<FlereFnrResponse>) => response.data)
+                        .then((wrapped: FlereFnrResponse) => wrapped)
+                },
+            ),
+            onError: (error) => {
+                return {data: {}, error, isValidating: false};
+            },
+            shouldRetryOnError: false,
+            refreshInterval: shouldRefresh ? 5000 : 0,
+        },
+    );
+    return {data, error, isLoading};
+}*/

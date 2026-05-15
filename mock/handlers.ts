@@ -95,6 +95,9 @@ export const handlers = [
         const id = Number(params.id)
         reranIds.push(id)
         return new HttpResponse(null, {status: 202})
+    }),
+    http.post("/sokos-skattekort/api/v1/skattekort/bestille/:forsystem/:year", async () => {
+        return new HttpResponse(null, {status: 403})
     })
 ];
 let skattekortBestilt: Date | null = null;

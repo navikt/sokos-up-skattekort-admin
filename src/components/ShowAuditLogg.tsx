@@ -1,10 +1,10 @@
 import {BodyLong, BodyShort, Box, Button, ExpansionCard, HStack, Process, VStack} from "@navikt/ds-react";
+import {useFetchAuditLogg} from "../api/apiService";
 import {type Audit, AuditSchema} from "../types/Audit";
 import {type Skattekort, SkattekortResponseDTOSchema, skattekortTittel} from "../types/SkattekortResponseDTOSchema";
 import {groupByDate, Periode} from "../util/listUtils";
 import {toLocalDate, toLocalDateTime} from "../util/dateUtils";
 import Skattekortdata from "./Skattekortdata";
-import {useFetchAuditLogg} from "../api/apiService";
 import Errorhandler from "./Errorhandler";
 
 type ShowAuditLoggProps = {
