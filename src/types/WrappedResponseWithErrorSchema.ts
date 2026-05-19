@@ -1,27 +1,17 @@
-import { z } from "zod";
-import { SkattekortResponseDTOSchema } from "./SkattekortResponseDTOSchema";
+import {z} from "zod";
+import {SkattekortResponseDTOSchema} from "./SkattekortResponseDTOSchema";
+import {AuditSchema} from "./Audit";
 
-export const WrappedHentNavnResponseWithErrorSchema = z.object({
-	errorMessage: z.string().refine((s) => s.length > 0),
-	data: z.optional(z.string()),
-});
-
-export type WrappedHentNavnResponseWithError = z.infer<
-	typeof WrappedHentNavnResponseWithErrorSchema
->;
-
-export const WrappedStatusResponseWithErrorSchema = z.object({
+export const WrappedAuditLoggWithErrorSchema = z.object({
     errorMessage: z.string().refine((s) => s.length > 0),
-    data: z.optional(z.string()),
-});
+    data: z.string().refine((s) => s.length === 0).or(z.object({items:z.array(AuditSchema)}))
+})
 
-export type WrappedStatusResponseWithError = z.infer<
-    typeof WrappedStatusResponseWithErrorSchema
->;
+export type WrappedAuditLoggWithError = z.infer<typeof WrappedAuditLoggWithErrorSchema>;
 
 export const WrappedSkattekortResponseDTOWithErrorSchema = z.object({
 	errorMessage: z.string().refine((s) => s.length > 0),
-	data: z.optional(z.array(SkattekortResponseDTOSchema)),
+    data: z.string().refine((s) => s.length === 0).or(z.array(SkattekortResponseDTOSchema)),
 });
 
 export type WrappedSkattekortResponseDTOWithError = z.infer<
