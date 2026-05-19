@@ -87,7 +87,7 @@ export const handlers = [
         reranIds.push(id)
         return new HttpResponse(null, {status: 202})
     }),
-    http.post("/sokos-skattekort/api/v1/skattekort/bestille/:forsystem/:year", async () => {
+    http.post("/sokos-skattekort/api/v1/skattekort/bestillingbulk/:forsystem/:year", async () => {
         return new HttpResponse(null, {status: 403})
     })
 ];
