@@ -4,7 +4,7 @@ import type {AxiosResponse} from "axios";
 import {type BestillingerResponse, BestillingerResponseSchema} from "./Bestilling";
 import {type NoekkelinformasjonResponse, NoekkelinformasjonResponseSchema} from "./Noekkelinformasjon";
 import {type UtsendingerResponse, UtsendingerResponseSchema} from "./Utsending";
-import {IncompleteBatchesResponse, IncompleteBatchesResponseSchema} from "./BestillingsbatchWithoutJson";
+import {type IncompleteBatchesResponse, IncompleteBatchesResponseSchema} from "./BestillingsbatchWithoutJson";
 
 export function useFetchLiveBestillinger(shouldRefresh: boolean): {
     data: BestillingerResponse | undefined;

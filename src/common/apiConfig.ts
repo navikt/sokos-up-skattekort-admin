@@ -66,7 +66,7 @@ export const BASE_URI = {
     SOKOS_SKATTEKORT_ADMIN_API: "/sokos-skattekort/api/v1/admin/"
 };
 
-export function wrConfig<T, ArgType>(fetcher: (arg: ArgType) => Promise<T>) {
+export function swrConfig<T, ArgType>(fetcher: (arg: ArgType) => Promise<T>) {
     return {
         fetcher,
         revalidateOnFocus: false,
