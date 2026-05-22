@@ -1,11 +1,11 @@
 import {BodyShort, Box, Skeleton, Table, VStack} from "@navikt/ds-react";
 import type {BatchInsightRequest, Bestillingsbatch} from "./Bestillingsbatch";
-import {DateRange, toLocalDate, toLocalTime} from "../util/dateUtils";
+import {type DateRange, toLocalDate, toLocalTime} from "../util/dateUtils";
 import SoekBatch from "./SoekBatch";
 import {useLayoutEffect, useMemo, useRef, useState} from "react";
 import JsonModal from "./JsonModal";
 import {Tidslinjer} from "./Tidslinjer";
-import {useFetchBatcher} from "./useFetchBatcher";
+import {useFetchBatcher} from "./api";
 
 type BatchCellRefs = Record<string, HTMLTableCellElement | null>;
 
@@ -26,7 +26,7 @@ export default function Batchdetaljer({dateRange}: Readonly<BatchdetaljerProps>)
             inline: "nearest"
         });
     }, [currentCell])
-    const {data, error, isLoading} = useFetchBatcher(batchInsightRequest);
+    const {data, isLoading} = useFetchBatcher(batchInsightRequest);
     const batchRefs = useRef<BatchCellRefs>({});
 
     function scrollTo(bestillingsreferanse: string) {

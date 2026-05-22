@@ -8,8 +8,8 @@ import {
     useFetchNoekkelinformasjon,
     useFetchLiveUtsendinger,
     rerunBestillingsbatch
-} from "./fetchFrontsideInfo";
-import {AllErrors} from "../common/Error";
+} from "./api";
+import type {AllErrors} from "../common/Error";
 
 export type FrontsideProps = {
     handleVisPerson: (fnr: string) => void;
