@@ -1,6 +1,6 @@
 import {http, HttpResponse} from "msw";
 import mangeSkattekort from "./responseMedMangeSkattekort.json";
-import type {HentSkattekortRequest} from "../src/types/HentSkattekortRequestSchema";
+import type {HentSkattekortRequest} from "../src/tab_person/HentSkattekortRequestSchema";
 import ingenSkattekort from "./responseUtenSkattekort.json";
 import auditLogg from "./auditLogg.json"
 import batcher from "./batcher_mindre.json"
@@ -43,7 +43,7 @@ export const handlers = [
         const sokeParameter = (await request.json()) as {fnr:string};
         const res =
             sokeParameter.fnr === "11111111111" 
-                ? []
+                ? {data:{items:[]}}
                 : auditLogg;
         return HttpResponse.json(res, {status: 200});
     }),

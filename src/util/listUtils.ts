@@ -1,6 +1,6 @@
-import type {Bestillingsbatch} from "../types/Bestillingsbatch";
-import {Audit} from "../types/Audit";
-import {Skattekort} from "../types/SkattekortResponseDTOSchema";
+import type {Bestillingsbatch} from "../tab_batchdetaljer/Bestillingsbatch";
+import {Audit} from "../tab_person/Audit";
+import {Skattekort} from "../tab_person/SkattekortResponseDTOSchema";
 
 export function groupByDay(batcher: Bestillingsbatch[]) {
     const byDay: Record<string, Bestillingsbatch[]> = {};

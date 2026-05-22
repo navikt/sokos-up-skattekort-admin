@@ -1,0 +1,114 @@
+strict digraph "dependency-cruiser output"{
+    rankdir="LR" splines="true" overlap="false" nodesep="0.16" ranksep="0.18" fontname="Helvetica-bold" fontsize="9" style="rounded,bold,filled" fillcolor="#ffffff" compound="true"
+    node [shape="box" style="rounded, filled" height="0.2" color="black" fillcolor="#ffffcc" fontcolor="black" fontname="Helvetica" fontsize="9"]
+    edge [arrowhead="normal" arrowsize="0.6" penwidth="2.0" color="#00000033" fontname="Helvetica" fontsize="9"]
+
+    subgraph "cluster_src" {label="src" "src/App.tsx" [label=<App.tsx> tooltip="App.tsx" URL="src/App.tsx" fillcolor="#bbfeff"] }
+    "src/App.tsx" -> "src/grafanaFaro.ts"
+    "src/App.tsx" -> "src/tab_batchdetaljer/Batchdetaljer.tsx"
+    "src/App.tsx" -> "src/tab_bestillMedFil/BestillMedFil.tsx"
+    "src/App.tsx" -> "src/tab_frontside/Frontside.tsx"
+    "src/App.tsx" -> "src/tab_person/Person.tsx"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/common" {label="common" "src/common/AlertWithCloseButton.tsx" [label=<AlertWithCloseButton.tsx> tooltip="AlertWithCloseButton.tsx" URL="src/common/AlertWithCloseButton.tsx" fillcolor="#bbfeff"] } }
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/common" {label="common" "src/common/Error.ts" [label=<Error.ts> tooltip="Error.ts" URL="src/common/Error.ts" fillcolor="#ddfeff"] } }
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/common" {label="common" "src/common/Errorhandler.tsx" [label=<Errorhandler.tsx> tooltip="Errorhandler.tsx" URL="src/common/Errorhandler.tsx" fillcolor="#bbfeff"] } }
+    "src/common/Errorhandler.tsx" -> "src/common/Error.ts" [arrowhead="onormal" penwidth="1.0"]
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/common" {label="common" "src/common/FoedselsnummerSchema.ts" [label=<FoedselsnummerSchema.ts> tooltip="FoedselsnummerSchema.ts" URL="src/common/FoedselsnummerSchema.ts" fillcolor="#ddfeff"] } }
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/common" {label="common" "src/common/LabelText.tsx" [label=<LabelText.tsx> tooltip="LabelText.tsx" URL="src/common/LabelText.tsx" fillcolor="#bbfeff"] } }
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/common" {label="common" "src/common/Personer.tsx" [label=<Personer.tsx> tooltip="Personer.tsx" URL="src/common/Personer.tsx" fillcolor="#bbfeff"] } }
+    "src/common/Personer.tsx" -> "src/tab_bestillMedFil/SoekFlere.tsx"
+    "src/common/Personer.tsx" -> "src/common/AlertWithCloseButton.tsx"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/common" {label="common" "src/common/apiConfig.ts" [label=<apiConfig.ts> tooltip="apiConfig.ts" URL="src/common/apiConfig.ts" fillcolor="#ddfeff"] } }
+    "src/common/apiConfig.ts" -> "src/common/Error.ts"
+    subgraph "cluster_src" {label="src" "src/environment.ts" [label=<environment.ts> tooltip="environment.ts" URL="src/environment.ts" fillcolor="#ddfeff"] }
+    subgraph "cluster_src" {label="src" "src/grafanaFaro.ts" [label=<grafanaFaro.ts> tooltip="grafanaFaro.ts" URL="src/grafanaFaro.ts" fillcolor="#ddfeff"] }
+    "src/grafanaFaro.ts" -> "src/environment.ts"
+    subgraph "cluster_src" {label="src" "src/index.css" [label=<index.css> tooltip="index.css" URL="src/index.css" ] }
+    subgraph "cluster_src" {label="src" "src/main.tsx" [label=<main.tsx> tooltip="main.tsx" URL="src/main.tsx" fillcolor="#bbfeff"] }
+    "src/main.tsx" -> "src/App.tsx"
+    "src/main.tsx" -> "src/index.css"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_batchdetaljer" {label="tab_batchdetaljer" "src/tab_batchdetaljer/Batchdetaljer.tsx" [label=<Batchdetaljer.tsx> tooltip="Batchdetaljer.tsx" URL="src/tab_batchdetaljer/Batchdetaljer.tsx" fillcolor="#bbfeff"] } }
+    "src/tab_batchdetaljer/Batchdetaljer.tsx" -> "src/tab_batchdetaljer/Bestillingsbatch.ts" [arrowhead="onormal" penwidth="1.0"]
+    "src/tab_batchdetaljer/Batchdetaljer.tsx" -> "src/tab_batchdetaljer/JsonModal.tsx"
+    "src/tab_batchdetaljer/Batchdetaljer.tsx" -> "src/tab_batchdetaljer/SoekBatch.tsx"
+    "src/tab_batchdetaljer/Batchdetaljer.tsx" -> "src/tab_batchdetaljer/Tidslinjer.tsx"
+    "src/tab_batchdetaljer/Batchdetaljer.tsx" -> "src/tab_batchdetaljer/useFetchBatcher.ts"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_batchdetaljer" {label="tab_batchdetaljer" "src/tab_batchdetaljer/Bestillingsbatch.ts" [label=<Bestillingsbatch.ts> tooltip="Bestillingsbatch.ts" URL="src/tab_batchdetaljer/Bestillingsbatch.ts" fillcolor="#ddfeff"] } }
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_batchdetaljer" {label="tab_batchdetaljer" "src/tab_batchdetaljer/JsonModal.tsx" [label=<JsonModal.tsx> tooltip="JsonModal.tsx" URL="src/tab_batchdetaljer/JsonModal.tsx" fillcolor="#bbfeff"] } }
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_batchdetaljer" {label="tab_batchdetaljer" "src/tab_batchdetaljer/SoekBatch.tsx" [label=<SoekBatch.tsx> tooltip="SoekBatch.tsx" URL="src/tab_batchdetaljer/SoekBatch.tsx" fillcolor="#bbfeff"] } }
+    "src/tab_batchdetaljer/SoekBatch.tsx" -> "src/tab_batchdetaljer/Bestillingsbatch.ts"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_batchdetaljer" {label="tab_batchdetaljer" "src/tab_batchdetaljer/Tidslinjer.tsx" [label=<Tidslinjer.tsx> tooltip="Tidslinjer.tsx" URL="src/tab_batchdetaljer/Tidslinjer.tsx" fillcolor="#bbfeff"] } }
+    "src/tab_batchdetaljer/Tidslinjer.tsx" -> "src/tab_batchdetaljer/Bestillingsbatch.ts" [arrowhead="onormal" penwidth="1.0"]
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_batchdetaljer" {label="tab_batchdetaljer" "src/tab_batchdetaljer/useFetchBatcher.ts" [label=<useFetchBatcher.ts> tooltip="useFetchBatcher.ts" URL="src/tab_batchdetaljer/useFetchBatcher.ts" fillcolor="#ddfeff"] } }
+    "src/tab_batchdetaljer/useFetchBatcher.ts" -> "src/common/apiConfig.ts"
+    "src/tab_batchdetaljer/useFetchBatcher.ts" -> "src/tab_batchdetaljer/Bestillingsbatch.ts" [arrowhead="onormal" penwidth="1.0"]
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_bestillMedFil" {label="tab_bestillMedFil" "src/tab_bestillMedFil/BestillMedFil.tsx" [label=<BestillMedFil.tsx> tooltip="BestillMedFil.tsx" URL="src/tab_bestillMedFil/BestillMedFil.tsx" fillcolor="#bbfeff"] } }
+    "src/tab_bestillMedFil/BestillMedFil.tsx" -> "src/common/AlertWithCloseButton.tsx"
+    "src/tab_bestillMedFil/BestillMedFil.tsx" -> "src/common/Error.ts"
+    "src/tab_bestillMedFil/BestillMedFil.tsx" -> "src/common/Errorhandler.tsx"
+    "src/tab_bestillMedFil/BestillMedFil.tsx" -> "src/tab_bestillMedFil/api.ts"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_bestillMedFil" {label="tab_bestillMedFil" "src/tab_bestillMedFil/FlereFnrRequest.ts" [label=<FlereFnrRequest.ts> tooltip="FlereFnrRequest.ts" URL="src/tab_bestillMedFil/FlereFnrRequest.ts" fillcolor="#ddfeff"] } }
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_bestillMedFil" {label="tab_bestillMedFil" "src/tab_bestillMedFil/SoekFlere.tsx" [label=<SoekFlere.tsx> tooltip="SoekFlere.tsx" URL="src/tab_bestillMedFil/SoekFlere.tsx" fillcolor="#bbfeff"] } }
+    "src/tab_bestillMedFil/SoekFlere.tsx" -> "src/tab_bestillMedFil/FlereFnrRequest.ts"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_bestillMedFil" {label="tab_bestillMedFil" "src/tab_bestillMedFil/api.ts" [label=<api.ts> tooltip="api.ts" URL="src/tab_bestillMedFil/api.ts" fillcolor="#ddfeff"] } }
+    "src/tab_bestillMedFil/api.ts" -> "src/common/apiConfig.ts"
+    "src/tab_bestillMedFil/api.ts" -> "src/common/Error.ts"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_frontside" {label="tab_frontside" "src/tab_frontside/Bestilling.ts" [label=<Bestilling.ts> tooltip="Bestilling.ts" URL="src/tab_frontside/Bestilling.ts" fillcolor="#ddfeff"] } }
+    "src/tab_frontside/Bestilling.ts" -> "src/common/FoedselsnummerSchema.ts"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_frontside" {label="tab_frontside" "src/tab_frontside/BestillingsbatchWithoutJson.ts" [label=<BestillingsbatchWithoutJson.ts> tooltip="BestillingsbatchWithoutJson.ts" URL="src/tab_frontside/BestillingsbatchWithoutJson.ts" fillcolor="#ddfeff"] } }
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_frontside" {label="tab_frontside" "src/tab_frontside/Frontside.tsx" [label=<Frontside.tsx> tooltip="Frontside.tsx" URL="src/tab_frontside/Frontside.tsx" fillcolor="#bbfeff"] } }
+    "src/tab_frontside/Frontside.tsx" -> "src/common/AlertWithCloseButton.tsx"
+    "src/tab_frontside/Frontside.tsx" -> "src/common/Error.ts"
+    "src/tab_frontside/Frontside.tsx" -> "src/common/LabelText.tsx"
+    "src/tab_frontside/Frontside.tsx" -> "src/tab_frontside/fetchFrontsideInfo.ts"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_frontside" {label="tab_frontside" "src/tab_frontside/Noekkelinformasjon.ts" [label=<Noekkelinformasjon.ts> tooltip="Noekkelinformasjon.ts" URL="src/tab_frontside/Noekkelinformasjon.ts" fillcolor="#ddfeff"] } }
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_frontside" {label="tab_frontside" "src/tab_frontside/Utsending.ts" [label=<Utsending.ts> tooltip="Utsending.ts" URL="src/tab_frontside/Utsending.ts" fillcolor="#ddfeff"] } }
+    "src/tab_frontside/Utsending.ts" -> "src/common/FoedselsnummerSchema.ts"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_frontside" {label="tab_frontside" "src/tab_frontside/fetchFrontsideInfo.ts" [label=<fetchFrontsideInfo.ts> tooltip="fetchFrontsideInfo.ts" URL="src/tab_frontside/fetchFrontsideInfo.ts" fillcolor="#ddfeff"] } }
+    "src/tab_frontside/fetchFrontsideInfo.ts" -> "src/common/apiConfig.ts"
+    "src/tab_frontside/fetchFrontsideInfo.ts" -> "src/tab_frontside/Bestilling.ts"
+    "src/tab_frontside/fetchFrontsideInfo.ts" -> "src/tab_frontside/BestillingsbatchWithoutJson.ts"
+    "src/tab_frontside/fetchFrontsideInfo.ts" -> "src/tab_frontside/Noekkelinformasjon.ts"
+    "src/tab_frontside/fetchFrontsideInfo.ts" -> "src/tab_frontside/Utsending.ts"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_person" {label="tab_person" "src/tab_person/Audit.ts" [label=<Audit.ts> tooltip="Audit.ts" URL="src/tab_person/Audit.ts" fillcolor="#ddfeff"] } }
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_person" {label="tab_person" "src/tab_person/BestilleSkattekortButton.tsx" [label=<BestilleSkattekortButton.tsx> tooltip="BestilleSkattekortButton.tsx" URL="src/tab_person/BestilleSkattekortButton.tsx" fillcolor="#bbfeff"] } }
+    "src/tab_person/BestilleSkattekortButton.tsx" -> "src/tab_person/api.ts"
+    "src/tab_person/BestilleSkattekortButton.tsx" -> "src/tab_person/ForespoerselRequest.ts" [arrowhead="onormal" penwidth="1.0"]
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_person" {label="tab_person" "src/tab_person/ForespoerselRequest.ts" [label=<ForespoerselRequest.ts> tooltip="ForespoerselRequest.ts" URL="src/tab_person/ForespoerselRequest.ts" fillcolor="#ddfeff"] } }
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_person" {label="tab_person" "src/tab_person/HentSkattekortRequestSchema.ts" [label=<HentSkattekortRequestSchema.ts> tooltip="HentSkattekortRequestSchema.ts" URL="src/tab_person/HentSkattekortRequestSchema.ts" fillcolor="#ddfeff"] } }
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_person" {label="tab_person" "src/tab_person/Person.tsx" [label=<Person.tsx> tooltip="Person.tsx" URL="src/tab_person/Person.tsx" fillcolor="#bbfeff"] } }
+    "src/tab_person/Person.tsx" -> "src/common/AlertWithCloseButton.tsx"
+    "src/tab_person/Person.tsx" -> "src/common/Errorhandler.tsx"
+    "src/tab_person/Person.tsx" -> "src/common/LabelText.tsx"
+    "src/tab_person/Person.tsx" -> "src/tab_person/api.ts"
+    "src/tab_person/Person.tsx" -> "src/tab_person/BestilleSkattekortButton.tsx"
+    "src/tab_person/Person.tsx" -> "src/tab_person/ShowAuditLogg.tsx"
+    "src/tab_person/Person.tsx" -> "src/tab_person/Soek.tsx"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_person" {label="tab_person" "src/tab_person/ShowAuditLogg.tsx" [label=<ShowAuditLogg.tsx> tooltip="ShowAuditLogg.tsx" URL="src/tab_person/ShowAuditLogg.tsx" fillcolor="#bbfeff"] } }
+    "src/tab_person/ShowAuditLogg.tsx" -> "src/common/Errorhandler.tsx"
+    "src/tab_person/ShowAuditLogg.tsx" -> "src/tab_person/api.ts"
+    "src/tab_person/ShowAuditLogg.tsx" -> "src/tab_person/Audit.ts"
+    "src/tab_person/ShowAuditLogg.tsx" -> "src/tab_person/Skattekortdata.tsx"
+    "src/tab_person/ShowAuditLogg.tsx" -> "src/tab_person/SkattekortResponseDTOSchema.ts"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_person" {label="tab_person" "src/tab_person/SkattekortResponseDTOSchema.ts" [label=<SkattekortResponseDTOSchema.ts> tooltip="SkattekortResponseDTOSchema.ts" URL="src/tab_person/SkattekortResponseDTOSchema.ts" fillcolor="#ddfeff"] } }
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_person" {label="tab_person" "src/tab_person/SkattekortStatusResponse.ts" [label=<SkattekortStatusResponse.ts> tooltip="SkattekortStatusResponse.ts" URL="src/tab_person/SkattekortStatusResponse.ts" fillcolor="#ddfeff"] } }
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_person" {label="tab_person" "src/tab_person/Skattekortdata.tsx" [label=<Skattekortdata.tsx> tooltip="Skattekortdata.tsx" URL="src/tab_person/Skattekortdata.tsx" fillcolor="#bbfeff"] } }
+    "src/tab_person/Skattekortdata.tsx" -> "src/common/LabelText.tsx"
+    "src/tab_person/Skattekortdata.tsx" -> "src/tab_person/SkattekortResponseDTOSchema.ts"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_person" {label="tab_person" "src/tab_person/Soek.tsx" [label=<Soek.tsx> tooltip="Soek.tsx" URL="src/tab_person/Soek.tsx" fillcolor="#bbfeff"] } }
+    "src/tab_person/Soek.tsx" -> "src/tab_person/SokParameter.ts"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_person" {label="tab_person" "src/tab_person/SokParameter.ts" [label=<SokParameter.ts> tooltip="SokParameter.ts" URL="src/tab_person/SokParameter.ts" fillcolor="#ddfeff"] } }
+    "src/tab_person/SokParameter.ts" -> "src/common/FoedselsnummerSchema.ts"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_person" {label="tab_person" "src/tab_person/WrappedResponseWithErrorSchema.ts" [label=<WrappedResponseWithErrorSchema.ts> tooltip="WrappedResponseWithErrorSchema.ts" URL="src/tab_person/WrappedResponseWithErrorSchema.ts" fillcolor="#ddfeff"] } }
+    "src/tab_person/WrappedResponseWithErrorSchema.ts" -> "src/tab_person/SkattekortResponseDTOSchema.ts"
+    subgraph "cluster_src" {label="src" subgraph "cluster_src/tab_person" {label="tab_person" "src/tab_person/api.ts" [label=<api.ts> tooltip="api.ts" URL="src/tab_person/api.ts" fillcolor="#ddfeff"] } }
+    "src/tab_person/api.ts" -> "src/common/apiConfig.ts"
+    "src/tab_person/api.ts" -> "src/common/Error.ts"
+    "src/tab_person/api.ts" -> "src/tab_person/Audit.ts"
+    "src/tab_person/api.ts" -> "src/tab_person/ForespoerselRequest.ts" [arrowhead="onormal" penwidth="1.0"]
+    "src/tab_person/api.ts" -> "src/tab_person/HentSkattekortRequestSchema.ts" [arrowhead="onormal" penwidth="1.0"]
+    "src/tab_person/api.ts" -> "src/tab_person/SkattekortResponseDTOSchema.ts"
+    "src/tab_person/api.ts" -> "src/tab_person/SkattekortStatusResponse.ts"
+    "src/tab_person/api.ts" -> "src/tab_person/WrappedResponseWithErrorSchema.ts"
+    subgraph "cluster_src" {label="src" "src/vite-env.d.ts" [label=<vite-env.d.ts> tooltip="vite-env.d.ts" URL="src/vite-env.d.ts" fillcolor="#ccffcc"] }
+}

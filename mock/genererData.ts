@@ -1,4 +1,4 @@
-import type {Bestillingsbatch, BestillingsbatchStatus, BestillingsbatchType} from "../src/types/Bestillingsbatch";
+import type {Bestillingsbatch, BestillingsbatchStatus, BestillingsbatchType} from "../src/tab_batchdetaljer/Bestillingsbatch";
 import {forFemMinutterSiden, nowDate} from "../src/util/dateUtils";
 
 export function batcherForSisteDoegn(): Bestillingsbatch[] {
