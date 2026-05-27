@@ -8,7 +8,7 @@ import {
     useFetchNoekkelinformasjon,
     useFetchLiveUtsendinger,
     rerunBestillingsbatch
-} from "./api";
+} from "./api/api";
 import type {AllErrors} from "../common/Error";
 
 export type FrontsideProps = {

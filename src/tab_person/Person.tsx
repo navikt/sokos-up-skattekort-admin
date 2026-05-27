@@ -6,7 +6,7 @@ import ShowAuditLogg from "./ShowAuditLogg";
 import Soek from "./Soek";
 import LabelText from "../common/LabelText";
 import BestilleSkattekortButton from "./BestilleSkattekortButton";
-import {useFetchSkattekort} from "./api";
+import {useFetchSkattekort} from "./api/api";
 
 export type PersonProps = {
     fnr: string | null;

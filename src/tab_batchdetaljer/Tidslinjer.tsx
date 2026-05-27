@@ -1,4 +1,4 @@
-import type {Bestillingsbatch} from "./Bestillingsbatch";
+import type {Bestillingsbatch} from "./api/Bestillingsbatch";
 import {Box, Timeline} from "@navikt/ds-react";
 import {ClockDashedIcon, PaperplaneIcon} from "@navikt/aksel-icons";
 import {isMoreThan24HoursBetween, now, toLocalDate} from "../util/dateUtils";

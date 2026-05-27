@@ -1,6 +1,6 @@
 import {http, HttpResponse} from "msw";
 import mangeSkattekort from "./responseMedMangeSkattekort.json";
-import type {HentSkattekortRequest} from "../src/tab_person/HentSkattekortRequestSchema";
+import type {HentSkattekortRequest} from "../src/tab_person/api/HentSkattekortRequestSchema";
 import ingenSkattekort from "./responseUtenSkattekort.json";
 import auditLogg from "./auditLogg.json"
 import batcher from "./batcher_mindre.json"

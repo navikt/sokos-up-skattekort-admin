@@ -1,6 +1,6 @@
 import {z} from "zod";
 
-import {FoedselsnummerSchema} from "../common/FoedselsnummerSchema";
+import {FoedselsnummerSchema} from "../../common/FoedselsnummerSchema";
 
 export const UtsendingDTOSchema = z.object({
     id: z.number().int(),

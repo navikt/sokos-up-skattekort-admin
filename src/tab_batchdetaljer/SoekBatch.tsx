@@ -14,7 +14,7 @@ import {
     VStack,
 } from "@navikt/ds-react";
 import {useForm} from "react-hook-form";
-import {type BatchInsightRequest, BatchInsightRequestSchema} from "./Bestillingsbatch";
+import {type BatchInsightRequest, BatchInsightRequestSchema} from "./api/Bestillingsbatch";
 import {A_DAY, DateRange, plus23H59m59s, timeBetweenIsoStrings, toZulu} from "../util/dateUtils";
 import {useCallback, useEffect, useState} from "react";
 

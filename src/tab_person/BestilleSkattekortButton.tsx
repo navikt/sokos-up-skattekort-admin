@@ -1,8 +1,8 @@
 import {ExclamationmarkTriangleFillIcon} from "@navikt/aksel-icons";
 import {Button, Tooltip} from "@navikt/ds-react";
-import React, {useEffect} from "react";
-import type {ForespoerselRequest} from "./ForespoerselRequest";
-import {bestillSkattekort, useFetchSkattekortStatus} from "./api";
+import {useEffect} from "react";
+import type {ForespoerselRequest} from "./api/ForespoerselRequest";
+import {bestillSkattekort, useFetchSkattekortStatus} from "./api/api";
 
 interface BestilleSkattekortButtonProps {
 	gjelderId: string;
@@ -27,7 +27,7 @@ export default function BestilleSkattekortButton(
 		forsystem: "OS",
 	};
 
-	const { data, error, isLoading } = useFetchSkattekortStatus(request, !!props.shouldRefreshStatus);
+	const { data } = useFetchSkattekortStatus(request, !!props.shouldRefreshStatus);
 
 	useEffect(() => {
 		if (data) {

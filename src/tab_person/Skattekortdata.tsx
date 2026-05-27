@@ -1,5 +1,5 @@
 import {BodyShort, Button, HStack, Table, VStack} from "@navikt/ds-react";
-import {menneskeleseligKilde, type Skattekort, Trekkode,} from "./SkattekortResponseDTOSchema";
+import {menneskeleseligKilde, type Skattekort, Trekkode,} from "./api/SkattekortResponseDTOSchema";
 import {toLocalDate, toLocalTime} from "../util/dateUtils";
 import LabelText from "../common/LabelText";
 

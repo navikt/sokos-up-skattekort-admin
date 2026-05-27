@@ -3,7 +3,7 @@ import {EraserIcon, MagnifyingGlassIcon} from "@navikt/aksel-icons";
 import {Box, Button, HelpText, HStack, Textarea, VStack,} from "@navikt/ds-react";
 import {useState} from "react";
 import {useForm} from "react-hook-form";
-import {FlereFnrFormValues, FlereFnrRequest, FlereFnrRequestSchema} from "./FlereFnrRequest";
+import {type FlereFnrFormValues, type FlereFnrRequest, FlereFnrRequestSchema} from "./api/FlereFnrRequest";
 
 function ekstraherFnr(fnr: string): string {
     const bareTallOgMellomrom = fnr.replaceAll(/[^\d\s]/g, "");
