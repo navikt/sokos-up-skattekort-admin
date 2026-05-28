@@ -1,13 +1,13 @@
 import {type Skattekort, SkattekortListSchema} from "./SkattekortResponseDTOSchema";
 import useSWR from "swr";
-import {api, axiosPostFetcher, BASE_URI, swrConfig} from "../../common/apiConfig";
+import {api, axiosPostFetcher, BASE_URI, swrConfig} from "../../../common/apiConfig";
 import type {HentSkattekortRequest} from "./HentSkattekortRequestSchema";
 import type {AxiosResponse} from "axios";
 import {
     type WrappedSkattekortResponseDTOWithError,
     WrappedSkattekortResponseDTOWithErrorSchema
 } from "./WrappedResponseWithErrorSchema";
-import {BackendError, NoDataError} from "../../common/Error";
+import {BackendError, NoDataError} from "../../../common/Error";
 import type {ForespoerselRequest} from "./ForespoerselRequest";
 import {type SkattekortStatusResponse, SkattekortStatusResponseSchema} from "./SkattekortStatusResponse";
 import {type AuditLogg, AuditLoggSchema, type WrappedAuditLoggWithError, WrappedAuditLoggWithErrorSchema} from "./Audit";

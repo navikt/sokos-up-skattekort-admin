@@ -1,6 +1,6 @@
 import {BodyShort, Box, Skeleton, Table, VStack} from "@navikt/ds-react";
 import type {BatchInsightRequest, Bestillingsbatch} from "./api/Bestillingsbatch";
-import {type DateRange, toLocalDate, toLocalTime} from "../util/dateUtils";
+import {type DateRange, toLocalDate, toLocalTime} from "../../util/dateUtils";
 import SoekBatch from "./SoekBatch";
 import {useLayoutEffect, useMemo, useRef, useState} from "react";
 import JsonModal from "./JsonModal";

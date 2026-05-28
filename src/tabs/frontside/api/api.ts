@@ -1,5 +1,5 @@
 import useSWR, {type KeyedMutator} from "swr";
-import {api, axiosPatchFetcher, BASE_URI, swrConfig} from "../../common/apiConfig";
+import {api, axiosPatchFetcher, BASE_URI, swrConfig} from "../../../common/apiConfig";
 import type {AxiosResponse} from "axios";
 import {type BestillingerResponse, BestillingerResponseSchema} from "./Bestilling";
 import {type NoekkelinformasjonResponse, NoekkelinformasjonResponseSchema} from "./Noekkelinformasjon";

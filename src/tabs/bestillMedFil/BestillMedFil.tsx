@@ -1,8 +1,8 @@
 import {BodyLong, BodyShort, Box, Button, type FileObject, FileUpload, Heading, Label} from "@navikt/ds-react";
-import Errorhandler from "../common/Errorhandler";
+import Errorhandler from "../../common/Errorhandler";
 import {useState} from "react";
-import AlertWithCloseButton from "../common/AlertWithCloseButton";
-import {BackendError} from "../common/Error";
+import AlertWithCloseButton from "../../common/AlertWithCloseButton";
+import {BackendError} from "../../common/Error";
 import {postForesoerselfil} from "./api/api";
 
 const INGEN_FIL = "Ingen fil"

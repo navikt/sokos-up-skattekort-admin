@@ -2,10 +2,10 @@ import {BodyLong, BodyShort, Box, Button, ExpansionCard, HStack, Process, VStack
 import {useFetchAuditLogg} from "./api/api";
 import {type Audit, AuditSchema} from "./api/Audit";
 import {type Skattekort, SkattekortResponseDTOSchema, skattekortTittel} from "./api/SkattekortResponseDTOSchema";
-import {groupByDate, Periode} from "../util/listUtils";
-import {toLocalDate, toLocalDateTime} from "../util/dateUtils";
+import {groupByDate, Periode} from "../../util/listUtils";
+import {toLocalDate, toLocalDateTime} from "../../util/dateUtils";
 import Skattekortdata from "./Skattekortdata";
-import Errorhandler from "../common/Errorhandler";
+import Errorhandler from "../../common/Errorhandler";
 
 type ShowAuditLoggProps = {
     fnr: string;

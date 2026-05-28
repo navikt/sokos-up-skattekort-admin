@@ -1,6 +1,8 @@
 import axios, {type CreateAxiosDefaults} from "axios";
 import {ApiError, HttpStatusCodeError} from "./Error";
 
+const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
+
 const config = (baseUri: string): CreateAxiosDefaults => ({
 	baseURL: baseUri,
 	timeout: 30000,
@@ -9,6 +11,7 @@ const config = (baseUri: string): CreateAxiosDefaults => ({
 		Pragma: "no-cache",
 		"Cache-Control": "no-cache",
 		"Content-Type": "application/json",
+        "Authorization" : accessToken ? `Bearer ${accessToken}` : "", // Opprett en fil som heter .env.backend.local som inneholder VITE_ACCESS_TOKEN=ey...
 	},
 	validateStatus: (status) => status < 400,
 });

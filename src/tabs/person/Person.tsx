@@ -1,10 +1,10 @@
 import {Box, Heading, VStack,} from "@navikt/ds-react";
 import {useState} from "react";
-import AlertWithCloseButton from "../common/AlertWithCloseButton";
-import Errorhandler from "../common/Errorhandler";
+import AlertWithCloseButton from "../../common/AlertWithCloseButton";
+import Errorhandler from "../../common/Errorhandler";
 import ShowAuditLogg from "./ShowAuditLogg";
 import Soek from "./Soek";
-import LabelText from "../common/LabelText";
+import LabelText from "../../common/LabelText";
 import BestilleSkattekortButton from "./BestilleSkattekortButton";
 import {useFetchSkattekort} from "./api/api";
 

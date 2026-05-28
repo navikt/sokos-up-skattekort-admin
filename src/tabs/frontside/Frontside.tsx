@@ -1,15 +1,15 @@
 import {Box, Button, Heading, HGrid, LocalAlert, Skeleton, Switch, Table, VStack} from "@navikt/ds-react";
-import LabelText from "../common/LabelText";
+import LabelText from "../../common/LabelText";
 import {useState} from "react";
-import AlertWithCloseButton from "../common/AlertWithCloseButton";
-import {toLocalDateTime} from "../util/dateUtils";
+import AlertWithCloseButton from "../../common/AlertWithCloseButton";
+import {toLocalDateTime} from "../../util/dateUtils";
 import {
     useFetchAlleUferdigeBestillingsbatcher, useFetchLiveBestillinger,
     useFetchNoekkelinformasjon,
     useFetchLiveUtsendinger,
     rerunBestillingsbatch
 } from "./api/api";
-import type {AllErrors} from "../common/Error";
+import type {AllErrors} from "../../common/Error";
 
 export type FrontsideProps = {
     handleVisPerson: (fnr: string) => void;

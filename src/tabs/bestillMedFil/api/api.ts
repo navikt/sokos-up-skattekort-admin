@@ -1,6 +1,6 @@
 import type {FileObject} from "@navikt/ds-react";
-import {BackendError} from "../../common/Error";
-import {api, BASE_URI} from "../../common/apiConfig";
+import {BackendError} from "../../../common/Error";
+import {api, BASE_URI} from "../../../common/apiConfig";
 
 export async function postForesoerselfil(file: FileObject | null, forsystem: "OS" | "DARE_POC", inntektsaar: number): Promise<{
     data: string,

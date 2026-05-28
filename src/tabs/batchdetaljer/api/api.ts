@@ -1,6 +1,6 @@
 import type {BatchInsightRequest, BatchInsightResponse} from "./Bestillingsbatch";
 import useSWR from "swr";
-import {api, BASE_URI, swrConfig} from "../../common/apiConfig";
+import {api, BASE_URI, swrConfig} from "../../../common/apiConfig";
 import type {AxiosResponse} from "axios";
 
 export function useFetchBatcher(batchInsightRequest: BatchInsightRequest | null): {

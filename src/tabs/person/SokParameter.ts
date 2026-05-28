@@ -1,5 +1,5 @@
 import {z} from "zod";
-import {FoedselsnummerSchema} from "../common/FoedselsnummerSchema";
+import {FoedselsnummerSchema} from "../../common/FoedselsnummerSchema";
 
 export const SokParameterSchema = z.object({
 	fnr: FoedselsnummerSchema

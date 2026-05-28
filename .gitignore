@@ -112,3 +112,4 @@ public/mockServiceWorker.js
 /blob-report/
 /playwright/.cache/
 .dependency-cruiser.cjs
+.env.backend.local

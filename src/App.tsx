@@ -1,11 +1,11 @@
-import Batchdetaljer from "./tab_batchdetaljer/Batchdetaljer";
+import Batchdetaljer from "./tabs/batchdetaljer/Batchdetaljer";
 import {initGrafanaFaro} from "./grafanaFaro";
 import {Tabs} from "@navikt/ds-react";
 import {ClockDashedIcon, FileIcon, HouseIcon, PersonIcon} from "@navikt/aksel-icons";
-import Person from "./tab_person/Person";
-import {Frontside} from "./tab_frontside/Frontside";
+import Person from "./tabs/person/Person";
+import {Frontside} from "./tabs/frontside/Frontside";
 import {useEffect, useState} from "react";
-import BestillMedFil from "./tab_bestillMedFil/BestillMedFil";
+import BestillMedFil from "./tabs/bestillMedFil/BestillMedFil";
 import {DateRange} from "./util/dateUtils";
 
 export default function App() {
