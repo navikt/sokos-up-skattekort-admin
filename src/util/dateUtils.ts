@@ -83,3 +83,8 @@ export const A_DAY =  1000 * 60 * 60 * 24;
 export function toIsoOrNull(value: string | null | undefined) {
     return value ? new Date(value.replace(",", ".")).toISOString() : null;
 }
+
+export type DateRange = {
+    from: Date | undefined;
+    to: Date | undefined;
+}

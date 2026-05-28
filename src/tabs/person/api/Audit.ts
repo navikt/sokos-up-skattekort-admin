@@ -1,0 +1,48 @@
+import {z} from "zod";
+
+export const AuditTagSchema = z.enum([
+    "BESTILLING_ETTERLATT",
+    "BESTILLING_FEILET",
+    "BESTILLING_SENDT",
+    "HENTING_AV_SKATTEKORT_FEILET",
+    "INVALID_FNR",
+    "MOTTATT_FORESPOERSEL",
+    "NYTT_FNR",
+    "OPPDATERT_PERSONIDENTIFIKATOR",
+    "OPPRETTET_PERSON",
+    "SKATTEKORTINFORMASJON_MOTTATT",
+    "SYNTETISERT_SKATTEKORT",
+    "UKJENT",
+    "UTSENDING_FEILET",
+    "UTSENDING_OK",
+    "UVENTET_PERSON",
+    "MANUELL",
+]);
+
+export type AuditTag = z.infer<typeof AuditTagSchema>;
+
+// AuditId and PersonId are @JvmInline value classes — serialized as their
+// underlying Long (number) by kotlinx.serialization
+export const AuditSchema = z.object({
+    id: z.number().int().nullable().optional(),
+    personId: z.number().int(),
+    brukerId: z.string(),
+    opprettet: z.iso.datetime(),
+    tag: AuditTagSchema,
+    informasjon: z.string().nullable(),
+});
+
+export const AuditLoggSchema = z.object({items:z.array(AuditSchema)});
+
+export type AuditLogg = z.infer<typeof AuditLoggSchema>;
+
+export type Audit = z.infer<typeof AuditSchema>;
+
+const AuditResponseSchema = z.object({items: z.array(AuditSchema)})
+
+export type AuditResponse = z.infer<typeof AuditResponseSchema>;
+export const WrappedAuditLoggWithErrorSchema = z.object({
+    errorMessage: z.string().refine((s) => s.length > 0),
+    data: z.object({items: z.array(AuditSchema)})
+})
+export type WrappedAuditLoggWithError = z.infer<typeof WrappedAuditLoggWithErrorSchema>;
