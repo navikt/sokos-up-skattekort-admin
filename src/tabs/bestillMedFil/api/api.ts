@@ -35,7 +35,7 @@ export async function postStatuses(file: FileObject | null): Promise<{
         const bytes = await file.file.arrayBuffer();
         return {data: await api(BASE_URI.SOKOS_SKATTEKORT_API)
                 .post(
-                    `/skattekort/statuses`,
+                    `/skattekort/statuser`,
                     bytes, {
                         headers: {"Content-Type": "application/octet-stream"},
                     })
@@ -54,7 +54,7 @@ export function useFetchStatuses(file: FileObject | null): {
     isLoading: boolean;
 } {
     const {data, error, isLoading} = useSWR<DetailStatusResponse>(
-        file ? ["/skattekort/statuses", file] : null,
+        file ? ["/skattekort/statuser", file] : null,
         {
             ...swrConfig<DetailStatusResponse, [string, FileObject]>(
                 async ([_url, file]: [string, FileObject]) => {

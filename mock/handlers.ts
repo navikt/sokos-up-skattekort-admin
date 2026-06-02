@@ -91,7 +91,7 @@ export const handlers = [
     http.post("/sokos-skattekort/api/v1/skattekort/bestillingbulk/:forsystem/:year", async () => {
         return new HttpResponse(null, {status: 200})
     }),
-    http.post("/sokos-skattekort/api/v1/skattekort/statuses", async () => {
+    http.post("/sokos-skattekort/api/v1/skattekort/statuser", async () => {
         return HttpResponse.json(detailedStatuses, {status: 200})
     })
 ];
