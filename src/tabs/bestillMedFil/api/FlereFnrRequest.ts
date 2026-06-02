@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const ForsystemEnum = z.enum(["OS", "DARE_POC"]);
+export const ForsystemEnum = z.enum(["OS", "OS_STOR", "DARE_POC"]);
 export type Forsystem = z.infer<typeof ForsystemEnum>;
 
 const fnrTextToArray = z

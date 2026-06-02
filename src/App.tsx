@@ -63,7 +63,7 @@ export default function App() {
             <Person fnr={activeFnr} handleShowBatchesAt={handleShowBatchesAt}/>
         </Tabs.Panel>
         <Tabs.Panel value="bolk">
-            <BestillMedFil />
+            <BestillMedFil handleVisPerson={handleVisPerson}/>
         </Tabs.Panel>
     </Tabs>
 }

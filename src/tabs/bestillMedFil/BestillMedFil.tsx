@@ -1,20 +1,39 @@
-import {BodyLong, BodyShort, Box, Button, type FileObject, FileUpload, Heading, Label} from "@navikt/ds-react";
+import {
+    BodyLong,
+    BodyShort,
+    Box,
+    Button,
+    type FileObject,
+    FileUpload,
+    Heading,
+    HStack,
+    Label,
+    Table
+} from "@navikt/ds-react";
 import Errorhandler from "../../common/Errorhandler";
 import {useState} from "react";
 import AlertWithCloseButton from "../../common/AlertWithCloseButton";
 import {BackendError} from "../../common/Error";
-import {postForesoerselfil} from "./api/api";
+import {postStatuses, useFetchStatuses} from "./api/api";
+import OpprettAbonnementModal from "./OpprettAbonnementModal";
+import JaValg from "./JaValg";
+import NeiValg from "./NeiValg";
+import {DetailStatus} from "./api/DetailStatus";
 
 const INGEN_FIL = "Ingen fil"
 
-export default function BestillMedFil() {
+interface BestillMedFilProps {
+    handleVisPerson: (fnr: string) => void;
+}
+
+export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilProps>) {
     const [error, setError] = useState<Error>();
-    const [files, setFiles] = useState<FileObject[]>([])
+    const [file, setFile] = useState<FileObject | null>(null)
     const [fileStatus, setFileStatus] = useState<string>(INGEN_FIL)
     const [fileContent, setFileContent] = useState<string | null>(null)
     const [alert, setAlert] = useState<string | null>(null)
-
-    const file = files.length > 0 ? files[0] : null;
+    const {data} = useFetchStatuses(file)
+    const statusRows = Object.entries(data?.statuses ?? {});
 
     async function parseFile(file: FileObject | null) {
         handleReset();
@@ -28,8 +47,8 @@ export default function BestillMedFil() {
                 throw new Error("Filen må kun bestå av fnr(11 sammenhengende siffer) og mellomrom/linjeskift")
             }
             setFileContent(text)
-            setFileStatus("ok");
-            setFiles([file])
+            setFileStatus("ok")
+            setFile(file)
             return true
         }
         throw new Error("Ingen fil?")
@@ -39,11 +58,11 @@ export default function BestillMedFil() {
         const parsedOK = await parseFile(files.length > 0 ? files[0] : null).catch(
             e => setFileStatus(e instanceof Error ? e.message : "Ukjent feil ved validering av fil")
         )
-        if (parsedOK) setFiles(files);
+        if (parsedOK) setFile(files.length > 0 ? files[0] : null);
     }
 
     function handleReset() {
-        setFiles([])
+        setFile(null)
         setFileStatus(INGEN_FIL)
         setFileContent(null)
         setAlert(null)
@@ -51,10 +70,10 @@ export default function BestillMedFil() {
     }
 
     async function handlePostFile(file: FileObject | null) {
-        await postForesoerselfil(file, "OS", 2026)
+        await postStatuses(file)
             .then(response => {
-                setAlert("Opplasting gjennomført")
-                if(response.error) setError(new BackendError(response.error.message))
+                setAlert(`Statuser: ${JSON.stringify(response.data, null, 2)}`)
+                if (response.error) setError(new BackendError(response.error.message))
             })
             .catch(error => {
                 setAlert(JSON.stringify(error))
@@ -62,14 +81,25 @@ export default function BestillMedFil() {
             })
     }
 
+    const lastYear = new Date().getFullYear() - 1;
+    const thisYear = new Date().getFullYear();
+    const nextYear = new Date().getFullYear() + 1;
+
+    const hasSkattekort = 
+        (year: number, status: DetailStatus) =>
+          (year === lastYear) ? status.skattekortLastYear
+        : (year === thisYear) ? status.skattekortThisYear
+        : (year === nextYear) ? status.skattekortNextYear
+        : false;
+
     return (
         <Box margin={"space-24"}>
             <Heading spacing level="3" size="medium">Bestill med fil</Heading>
             <Box padding="6" background={"surface-alt-1-subtle"} borderRadius="large">
-                {files.length === 0 && <FileUpload.Dropzone
+                {file === null && <FileUpload.Dropzone
                     label="Last opp fil"
                     description={"Støtter rene tekstfiler med fnr og mellomrom/linjeskift."}
-                    fileLimit={{max: 1, current: files.length}}
+                    fileLimit={{max: 1, current: file ? 1 : 0}}
                     multiple={false}
                     onSelect={handleFileChange}
                 />}
@@ -103,6 +133,39 @@ export default function BestillMedFil() {
             </AlertWithCloseButton>}
             {error && <Errorhandler heading={"Feil under kommunikasjon med sokos-skattekort"} error={error}/>}
             {file && <Button disabled={!file} onClick={() => handlePostFile(file)}>Bestill</Button>}
+            {statusRows.length > 0 && (
+                <Box background={"surface-default"} padding="space-16" borderRadius="medium">
+                    <Table zebraStripes size="small">
+                        <Table.Header>
+                            <Table.Row>
+                                <Table.HeaderCell scope="col">Fnr</Table.HeaderCell>
+                                <Table.HeaderCell scope="col">Abonnementer</Table.HeaderCell>
+                                <Table.HeaderCell scope="col">Skattekort for {lastYear}</Table.HeaderCell>
+                                <Table.HeaderCell scope="col">Skattekort for {thisYear}</Table.HeaderCell>
+                                <Table.HeaderCell scope="col">Skattekort for {nextYear}</Table.HeaderCell>
+                            </Table.Row>
+                        </Table.Header>
+                        <Table.Body>
+                            {statusRows.map(([fnr, status]) => (
+                                <Table.Row key={fnr}>
+                                    <Table.DataCell><Button variant={"tertiary"}
+                                                            onClick={() => handleVisPerson(fnr)}>{fnr}</Button></Table.DataCell>
+                                    <Table.DataCell><HStack>
+                                        {status.abonnements.filter(Boolean).join(", ") || "-"}
+                                        <OpprettAbonnementModal fnr={fnr} abonnementer={status.abonnements}/>
+                                    </HStack></Table.DataCell>
+                                    {[lastYear, thisYear, nextYear].map(year => (
+                                        <Table.DataCell key={year}>{hasSkattekort(year, status) ?
+                                            <JaValg fnr={fnr} inntektsaar={year} abonnementer={status.abonnements}/>
+                                            : <NeiValg fnr={fnr} inntektsaar={year}
+                                                       abonnementer={status.abonnements}/>}</Table.DataCell>)
+                                    )}
+                                </Table.Row>
+                            ))}
+                        </Table.Body>
+                    </Table>
+                </Box>
+            )}
         </Box>
     )
 }

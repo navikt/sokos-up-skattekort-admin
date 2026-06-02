@@ -113,3 +113,5 @@ public/mockServiceWorker.js
 /playwright/.cache/
 .dependency-cruiser.cjs
 .env.backend.local
+graph.dot
+graph.svg

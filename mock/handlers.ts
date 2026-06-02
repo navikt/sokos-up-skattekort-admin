@@ -8,6 +8,7 @@ import batcherUtenJson from "./batcherUtenJson.json"
 import bestillinger from "./bestillinger.json"
 import utsendinger from "./utsendinger.json"
 import noekkelinformasjon from "./noekkelinformasjon.json"
+import detailedStatuses from "./detailStatuses.json";
 import {addSeconds, now} from "../src/util/dateUtils";
 
 let refNr = 9000
@@ -88,7 +89,10 @@ export const handlers = [
         return new HttpResponse(null, {status: 202})
     }),
     http.post("/sokos-skattekort/api/v1/skattekort/bestillingbulk/:forsystem/:year", async () => {
-        return new HttpResponse(null, {status: 403})
+        return new HttpResponse(null, {status: 200})
+    }),
+    http.post("/sokos-skattekort/api/v1/skattekort/statuses", async () => {
+        return HttpResponse.json(detailedStatuses, {status: 200})
     })
 ];
 let skattekortBestilt: Date | null = null;

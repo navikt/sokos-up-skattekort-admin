@@ -40,7 +40,7 @@ export default function BestilleSkattekortButton(
 				// Det er først når data kommer tilbake fra kallet at vi evt rerendrer basert på shouldRefreshStatus
 				// Derfor er det trygt å sette state her uten at vi risikerer en uendelig loop
 				props.setShouldRefreshStatus(true);
-			} else if (["UGYLDIG_FNR", "SENDT_FORSYSTEM"].includes(data)) {
+			} else if (["UGYLDIG_FNR", "KUNSTIG_FNR", "SENDT_FORSYSTEM"].includes(data)) {
 				props.setShouldRefreshStatus(false);
 			}
             return
@@ -78,7 +78,7 @@ export default function BestilleSkattekortButton(
 					disabled={
 						!data ||
 						!!props.error ||
-						["API_ERROR", "UGYLDIG_FNR", "SENDT_FORSYSTEM"].includes(
+						["API_ERROR", "KUNSTIG_FNR", "UGYLDIG_FNR", "SENDT_FORSYSTEM"].includes(
 							data ?? "",
 						) ||
 						props.shouldRefreshStatus
