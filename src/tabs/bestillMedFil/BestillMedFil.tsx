@@ -19,6 +19,7 @@ import OpprettAbonnementModal from "./OpprettAbonnementModal";
 import JaValg from "./JaValg";
 import NeiValg from "./NeiValg";
 import {DetailStatus} from "./api/DetailStatus";
+import {foedselsnummerkategori} from "../../util/fnrUtils";
 
 const INGEN_FIL = "Ingen fil"
 
@@ -139,6 +140,7 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
                         <Table.Header>
                             <Table.Row>
                                 <Table.HeaderCell scope="col">Fnr</Table.HeaderCell>
+                                <Table.HeaderCell scope="col">Type</Table.HeaderCell>
                                 <Table.HeaderCell scope="col">Abonnementer</Table.HeaderCell>
                                 <Table.HeaderCell scope="col">Skattekort for {lastYear}</Table.HeaderCell>
                                 <Table.HeaderCell scope="col">Skattekort for {thisYear}</Table.HeaderCell>
@@ -150,6 +152,7 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
                                 <Table.Row key={fnr}>
                                     <Table.DataCell><Button variant={"tertiary"}
                                                             onClick={() => handleVisPerson(fnr)}>{fnr}</Button></Table.DataCell>
+                                    <Table.DataCell>{foedselsnummerkategori(fnr)}</Table.DataCell>
                                     <Table.DataCell><HStack>
                                         {status.abonnements.filter(Boolean).join(", ") || "-"}
                                         <OpprettAbonnementModal fnr={fnr} abonnementer={status.abonnements}/>
