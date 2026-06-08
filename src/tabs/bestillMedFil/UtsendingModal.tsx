@@ -1,7 +1,7 @@
 import {BodyLong, Box, Button, Checkbox, CheckboxGroup, HStack, Modal, VStack} from "@navikt/ds-react";
 import {type Dispatch, type SetStateAction, useRef, useState} from "react";
-import {postUtsending} from "./api/api";
 import {type Forsystem, ForsystemEnum} from "./api/FlereFnrRequest";
+import {bestillSkattekort} from "../person/api/api";
 
 
 interface UtsendingModalProps {
@@ -21,7 +21,7 @@ export default function UtsendingModal({fnr, inntektsaar, alreadySent, setSendes
     async function handleSendUt() {
         const sendNow:Array<Forsystem> = [] as Forsystem[]
         for (const forsystem of forsystemer) {
-            await postUtsending(fnr, inntektsaar, forsystem)
+            await bestillSkattekort({personIdent: fnr, aar: inntektsaar, forsystem})
                 .then(response => sendNow.push(forsystem))
                 .catch(error => {
                     //TODO

@@ -4,8 +4,9 @@ import {api, BASE_URI, swrConfig} from "../../../common/apiConfig";
 import {type DetailStatusResponse, DetailStatusResponseSchema} from "./DetailStatus";
 import useSWR from "swr";
 import type {AxiosResponse} from "axios";
+import {Forsystem} from "./FlereFnrRequest";
 
-export async function postForesoerselfil(file: FileObject | null, forsystem: "OS" | "DARE_POC", inntektsaar: number): Promise<{
+export async function postForesoerselfil(file: FileObject | null, forsystem: Forsystem, inntektsaar: number): Promise<{
     data: string,
     error: BackendError | null
 }> {
@@ -75,17 +76,5 @@ export function useFetchStatuses(file: FileObject | null): {
         },
     );
     return {data, error, isLoading};
-}
-
-export async function postUtsending(fnr:string, inntektsaar: number, forsystem: string) {
-    //TODO
-    console.log(`Posting utsending for fnr ${fnr}, forsystem ${forsystem}, inntektsaar ${inntektsaar}`);
-    return {data: null, error: null, isLoading: false};
-}
-
-export function postAbonnement(fnr:string, inntektsaar: number, forsystem: string) {
-    //TODO
-    console.log(`Starting abonnement for fnr ${fnr}, forsystem ${forsystem}, inntektsaar ${inntektsaar}`);
-    return {data: null, error: null, isLoading: false};
 }
 

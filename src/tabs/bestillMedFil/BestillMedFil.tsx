@@ -3,23 +3,27 @@ import {
     BodyShort,
     Box,
     Button,
+    Checkbox,
+    CheckboxGroup,
     type FileObject,
     FileUpload,
     Heading,
+    HGrid,
     HStack,
     Label,
-    Table
+    Table,
+    VStack
 } from "@navikt/ds-react";
 import Errorhandler from "../../common/Errorhandler";
 import {useState} from "react";
 import AlertWithCloseButton from "../../common/AlertWithCloseButton";
-import {BackendError} from "../../common/Error";
-import {postStatuses, useFetchStatuses} from "./api/api";
+import {postForesoerselfil, useFetchStatuses} from "./api/api";
 import OpprettAbonnementModal from "./OpprettAbonnementModal";
 import JaValg from "./JaValg";
 import NeiValg from "./NeiValg";
 import {DetailStatus} from "./api/DetailStatus";
 import {foedselsnummerkategori} from "../../util/fnrUtils";
+import {Forsystem} from "./api/FlereFnrRequest";
 
 const INGEN_FIL = "Ingen fil"
 
@@ -35,6 +39,13 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
     const [alert, setAlert] = useState<string | null>(null)
     const {data} = useFetchStatuses(file)
     const statusRows = Object.entries(data?.statuses ?? {});
+    const [aar, setAar] = useState<number[]>([])
+    const [forsystemer, setForsystemer] = useState<Forsystem[]>([])
+    const [alertMessages, setAlertMessages] = useState<{
+        message: string;
+        variant: "success" | "error" | "warning";
+    }[]>([]);
+
 
     async function parseFile(file: FileObject | null) {
         handleReset();
@@ -70,33 +81,57 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
         setError(undefined)
     }
 
-    async function handlePostFile(file: FileObject | null) {
-        await postStatuses(file)
-            .then(response => {
-                setAlert(`Statuser: ${JSON.stringify(response.data, null, 2)}`)
-                if (response.error) setError(new BackendError(response.error.message))
-            })
-            .catch(error => {
-                setAlert(JSON.stringify(error))
-                setError(error)
-            })
-    }
-
     const lastYear = new Date().getFullYear() - 1;
     const thisYear = new Date().getFullYear();
     const nextYear = new Date().getFullYear() + 1;
 
-    const hasSkattekort = 
+    const hasSkattekort =
         (year: number, status: DetailStatus) =>
-          (year === lastYear) ? status.skattekortLastYear
-        : (year === thisYear) ? status.skattekortThisYear
-        : (year === nextYear) ? status.skattekortNextYear
-        : false;
+            (year === lastYear) ? status.skattekortLastYear
+                : (year === thisYear) ? status.skattekortThisYear
+                    : (year === nextYear) ? status.skattekortNextYear
+                        : false;
+
+    function handleOpprettAbonnement() {
+        for (const hvertAar of aar) {
+            for (const hvertForsystem of forsystemer) {
+                postForesoerselfil(file, hvertForsystem, hvertAar)
+                    .then(response => {
+                        console.log(`${hvertForsystem} ${hvertAar} vellykket faktisk(?): ${JSON.stringify(response, null, 2)}`)
+                        
+                        if (response.error){
+                            setAlertMessages(prev => [...prev, {
+                                message: `${hvertForsystem} for år ${hvertAar} : ${response.error?.meldingFraBackend}`,
+                                variant: "error",
+                            }])
+                        } else {
+                            setAlertMessages(prev => [...prev, {
+                                message: `Sendt forespørsel og opprettet abonnement for alle fnr til ${hvertForsystem} for år ${hvertAar}`,
+                                variant: "success",
+                            }])
+                        }
+                    })
+                    .catch(error => {
+                        console.log(`${hvertForsystem} ${hvertAar} mislykket: ${JSON.stringify(error, null, 2)}`)
+                        setAlertMessages(prev => [...prev, {
+                            message: `Feil for ${hvertForsystem} ${hvertAar}`,
+                            variant: "error",
+                        }])
+                    })
+            }
+        }
+    }
+
+    function removeAlertMessage(alertMessage: string) {
+        setAlertMessages(prev => prev.filter(msg => msg.message !== alertMessage))
+    }
 
     return (
         <Box margin={"space-24"}>
             <Heading spacing level="3" size="medium">Bestill med fil</Heading>
             <Box padding="6" background={"surface-alt-1-subtle"} borderRadius="large">
+        <HGrid columns={!!file ? "1fr 240px" : "1"} gap={"space-16"}>
+            <VStack >
                 {file === null && <FileUpload.Dropzone
                     label="Last opp fil"
                     description={"Støtter rene tekstfiler med fnr og mellomrom/linjeskift."}
@@ -123,6 +158,30 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
                     <BodyLong
                         style={{overflow: "hidden", textOverflow: "ellipsis"}}>{fileContent}</BodyLong>
                 </Box>
+            </VStack>
+            {file &&
+                    <VStack width="240px" gap={"space-16"}>
+                        <BodyLong>
+                            Opprett abonnement for alle fnr
+                        </BodyLong>
+                        <HStack gap="space-8" justify="space-evenly">
+                            <CheckboxGroup legend={"Forsystem"} onChange={setForsystemer}>
+                                <Checkbox value={"OS"}>OS</Checkbox>
+                                <Checkbox value={"OS_STOR"}>OS_STOR</Checkbox>
+                                <Checkbox value={"DARE_POC"}>DARE_POC</Checkbox>
+                            </CheckboxGroup>
+                            <CheckboxGroup legend={"År"} onChange={setAar}>
+                                <Checkbox key={thisYear - 1} value={thisYear - 1}>{thisYear - 1}</Checkbox>
+                                <Checkbox key={thisYear} value={thisYear}>{thisYear}</Checkbox>
+                                <Checkbox key={thisYear + 1} value={thisYear + 1}>{thisYear + 1}</Checkbox>
+                            </CheckboxGroup>
+                        </HStack>
+                        <Button disabled={!file || forsystemer.length == 0 || aar.length == 0} 
+                                onClick={handleOpprettAbonnement}>Bestill for alle fnr</Button>
+
+                    </VStack>
+            }
+            </HGrid>
             </Box>
 
             {alert && <AlertWithCloseButton
@@ -132,8 +191,18 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
             >
                 {alert}
             </AlertWithCloseButton>}
+            {alertMessages.length > 0 && alertMessages.map(alertMessage => 
+                <AlertWithCloseButton
+                    key={alertMessage.message}
+                    show={!!alertMessage}
+                    setShow={() => removeAlertMessage(alertMessage.message)}
+                    variant={alertMessage.variant}
+                >
+                    {alertMessage.message}
+                </AlertWithCloseButton>
+            )}
             {error && <Errorhandler heading={"Feil under kommunikasjon med sokos-skattekort"} error={error}/>}
-            {file && <Button disabled={!file} onClick={() => handlePostFile(file)}>Bestill</Button>}
+
             {statusRows.length > 0 && (
                 <Box background={"surface-default"} padding="space-16" borderRadius="medium">
                     <Table zebraStripes size="small">

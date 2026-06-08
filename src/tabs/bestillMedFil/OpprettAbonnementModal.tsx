@@ -17,35 +17,20 @@ export default function OpprettAbonnementModal({fnr, abonnementer}: Readonly<Opp
         ref.current?.showModal();
     };
     const thisYear = new Date().getFullYear()
-    
-    const [abonner, setAbonner] = useState(abonnementer);
-    const [failed, setFailed] = useState<string[]>([]);
-
     function handleClose() {
         ref.current?.close();
     }
     
     function handleOpprettAbonnement() {
-        const abonnerNow: string[] = [] as string[];
-        const failedNow: string[] = [] as string[];
-        for (const year of aar) {
-            for (const forsystem of forsystemer) {
-                const abonnementString = `${forsystem}${year}`
-                if (abonnementer.includes(abonnementString)) {
-                    failedNow.push(abonnementString);
-                } else {
-                    bestillSkattekort({personIdent: fnr, aar: year, forsystem})
+        for (const hvertAar of aar) {
+            for (const hvertForsystem of forsystemer) {
+                    bestillSkattekort({personIdent: fnr, aar: hvertAar, forsystem: hvertForsystem})
                         .then(() => {
-                            abonnerNow.push(abonnementString);
                         })
                         .catch(() => {
-                            failedNow.push(abonnementString);
                         })
-                }
             }
         }
-        setAbonner((prev) => [...new Set([...prev, ...abonnerNow])])
-        setFailed((prev) => [...new Set([...prev, ...failedNow])]);
         handleClose()
     }
     
@@ -61,7 +46,7 @@ export default function OpprettAbonnementModal({fnr, abonnementer}: Readonly<Opp
                         <BodyLong>
                             Opprett abonnement for {fnr}
                         </BodyLong>
-                        <HStack gap="space-8" justify="space-evenly">
+                        <HStack gap="space-16" justify="space-evenly">
                             <CheckboxGroup legend={"Forsystem"} onChange={setForsystemer}>
                                 <Checkbox value={"OS"}>OS</Checkbox>
                                 <Checkbox value={"OS_STOR"}>OS_STOR</Checkbox>
