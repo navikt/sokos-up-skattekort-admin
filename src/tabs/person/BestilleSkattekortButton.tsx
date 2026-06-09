@@ -53,7 +53,7 @@ export default function BestilleSkattekortButton(
         
 		bestillSkattekort(request)
 			.then((response) => {
-				if (response === "Success") {
+				if (response.data === "Success") {
 					props.setAlertMessage({
 						message:
 							"Skattekort bestilles fra Skatteetaten. Det tar normalt et par minutter." +
