@@ -1,7 +1,7 @@
 import type {FileObject} from "@navikt/ds-react";
 import {BackendError} from "../../../common/Error";
 import {api, BASE_URI, swrConfig} from "../../../common/apiConfig";
-import {type DetailStatusResponse, DetailStatusResponseSchema} from "./DetailStatus";
+import {type DetailStatusResponse} from "./DetailStatus";
 import useSWR from "swr";
 import type {AxiosResponse} from "axios";
 import {Forsystem} from "./FlereFnrRequest";
@@ -24,28 +24,7 @@ export async function postForesoerselfil(file: FileObject | null, forsystem: For
         if (error instanceof Error) {
             return {data: "", error: new BackendError(error.message)};
         }
-        return {data: "", error: new BackendError("Ukjent feil ved opplasting")};
-    }
-}
-export async function postStatuses(file: FileObject | null): Promise<{
-    data: DetailStatusResponse | null,
-    error: BackendError | null
-}> {
-    if (!file) return {data: null, error: new BackendError("Ingen fil valgt")};
-    try {
-        const bytes = await file.file.arrayBuffer();
-        return {data: await api(BASE_URI.SOKOS_SKATTEKORT_API)
-                .post(
-                    `/skattekort/statuser`,
-                    bytes, {
-                        headers: {"Content-Type": "application/octet-stream"},
-                    })
-                .then(res => DetailStatusResponseSchema.parse(res.data)), error: null}
-    } catch (error) {
-        if (error instanceof Error) {
-            return {data: null, error: new BackendError(error.message)};
-        }
-        return {data: null, error: new BackendError("Ukjent feil ved opplasting")};
+        return {data: "", error: new BackendError("Ukjent feil ved henting av statuser")};
     }
 }
 

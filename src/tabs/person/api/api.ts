@@ -7,7 +7,7 @@ import {
     type WrappedSkattekortResponseDTOWithError,
     WrappedSkattekortResponseDTOWithErrorSchema
 } from "./WrappedResponseWithErrorSchema";
-import {BackendError, NoDataError} from "../../../common/Error";
+import {ApiError, BackendError, NoDataError} from "../../../common/Error";
 import type {ForespoerselRequest} from "./ForespoerselRequest";
 import {type SkattekortStatusResponse, SkattekortStatusResponseSchema} from "./SkattekortStatusResponse";
 import {type AuditLogg, AuditLoggSchema, type WrappedAuditLoggWithError, WrappedAuditLoggWithErrorSchema} from "./Audit";
@@ -59,11 +59,13 @@ export async function bestillSkattekort(request: ForespoerselRequest) {
         "/skattekort/bestille",
         request,
     ).then((response) => {
-        if (response.errorMessage) {
-            return response.errorMessage;
+        return {data: "Success", error: null};
+    }).catch(error => {
+        if (error instanceof ApiError) {
+            throw new BackendError(error.message);
         }
-        return "Success";
-    });
+        throw new Error("Ukjent feil ved bestilling");
+    })
 }
 
 export function useFetchSkattekortStatus(

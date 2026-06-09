@@ -23,8 +23,7 @@ export function api(baseUri: string) {
         (response) => response,
         (error) => {
             if (error.response?.status === 400) {
-                // her kan vi legge feilkoder også som vi fra backend
-                throw new HttpStatusCodeError(error.response?.status, error.response?.data?.message);
+                return Promise.reject(new ApiError(error.response?.data?.message));
             }
             if (error.response?.status === 401) {
                 return Promise.reject(new ApiError("Du må logge inn"));

@@ -10,6 +10,7 @@ import utsendinger from "./utsendinger.json"
 import noekkelinformasjon from "./noekkelinformasjon.json"
 import detailedStatuses from "./detailStatuses.json";
 import {addSeconds, now} from "../src/util/dateUtils";
+import {ForespoerselRequest} from "../src/tabs/person/api/ForespoerselRequest";
 
 let refNr = 9000
 let skattekortnstuff: number = refNr*(Math.round(Math.random()*100))
@@ -28,9 +29,11 @@ export const handlers = [
             return HttpResponse.json(skattekort, {status: 200});
         },
     ),
-    http.post("/sokos-skattekort/api/v1/skattekort/bestille", async () => {
+    http.post("/sokos-skattekort/api/v1/skattekort/bestille", async ({request}) => {
         skattekortBestilt = now();
-        return HttpResponse.json({data: "", errorMessage: ""}, {status: 201});
+        const sokeParameter = (await request.json()) as ForespoerselRequest;
+        if (sokeParameter.aar === 2027) return HttpResponse.json({message: "Feilmelding fra backend om inntektsår"}, {status: 400});
+        return new HttpResponse(null, {status: 202})
     }),
     http.post("/sokos-skattekort/api/v1/skattekort/status", async () => {
         const status = !skattekortBestilt ? "IKKE_FORESPURT"
@@ -80,15 +83,16 @@ export const handlers = [
             {"antallAvHver": {...noekkelinformasjon.antallAvHver,
                 "2026": noekkelinformasjon.antallAvHver["2026"]+skattekortnstuff,
                 "personer": noekkelinformasjon.antallAvHver["personer"]+Math.round(skattekortnstuff/2)
-            }},
-            {status: 200});
+            }}, {status: 200});
     }),
     http.patch("/sokos-skattekort/api/v1/admin/bestillingsbatcher/:id", async ({params}) => {
         const id = Number(params.id)
         reranIds.push(id)
         return new HttpResponse(null, {status: 202})
     }),
-    http.post("/sokos-skattekort/api/v1/skattekort/bestillingbulk/:forsystem/:year", async () => {
+    http.post("/sokos-skattekort/api/v1/skattekort/bestillingbulk/:forsystem/:year", async ({params}) => {
+        const aar = params.year;
+        if (aar === "2027") return HttpResponse.json({message: "Feilmelding fra backend om inntektsår"}, {status: 400});
         return new HttpResponse(null, {status: 202})
     }),
     http.post("/sokos-skattekort/api/v1/skattekort/statuser", async () => {

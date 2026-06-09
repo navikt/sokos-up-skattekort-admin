@@ -38,9 +38,8 @@ export default function UtsendingModal({fnr, inntektsaar, alreadySent, setSendes
     
     const checkboxes =
         ForsystemEnum.options
-            .map(forsystem => <Checkbox readOnly={alreadySent.has(forsystem)} key={forsystem} value={forsystem}>{forsystem}</Checkbox>)
-
-
+            .map(forsystem => <Checkbox readOnly={alreadySent.has(forsystem)} key={forsystem+"utsendingmodal"} value={forsystem}>{forsystem}</Checkbox>)
+    
     return (
         <Box>
             <Button size="xsmall" variant={"tertiary"} onClick={handleClick}>Send ut</Button>

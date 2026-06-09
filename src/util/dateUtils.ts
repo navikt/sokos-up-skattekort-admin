@@ -80,11 +80,12 @@ export function timeBetweenIsoStrings(dateA: string, dateB: string | null) {
 
 export const A_DAY =  1000 * 60 * 60 * 24;
 
-export function toIsoOrNull(value: string | null | undefined) {
-    return value ? new Date(value.replace(",", ".")).toISOString() : null;
-}
-
 export type DateRange = {
     from: Date | undefined;
     to: Date | undefined;
+}
+export function thisYear():number { return new Date().getFullYear();}
+export function skattekortYears(){
+    const y = thisYear();
+    return [y - 1, y, y + 1]
 }
