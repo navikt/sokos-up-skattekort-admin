@@ -19,6 +19,6 @@ export default function NeiValg({fnr, inntektsaar, abonnementer, setAlertMessage
         <SimpleOpprettAbonnementModal setAlertMessages={setAlertMessages} fnr={fnr} inntektsaar={inntektsaar} abonnementer={[...abonnementer, ...abonner]} setAbonner={setAbonner} setFailed={setFailed}/>
         {")"}
         <Statusikon showIcon={abonner.size > 0} title={`Startet abonnement for ${[...abonner].join(", ")}`} type={StatusikonType.SUBSCRIBE} />        
-        <Statusikon showIcon={failed.size > 0} title={`${[...failed].join(", ")} feilet, sjekk logg og network-tab`} type={StatusikonType.TROUBLE} />        
+        <Statusikon showIcon={failed.size > 0} title={`${[...failed].join(", ")} feilet, sjekk logg og network-tab`} type={StatusikonType.SUBSCRIBETROUBLE} />        
     </HStack>)
 }

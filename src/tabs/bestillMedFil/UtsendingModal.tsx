@@ -9,9 +9,10 @@ interface UtsendingModalProps {
     inntektsaar: number;
     alreadySent: Set<Forsystem>;
     setSendes: Dispatch<SetStateAction<Set<Forsystem>>>;
+    setKunneIkkeSende: Dispatch<SetStateAction<Set<string>>>;
 }
 
-export default function UtsendingModal({fnr, inntektsaar, alreadySent, setSendes}: Readonly<UtsendingModalProps>) {
+export default function UtsendingModal({fnr, inntektsaar, alreadySent, setSendes, setKunneIkkeSende}: Readonly<UtsendingModalProps>) {
     const ref = useRef<HTMLDialogElement>(null);
     const handleClick = () => {
         ref.current?.showModal();
@@ -20,15 +21,14 @@ export default function UtsendingModal({fnr, inntektsaar, alreadySent, setSendes
 
     async function handleSendUt() {
         const sendNow:Array<Forsystem> = [] as Forsystem[]
+        const failedNow:Array<Forsystem> = [] as Forsystem[]
         for (const forsystem of forsystemer) {
             await bestillSkattekort({personIdent: fnr, aar: inntektsaar, forsystem})
-                .then(response => sendNow.push(forsystem))
-                .catch(error => {
-                    //TODO
-                    console.log(error)
-                })
+                .then(_ => sendNow.push(forsystem))
+                .catch(_ => {failedNow.push(forsystem);})
         }
         setSendes(prev => new Set([...prev, ...sendNow]));
+        setKunneIkkeSende(prev => new Set([...prev, ...failedNow]));
         handleClose();
     }
 

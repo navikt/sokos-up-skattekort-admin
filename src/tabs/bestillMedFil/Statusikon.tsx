@@ -1,4 +1,9 @@
-import {ClipboardCheckmarkIcon, ExclamationmarkTriangleIcon, TasklistSendIcon} from "@navikt/aksel-icons";
+import {
+    ClipboardCheckmarkIcon,
+    ExclamationmarkTriangleIcon,
+    FileXMarkIcon,
+    TasklistSendIcon
+} from "@navikt/aksel-icons";
 import {Popover} from "@navikt/ds-react";
 import {useState} from "react";
 
@@ -10,8 +15,9 @@ interface StatusikonProps{
 
 export enum StatusikonType {
     SUBSCRIBE = "SUBSCRIBE",
+    SUBSCRIBETROUBLE = "VELLYKKET",
     SENDING = "SENDING",
-    TROUBLE = "VELLYKKET"
+    SENDTROUBLE="SENDTROUBLE"
 }
 
 const iconMap: Record<StatusikonType, React.ForwardRefExoticComponent<React.SVGProps<SVGSVGElement> & {
@@ -19,8 +25,9 @@ const iconMap: Record<StatusikonType, React.ForwardRefExoticComponent<React.SVGP
     titleId?: string;
 } & React.RefAttributes<SVGSVGElement>>> = {
     [StatusikonType.SUBSCRIBE]: ClipboardCheckmarkIcon,
+    [StatusikonType.SUBSCRIBETROUBLE]: ExclamationmarkTriangleIcon,
     [StatusikonType.SENDING]: TasklistSendIcon,
-    [StatusikonType.TROUBLE]: ExclamationmarkTriangleIcon,
+    [StatusikonType.SENDTROUBLE]: FileXMarkIcon
 }
 
 export default function Statusikon({showIcon, title, type}: Readonly<StatusikonProps>) {
