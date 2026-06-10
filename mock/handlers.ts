@@ -9,7 +9,7 @@ import bestillinger from "./bestillinger.json"
 import utsendinger from "./utsendinger.json"
 import noekkelinformasjon from "./noekkelinformasjon.json"
 import detailedStatuses from "./detailStatuses.json";
-import {addSeconds, now} from "../src/util/dateUtils";
+import {addSeconds, now, skattekortYears} from "../src/util/dateUtils";
 import {ForespoerselRequest} from "../src/tabs/person/api/ForespoerselRequest";
 
 let refNr = 9000
@@ -32,15 +32,17 @@ export const handlers = [
     http.post("/sokos-skattekort/api/v1/skattekort/bestille", async ({request}) => {
         skattekortBestilt = now();
         const sokeParameter = (await request.json()) as ForespoerselRequest;
-        if (sokeParameter.aar === 2027) return HttpResponse.json({message: "Feilmelding fra backend om inntektsår"}, {status: 400});
+        if (!skattekortYears().includes(sokeParameter.aar)) 
+            return HttpResponse.json({message: "Feilmelding fra backend om inntektsår"}, {status: 400});
         return new HttpResponse(null, {status: 202})
     }),
     http.post("/sokos-skattekort/api/v1/skattekort/status", async () => {
-        const status = !skattekortBestilt ? "IKKE_FORESPURT"
+        // eslint-disable-next-line no-negated-condition
+        const status = /* ..................... */ !skattekortBestilt ? "IKKE_FORESPURT"
             : now() < addSeconds(skattekortBestilt, 5)                ? "IKKE_BESTILT"
             : now() < addSeconds(skattekortBestilt, 10)               ? "BESTILT"
             : now() < addSeconds(skattekortBestilt, 15)               ? "VENTER_PAA_UTSENDING"
-            : /* Og hvis det er mer enn 15s siden man trykket:                */ "SENDT_FORSYSTEM";
+            : /* Og hvis det er mer enn 15s siden man trykket:       */ "SENDT_FORSYSTEM";
         return HttpResponse.json({status}, {status: 200});
     }),
     http.post("/sokos-skattekort/api/v1/admin/auditlogg", async ({request}) => {
@@ -92,7 +94,7 @@ export const handlers = [
     }),
     http.post("/sokos-skattekort/api/v1/skattekort/bestillingbulk/:forsystem/:year", async ({params}) => {
         const aar = params.year;
-        if (aar === "2027") return HttpResponse.json({message: "Feilmelding fra backend om inntektsår"}, {status: 400});
+        if (!skattekortYears().includes(Number(aar))) return HttpResponse.json({message: "Feilmelding fra backend om inntektsår"}, {status: 400});
         return new HttpResponse(null, {status: 202})
     }),
     http.post("/sokos-skattekort/api/v1/skattekort/statuser", async () => {

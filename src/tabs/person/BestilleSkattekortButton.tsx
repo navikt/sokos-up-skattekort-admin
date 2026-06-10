@@ -3,6 +3,7 @@ import {Button, Tooltip} from "@navikt/ds-react";
 import {useEffect} from "react";
 import type {ForespoerselRequest} from "./api/ForespoerselRequest";
 import {bestillSkattekort, useFetchSkattekortStatus} from "./api/api";
+import {thisYear} from "../../util/dateUtils";
 
 interface BestilleSkattekortButtonProps {
 	gjelderId: string;
@@ -23,7 +24,7 @@ export default function BestilleSkattekortButton(
 ) {
 	const request: ForespoerselRequest = {
 		personIdent: props.gjelderId,
-		aar: new Date().getFullYear(),
+		aar: thisYear(),
 		forsystem: "OS",
 	};
 

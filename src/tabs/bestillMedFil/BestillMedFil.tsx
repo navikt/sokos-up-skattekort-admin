@@ -24,7 +24,7 @@ import NeiValg from "./NeiValg";
 import {DetailStatus} from "./api/DetailStatus";
 import {foedselsnummerkategori} from "../../util/fnrUtils";
 import {Forsystem, ForsystemEnum} from "./api/FlereFnrRequest";
-import {skattekortYears} from "../../util/dateUtils";
+import {skattekortYears, thisYear} from "../../util/dateUtils";
 
 const INGEN_FIL = "Ingen fil"
 
@@ -82,15 +82,11 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
         setError(undefined)
     }
 
-    const lastYear = new Date().getFullYear() - 1;
-    const thisYear = new Date().getFullYear();
-    const nextYear = new Date().getFullYear() + 1;
-
     const hasSkattekort =
         (year: number, status: DetailStatus) =>
-            (year === lastYear) ? status.skattekortLastYear
-                : (year === thisYear) ? status.skattekortThisYear
-                    : (year === nextYear) ? status.skattekortNextYear
+            (year === thisYear() - 1) ? status.skattekortLastYear
+                : (year === thisYear()) ? status.skattekortThisYear
+                    : (year === thisYear() + 1) ? status.skattekortNextYear
                         : false;
 
     function handleOpprettAbonnement() {
@@ -129,7 +125,7 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
         <Box margin={"space-24"}>
             <Heading spacing level="3" size="medium">Bestill med fil</Heading>
             <Box padding="6" background={"surface-alt-1-subtle"} borderRadius="large">
-                <HGrid columns={!!file ? "1fr 240px" : "1"} gap={"space-16"}>
+                <HGrid columns={file ? "1fr 240px" : "1"} gap={"space-16"}>
                     <VStack>
                         {file === null && <FileUpload.Dropzone
                             label="Last opp fil"
@@ -167,13 +163,14 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
                             </BodyLong>
                             <HStack gap="space-8" justify="space-evenly">
                                 <CheckboxGroup legend={"Forsystem"} onChange={setForsystemer}>
-                                    {ForsystemEnum.options.map((forsystem)  => 
-                                    <Checkbox key={"abonnerAlle"+forsystem} value={forsystem}>{forsystem}</Checkbox>)}
+                                    {ForsystemEnum.options.map((forsystem) =>
+                                        <Checkbox key={"abonnerAlle" + forsystem}
+                                                  value={forsystem}>{forsystem}</Checkbox>)}
                                 </CheckboxGroup>
                                 <CheckboxGroup legend={"År"} onChange={setAar}>
                                     {skattekortYears().map((year) =>
-                                    <Checkbox key={"abonnerAlleFnr"+year} value={year}>{year}</Checkbox>
-                                        )}
+                                        <Checkbox key={"abonnerAlleFnr" + year} value={year}>{year}</Checkbox>
+                                    )}
                                 </CheckboxGroup>
                             </HStack>
                             <Button disabled={!file || forsystemer.length == 0 || aar.length == 0}
@@ -211,9 +208,7 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
                                 <Table.HeaderCell scope="col">Fnr</Table.HeaderCell>
                                 <Table.HeaderCell scope="col">Type</Table.HeaderCell>
                                 <Table.HeaderCell scope="col">Abonnementer</Table.HeaderCell>
-                                <Table.HeaderCell scope="col">Skattekort for {lastYear}</Table.HeaderCell>
-                                <Table.HeaderCell scope="col">Skattekort for {thisYear}</Table.HeaderCell>
-                                <Table.HeaderCell scope="col">Skattekort for {nextYear}</Table.HeaderCell>
+                                {skattekortYears().map((year => <Table.HeaderCell key={"detailstatustabellheading"+year} scope="col">Skattekort for {year}</Table.HeaderCell>))}
                             </Table.Row>
                         </Table.Header>
                         <Table.Body>
@@ -227,13 +222,14 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
                                         <OpprettAbonnementModal setAlertMessages={setAlertMessages} fnr={fnr}
                                                                 abonnementer={status.abonnements}/>
                                     </HStack></Table.DataCell>
-                                    {[lastYear, thisYear, nextYear].map(year => (
-                                        <Table.DataCell key={"abonnerforsystem"+fnr+year}>{hasSkattekort(year, status) ?
-                                            <JaValg setAlertMessages={setAlertMessages} fnr={fnr} inntektsaar={year}
-                                                    abonnementer={status.abonnements}/>
-                                            : <NeiValg setAlertMessages={setAlertMessages} fnr={fnr} inntektsaar={year}
-                                                       abonnementer={status.abonnements}/>}</Table.DataCell>)
-                                    )}
+                                    {skattekortYears().map(year => {
+                                        const ValgComponent = hasSkattekort(year, status) ? JaValg : NeiValg;
+                                        return (
+                                            <Table.DataCell key={"abonnerforsystem" + fnr + year}>
+                                                <ValgComponent setAlertMessages={setAlertMessages} fnr={fnr}
+                                                               inntektsaar={year} abonnementer={status.abonnements}/>
+                                            </Table.DataCell>)
+                                    })}
                                 </Table.Row>
                             ))}
                         </Table.Body>
