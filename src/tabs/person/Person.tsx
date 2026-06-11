@@ -1,12 +1,14 @@
-import {Box, Heading, VStack,} from "@navikt/ds-react";
+import {Box, Heading, HStack, VStack,} from "@navikt/ds-react";
 import {useState} from "react";
-import AlertWithCloseButton from "../../common/AlertWithCloseButton";
+import AlertWithCloseButton, {Alert} from "../../common/AlertWithCloseButton";
 import Errorhandler from "../../common/Errorhandler";
 import ShowAuditLogg from "./ShowAuditLogg";
 import Soek from "./Soek";
 import LabelText from "../../common/LabelText";
 import BestilleSkattekortButton from "./BestilleSkattekortButton";
 import {useFetchSkattekort} from "./api/api";
+import {SokParameter} from "./SokParameter";
+import {thisYear} from "../../util/dateUtils";
 
 export type PersonProps = {
     fnr: string | null;
@@ -14,15 +16,16 @@ export type PersonProps = {
 }
 
 export default function Person(props: Readonly<PersonProps>) {
-    const [isSubmit, setIsSubmit] = useState<boolean>(false);
-    const [fnr, setFnr] = useState<string | null>(props.fnr);
     const [skattekortstatus, setSkattekortstatus] = useState<string>("UKJENT");
+    const [sokParameters, setSokParameters] =
+        useState<SokParameter>({fnr: "", aar: thisYear(), forsystem: "OS"});
 
-    const {data: skattekortData, error, isLoading} = useFetchSkattekort(fnr);
-    const [alertMessage, setAlertMessage] = useState<{
-        message: string;
-        variant: "success" | "error" | "warning";
-    } | null>(null);
+    const {data: skattekortData, error, isLoading} = useFetchSkattekort(sokParameters.fnr);
+    const [alertMessages, setAlertMessages] = useState<Set<Alert>>(new Set());
+
+    function addAlertMessage(alert: Alert) {
+        return setAlertMessages(prev => new Set(prev).add(alert));
+    }
 
     const [shouldRefresh, setShouldRefresh] = useState(false);
 
@@ -30,50 +33,54 @@ export default function Person(props: Readonly<PersonProps>) {
         <Box marginInline={"auto"} padding="space-16" width="100%" maxWidth="1440px">
             <Heading spacing level="3" size="medium">Personinformasjon</Heading>
             <Soek
-                fnr={fnr}
-                setFnr={setFnr}
-                setIsSubmit={setIsSubmit}
+                fnr={sokParameters.fnr}
+                setSokparametre={setSokParameters}
                 isLoading={isLoading}
-                nullstillStatus={() => setSkattekortstatus("UKJENT")}
+                nullstillStatus={() => {
+                    setSokParameters({fnr: "", aar: thisYear(), forsystem: "OS"});
+                    setSkattekortstatus("UKJENT");
+                }}
             />
             <Errorhandler heading={"Feil ved henting av person:"} error={error}/>
-            {!!alertMessage && (
-                <AlertWithCloseButton
-                    show={!!alertMessage}
-                    setShow={() => setAlertMessage(null)}
-                    variant={alertMessage.variant}
-                >
-                    {alertMessage.message}
-                </AlertWithCloseButton>
+            {alertMessages.size > 0 && [...alertMessages].map((alertMessage) => (
+                    <AlertWithCloseButton
+                        key={alertMessage.message}
+                        show={alertMessages.size > 0}
+                        setShow={() => setAlertMessages(new Set())}
+                        variant={alertMessage.variant}
+                    >
+                        {alertMessage.message}
+                    </AlertWithCloseButton>
+                )
             )}
-            <VStack padding="space-8">
-                {!error && fnr && <Box
-                    background={"surface-default"}
-                    padding="space-16"
-                    paddingInline="space-32"
-                    borderRadius="large"
-                >
-                    <Box>
-                        {skattekortstatus && fnr && (<LabelText
-                                label={"Skattekort status"}
+            {!error && sokParameters.fnr && <Box
+                background={"surface-default"}
+                padding="space-16"
+                paddingInline="space-32"
+                borderRadius="large"
+            >
+                <VStack justify="space-between" align={"baseline"} gap={"space-16"}>
+                    <HStack gap={"space-32"} align={"center"}>
+                        {skattekortstatus && sokParameters.fnr && (<LabelText
+                                label={`Skattekort status for ${sokParameters.fnr}, ${sokParameters.forsystem}, ${sokParameters.aar}`} 
                                 text={skattekortstatus}
                             />
                         )}
-                    </Box>
-                    <BestilleSkattekortButton
-                        gjelderId={fnr}
-                        error={error}
-                        setSkattekortstatus={setSkattekortstatus}
-                        setAlertMessage={setAlertMessage}
-                        shouldRefreshStatus={shouldRefresh}
-                        setShouldRefreshStatus={setShouldRefresh}
-                    />
-                </Box>
-                }
-                {fnr &&
-                    <ShowAuditLogg shouldRefresh={shouldRefresh} fnr={fnr} skattekort={skattekortData}
-                                   jumpToBatches={props.handleShowBatchesAt}/>}
-            </VStack>
+                        <BestilleSkattekortButton
+                            sokParameters={sokParameters}
+                            error={error}
+                            setSkattekortstatus={setSkattekortstatus}
+                            addAlertMessage={addAlertMessage}
+                            shouldRefreshStatus={shouldRefresh}
+                            setShouldRefreshStatus={setShouldRefresh}
+                        />
+                    </HStack>
+                </VStack>
+            </Box>
+            }
+            {sokParameters.fnr &&
+                <ShowAuditLogg shouldRefresh={shouldRefresh} fnr={sokParameters.fnr} skattekort={skattekortData}
+                               jumpToBatches={props.handleShowBatchesAt}/>}
         </Box>
     );
 }

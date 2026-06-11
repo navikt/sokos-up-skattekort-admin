@@ -1,126 +1,114 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { EraserIcon, MagnifyingGlassIcon } from "@navikt/aksel-icons";
-import {
-	Box,
-	Button,
-	HelpText,
-	HStack,
-	TextField,
-	VStack,
-} from "@navikt/ds-react";
-import {useEffect} from "react";
-import { useForm } from "react-hook-form";
-import { type SokParameter, SokParameterSchema } from "./SokParameter";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {EraserIcon, MagnifyingGlassIcon} from "@navikt/aksel-icons";
+import {Box, Button, HStack, VStack,} from "@navikt/ds-react";
+import {Dispatch, SetStateAction, useEffect} from "react";
+import {FormProvider, useForm} from "react-hook-form";
+import {type SokParameter} from "./SokParameter";
+import {ForsystemEnum} from "../bestillMedFil/api/FlereFnrRequest";
+import {thisYear} from "../../util/dateUtils";
+import {z} from "zod";
+import FnrTextField from "./FnrTextField";
+import AarRadioGroup from "./AarRadioGroup";
+import ForsystemRadioGroup from "./ForsystemRadioGroup";
 
 export type SoekProps = {
-    fnr: string |null;
-	setIsSubmit: (isSubmit: boolean) => void;
-	setFnr: (fnr: string) => void;
-	isLoading?: boolean;
+    fnr: string;
+    setSokparametre: Dispatch<SetStateAction<SokParameter>>;
+    isLoading?: boolean;
     nullstillStatus: () => void;
 };
-function formaterFnr(fnr: string) {
-	return fnr.replaceAll(/\D/g, "");
-}
-export default function Soek({
-    fnr,
-	setIsSubmit,
-	setFnr,
-	isLoading,
-    nullstillStatus
-}: Readonly<SoekProps>) {
-	const {
-		register,
-		handleSubmit,
-		trigger,
-		reset,
-		setValue,
-		formState: { errors },
-	} = useForm<SokParameter>({
-		resolver: zodResolver(SokParameterSchema),
-	});
 
-	function handleSoekReset() {
-		setIsSubmit(false);
-		setFnr("");
+const FormDataSchema = z.object({
+    fnr: z.string().refine((value) => {
+        return /^\d{11}$/.test(value);
+    }, {message: "FNR kan bare inneholde 11 siffer"}).default("").nonoptional(),
+    forsystem: ForsystemEnum.default(ForsystemEnum.enum.OS).nonoptional(),
+    aar: z.number()
+});
+
+type FormData = z.infer<typeof FormDataSchema>
+
+export default function Soek({
+                                 fnr,
+                                 setSokparametre,
+                                 isLoading,
+                                 nullstillStatus
+                             }: Readonly<SoekProps>) {
+    const form = useForm<FormData>({
+        resolver: zodResolver(FormDataSchema),
+        defaultValues: {
+            fnr: "",
+            forsystem: ForsystemEnum.enum.OS,
+            aar: thisYear(),
+        }
+    });
+
+    function handleSoekReset() {
         nullstillStatus();
-		reset();
-	}
-	function handleSoekSubmit(parameter: SokParameter) {
+        form.reset();
+    }
+
+    function handleSoekSubmit(parameter: FormData) {
+        console.log(JSON.stringify(parameter, null, 2));
         nullstillStatus();
-		setIsSubmit(true);
-		const fnr = parameter.fnr ?? "";
-		setFnr(fnr);
-	}
+        setSokparametre({
+            fnr: parameter.fnr,
+            forsystem: parameter.forsystem,
+            aar: Number(parameter.aar),
+        });
+    }
 
     useEffect(() => {
         if (fnr) {
-            setValue("fnr", fnr);
+            form.setValue("fnr", fnr);
         }
-    }, [fnr, setValue]);
-    
-	return (
-		<Box padding="6" background={"surface-alt-1-subtle"} borderRadius="large">
-			<form onSubmit={handleSubmit(handleSoekSubmit)}>
-				<VStack gap={"4"}>
-					<HStack justify="space-between">
-						<TextField
-							{...register("fnr")}
-							size={"small"}
-							autoComplete={"off"}
-							htmlSize={30}
-							maxLength={11}
-							label="Gjelder"
-							error={errors.fnr?.message}
-							onPaste={(event: React.ClipboardEvent<HTMLInputElement>) => {
-								event.preventDefault();
-								const fraUtklippstavle =
-									event.clipboardData.getData("text/plain");
-								const bareSiffer = formaterFnr(fraUtklippstavle);
-								setValue("fnr", bareSiffer);
-							}}
-							// eslint-disable-next-line jsx-a11y/no-autofocus
-							autoFocus
-						/>
-						<HelpText placement="left" title="Om arbeidsflaten skattekort">
-							Du kan se skattekort 24 mnd tilbake i tid.
-							<br />
-							For å se hvilken del av skattekortet som vil bli, eller er, brukt
-							i en beregning må menypunktet "Skatt og trekk" og underpunktmeny
-							"eSkattekort - Søk" i Økonomiportalen benyttes.
-						</HelpText>
-					</HStack>
-					<HStack gap="space-16" justify="end">
-						<Button
-							disabled={isLoading}
-							variant="secondary"
-							size={"small"}
-							type="button"
-							icon={<EraserIcon aria-hidden={"true"} />}
-							iconPosition={"right"}
-							title={"Nytt søk"}
-							onClick={(e) => {
-								e.preventDefault();
-								handleSoekReset();
-							}}
-						>
-							Nytt søk
-						</Button>
-						<Button
-							disabled={isLoading}
-							size={"small"}
-							variant={"primary"}
-							type={"submit"}
-							title={"Søk"}
-							iconPosition={"right"}
-							icon={<MagnifyingGlassIcon aria-hidden={"true"} />}
-							onClick={() => trigger()}
-						>
-							Søk
-						</Button>
-					</HStack>
-				</VStack>
-			</form>
-		</Box>
-	);
+    }, [fnr, form.setValue]);
+
+    return (
+        <Box padding="6" background={"surface-alt-1-subtle"} borderRadius="large">
+            <form onSubmit={form.handleSubmit(handleSoekSubmit)}>
+                <FormProvider {...form}>
+                    <VStack gap={"4"}>
+                        <HStack justify="start" gap={"space-64"}>
+                            <HStack gap="space-8" justify="space-evenly">
+                                <ForsystemRadioGroup/>
+                                <AarRadioGroup/>
+                            </HStack>
+                            <VStack align={"start"} justify={"space-between"} gap={"space-16"}>
+                                <FnrTextField/>
+                                <HStack gap="space-16" justify="end">
+                                    <Button
+                                        disabled={isLoading}
+                                        variant="secondary"
+                                        size={"small"}
+                                        type="button"
+                                        icon={<EraserIcon aria-hidden={"true"}/>}
+                                        iconPosition={"right"}
+                                        title={"Nytt søk"}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            handleSoekReset();
+                                        }}
+                                    >
+                                        Nytt søk
+                                    </Button>
+                                    <Button
+                                        disabled={isLoading}
+                                        size={"small"}
+                                        variant={"primary"}
+                                        type={"submit"}
+                                        title={"Søk"}
+                                        iconPosition={"right"}
+                                        icon={<MagnifyingGlassIcon aria-hidden={"true"}/>}
+                                    >
+                                        Søk
+                                    </Button>
+                                </HStack>
+                            </VStack>
+                        </HStack>
+                    </VStack>
+                </FormProvider>
+            </form>
+        </Box>
+    );
 }

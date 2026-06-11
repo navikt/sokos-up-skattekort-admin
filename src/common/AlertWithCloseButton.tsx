@@ -1,6 +1,11 @@
 import { Alert, type AlertProps } from "@navikt/ds-react";
 import type React from "react";
 
+export interface Alert {
+    message: string;
+    variant: "success" | "error" | "warning";
+}
+
 export default function AlertWithCloseButton({
 	children,
 	variant,

@@ -39,9 +39,7 @@ export const handlers = [
     http.post("/sokos-skattekort/api/v1/skattekort/status", async () => {
         // eslint-disable-next-line no-negated-condition
         const status = /* ..................... */ !skattekortBestilt ? "IKKE_FORESPURT"
-            : now() < addSeconds(skattekortBestilt, 5)                ? "IKKE_BESTILT"
-            : now() < addSeconds(skattekortBestilt, 10)               ? "BESTILT"
-            : now() < addSeconds(skattekortBestilt, 15)               ? "VENTER_PAA_UTSENDING"
+            : now() < addSeconds(skattekortBestilt, 5)               ? "VENTER_PAA_UTSENDING"
             : /* Og hvis det er mer enn 15s siden man trykket:       */ "SENDT_FORSYSTEM";
         return HttpResponse.json({status}, {status: 200});
     }),
