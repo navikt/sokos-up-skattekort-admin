@@ -1,5 +1,5 @@
 import {Box, Heading, HStack, VStack,} from "@navikt/ds-react";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import AlertWithCloseButton, {Alert} from "../../common/AlertWithCloseButton";
 import Errorhandler from "../../common/Errorhandler";
 import ShowAuditLogg from "./ShowAuditLogg";
@@ -22,6 +22,11 @@ export default function Person(props: Readonly<PersonProps>) {
 
     const {data: skattekortData, error, isLoading} = useFetchSkattekort(sokParameters.fnr);
     const [alertMessages, setAlertMessages] = useState<Set<Alert>>(new Set());
+    useEffect(() => {
+        if (props.fnr) {
+            setSokParameters(prev =>
+                ({fnr: props.fnr || "", aar: prev.aar, forsystem: prev.forsystem}))
+        }}, [props.fnr, setSokParameters]);
 
     function addAlertMessage(alert: Alert) {
         return setAlertMessages(prev => new Set(prev).add(alert));

@@ -49,7 +49,6 @@ export default function Soek({
     }
 
     function handleSoekSubmit(parameter: FormData) {
-        console.log(JSON.stringify(parameter, null, 2));
         nullstillStatus();
         setSokparametre({
             fnr: parameter.fnr,
