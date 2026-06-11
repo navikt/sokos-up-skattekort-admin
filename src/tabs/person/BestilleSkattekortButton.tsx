@@ -28,7 +28,6 @@ export default function BestilleSkattekortButton(
 
     useEffect(() => {
         if (data) {
-            console.log(data);
             props.setSkattekortstatus(data);
             if (["UGYLDIG_FNR", "KUNSTIG_FNR", "SENDT_FORSYSTEM"].includes(data)) {
                 props.setShouldRefreshStatus(false);
@@ -56,16 +55,14 @@ export default function BestilleSkattekortButton(
     }
 
     return (
-        <Tooltip content={props.error ? props.error.message : "Send forespørsel til sokos-skattekort om Skattekort"}>
+        <Tooltip content={"Send forespørsel til sokos-skattekort om Skattekort"}>
 			<span>
 				<Button
                     size={"small"}
                     onClick={handleClick}
                     loading={props.shouldRefreshStatus}
                     disabled={
-                        !data ||
-                        !!props.error ||
-                        props.shouldRefreshStatus
+                        !data || props.shouldRefreshStatus
                     }
                     icon={!!props.error && <ExclamationmarkTriangleFillIcon/>}
                 >
