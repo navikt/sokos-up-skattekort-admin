@@ -58,7 +58,7 @@ export default function Person(props: Readonly<PersonProps>) {
                     </AlertWithCloseButton>
                 )
             )}
-            {!error && sokParameters.fnr && <Box
+            {sokParameters.fnr && <Box
                 background={"surface-default"}
                 padding="space-16"
                 paddingInline="space-32"
