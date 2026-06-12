@@ -1,8 +1,12 @@
 import type {FileObject} from "@navikt/ds-react";
 import {BackendError} from "../../../common/Error";
-import {api, BASE_URI} from "../../../common/apiConfig";
+import {api, BASE_URI, swrConfig} from "../../../common/apiConfig";
+import {type DetailStatusResponse} from "./DetailStatus";
+import useSWR from "swr";
+import type {AxiosResponse} from "axios";
+import {Forsystem} from "./FlereFnrRequest";
 
-export async function postForesoerselfil(file: FileObject | null, forsystem: "OS" | "DARE_POC", inntektsaar: number): Promise<{
+export async function postForesoerselfil(file: FileObject | null, forsystem: Forsystem, inntektsaar: number): Promise<{
     data: string,
     error: BackendError | null
 }> {
@@ -20,6 +24,36 @@ export async function postForesoerselfil(file: FileObject | null, forsystem: "OS
         if (error instanceof Error) {
             return {data: "", error: new BackendError(error.message)};
         }
-        return {data: "", error: new BackendError("Ukjent feil ved opplasting")};
+        return {data: "", error: new BackendError("Ukjent feil ved henting av statuser")};
     }
 }
+
+export function useFetchStatuses(file: FileObject | null): {
+    data: DetailStatusResponse | undefined;
+    error: Error | null;
+    isLoading: boolean;
+} {
+    const {data, error, isLoading} = useSWR<DetailStatusResponse>(
+        file ? ["/skattekort/statuser", file] : null,
+        {
+            ...swrConfig<DetailStatusResponse, [string, FileObject]>(
+                async ([_url, file]: [string, FileObject]) => {
+                    const bytes = await file?.file.arrayBuffer();
+                    return api(BASE_URI.SOKOS_SKATTEKORT_API)
+                        .post<
+                            ArrayBufferView,
+                            AxiosResponse<DetailStatusResponse>
+                        >(_url, bytes)
+                        .then((response: AxiosResponse<DetailStatusResponse>) => response.data)
+                        .then((detailStatusResponse: DetailStatusResponse) => detailStatusResponse)
+                },
+            ),
+            onError: (error) => {
+                return {data: {}, error, isValidating: false};
+            },
+            shouldRetryOnError: false,
+        },
+    );
+    return {data, error, isLoading};
+}
+

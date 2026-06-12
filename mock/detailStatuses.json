@@ -1,0 +1,32 @@
+{
+  "statuses": {
+    "06859899852": {
+      "abonnements": [
+        "OS2025",
+        "OS2026",
+        "OS_STOR2026"
+      ],
+      "skattekortLastYear": true,
+      "skattekortThisYear": true,
+      "skattekortNextYear": false
+    },
+    "12341234123": {
+      "abonnements": [
+        ""
+      ],
+      "skattekortLastYear": false,
+      "skattekortThisYear": false,
+      "skattekortNextYear": false
+    },
+    "29860299923": {
+      "abonnements": [
+        "OS2025",
+        "OS2026",
+        "OS_STOR2026"
+      ],
+      "skattekortLastYear": true,
+      "skattekortThisYear": true,
+      "skattekortNextYear": false
+    }
+  }
+}

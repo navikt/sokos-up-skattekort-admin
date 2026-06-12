@@ -3,6 +3,7 @@ import {Button, Tooltip} from "@navikt/ds-react";
 import {useEffect} from "react";
 import type {ForespoerselRequest} from "./api/ForespoerselRequest";
 import {bestillSkattekort, useFetchSkattekortStatus} from "./api/api";
+import {thisYear} from "../../util/dateUtils";
 
 interface BestilleSkattekortButtonProps {
 	gjelderId: string;
@@ -23,7 +24,7 @@ export default function BestilleSkattekortButton(
 ) {
 	const request: ForespoerselRequest = {
 		personIdent: props.gjelderId,
-		aar: new Date().getFullYear(),
+		aar: thisYear(),
 		forsystem: "OS",
 	};
 
@@ -40,7 +41,7 @@ export default function BestilleSkattekortButton(
 				// Det er først når data kommer tilbake fra kallet at vi evt rerendrer basert på shouldRefreshStatus
 				// Derfor er det trygt å sette state her uten at vi risikerer en uendelig loop
 				props.setShouldRefreshStatus(true);
-			} else if (["UGYLDIG_FNR", "SENDT_FORSYSTEM"].includes(data)) {
+			} else if (["UGYLDIG_FNR", "KUNSTIG_FNR", "SENDT_FORSYSTEM"].includes(data)) {
 				props.setShouldRefreshStatus(false);
 			}
             return
@@ -53,7 +54,7 @@ export default function BestilleSkattekortButton(
         
 		bestillSkattekort(request)
 			.then((response) => {
-				if (response === "Success") {
+				if (response.data === "Success") {
 					props.setAlertMessage({
 						message:
 							"Skattekort bestilles fra Skatteetaten. Det tar normalt et par minutter." +
@@ -78,7 +79,7 @@ export default function BestilleSkattekortButton(
 					disabled={
 						!data ||
 						!!props.error ||
-						["API_ERROR", "UGYLDIG_FNR", "SENDT_FORSYSTEM"].includes(
+						["API_ERROR", "KUNSTIG_FNR", "UGYLDIG_FNR", "SENDT_FORSYSTEM"].includes(
 							data ?? "",
 						) ||
 						props.shouldRefreshStatus
