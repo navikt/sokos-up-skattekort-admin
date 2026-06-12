@@ -1,94 +1,75 @@
 import {ExclamationmarkTriangleFillIcon} from "@navikt/aksel-icons";
 import {Button, Tooltip} from "@navikt/ds-react";
-import {useEffect} from "react";
 import type {ForespoerselRequest} from "./api/ForespoerselRequest";
 import {bestillSkattekort, useFetchSkattekortStatus} from "./api/api";
-import {thisYear} from "../../util/dateUtils";
+import {useEffect} from "react";
+import {Alert} from "../../common/AlertWithCloseButton";
+import {SokParameter} from "./SokParameter";
 
 interface BestilleSkattekortButtonProps {
-	gjelderId: string;
-	error: Error | null;
-	setSkattekortstatus: (status: string) => void;
-	setAlertMessage: (
-		message: {
-			message: string;
-			variant: "success" | "error" | "warning";
-		} | null,
-	) => void;
+    sokParameters: SokParameter;
+    error: Error | null;
+    setSkattekortstatus: (status: string) => void;
+    addAlertMessage: (alert: Alert) => void;
     shouldRefreshStatus?: boolean;
     setShouldRefreshStatus: (should: boolean) => void;
 }
 
 export default function BestilleSkattekortButton(
-	props: Readonly<BestilleSkattekortButtonProps>,
+    props: Readonly<BestilleSkattekortButtonProps>,
 ) {
-	const request: ForespoerselRequest = {
-		personIdent: props.gjelderId,
-		aar: thisYear(),
-		forsystem: "OS",
-	};
+    const request: ForespoerselRequest = {
+        personIdent: props.sokParameters.fnr,
+        aar: Number(props.sokParameters.aar),
+        forsystem: props.sokParameters.forsystem,
+    };
 
-	const { data } = useFetchSkattekortStatus(request, !!props.shouldRefreshStatus);
+    const {data} = useFetchSkattekortStatus(request, !!props.shouldRefreshStatus);
 
-	useEffect(() => {
-		if (data) {
-			props.setSkattekortstatus(data);
-			if (
-				["IKKE_BESTILT", "BESTILT", "VENTER_PAA_UTSENDING"].includes(
-					data,
-				)
-			) {
-				// Det er først når data kommer tilbake fra kallet at vi evt rerendrer basert på shouldRefreshStatus
-				// Derfor er det trygt å sette state her uten at vi risikerer en uendelig loop
-				props.setShouldRefreshStatus(true);
-			} else if (["UGYLDIG_FNR", "KUNSTIG_FNR", "SENDT_FORSYSTEM"].includes(data)) {
-				props.setShouldRefreshStatus(false);
-			}
+    useEffect(() => {
+        if (data) {
+            props.setSkattekortstatus(data);
+            if (["UGYLDIG_FNR", "KUNSTIG_FNR", "SENDT_FORSYSTEM"].includes(data)) {
+                props.setShouldRefreshStatus(false);
+            }
             return
-		}
+        }
         props.setShouldRefreshStatus(false);
-	}, [data, props]);
+    }, [data, props.setShouldRefreshStatus, props.setSkattekortstatus]);
 
-	function handleClick() {
-		props.shouldRefreshStatus || props.setShouldRefreshStatus(true);
-        
-		bestillSkattekort(request)
-			.then((response) => {
-				if (response.data === "Success") {
-					props.setAlertMessage({
-						message:
-							"Skattekort bestilles fra Skatteetaten. Det tar normalt et par minutter." +
-							"Du kan lukke dette vinduet eller fortsette å arbeide i mellomtiden.",
-						variant: "success",
-					});
-				}
-			})
-			.catch((error) => {
-				props.setAlertMessage({ message: error.message, variant: "error" });
-			});
-	}
+    function handleClick() {
+        props.shouldRefreshStatus || props.setShouldRefreshStatus(true);
+        bestillSkattekort(request)
+            .then((response) => {
+                if (response.data === "Success") {
+                    props.addAlertMessage({
+                        message: `Skattekort er forespurt til ${props.sokParameters.forsystem} for ${props.sokParameters.aar}`,
+                        variant: "success",
+                    });
+                }
+            })
+            .catch((error) => {
+                props.addAlertMessage({message: error.message, variant: "error"});
+            });
+    }
 
-	return (
-		<Tooltip content={props.error ? props.error.message : "Bestill skattekort"}>
+    return (
+        <Tooltip content={"Send forespørsel til sokos-skattekort om Skattekort"}>
 			<span>
 				<Button
-					size={"small"}
-					variant={"secondary-neutral"}
-					onClick={handleClick}
-					loading={props.shouldRefreshStatus}
-					disabled={
-						!data ||
-						!!props.error ||
-						["API_ERROR", "KUNSTIG_FNR", "UGYLDIG_FNR", "SENDT_FORSYSTEM"].includes(
-							data ?? "",
-						) ||
-						props.shouldRefreshStatus
-					}
-					icon={!!props.error && <ExclamationmarkTriangleFillIcon />}
-				>
-					Bestill skattekort
+                    size={"small"}
+                    onClick={handleClick}
+                    loading={props.shouldRefreshStatus}
+                    disabled={
+                        !data || props.shouldRefreshStatus
+                    }
+                    icon={!!props.error && <ExclamationmarkTriangleFillIcon/>}
+                >
+					Forespør
+                    {data === "SENDT_FORSYSTEM" && " igjen"}
 				</Button>
 			</span>
-		</Tooltip>
-	);
+        </Tooltip>
+    )
+
 }
