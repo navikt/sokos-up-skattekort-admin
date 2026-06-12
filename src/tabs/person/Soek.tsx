@@ -3,10 +3,9 @@ import {EraserIcon, MagnifyingGlassIcon} from "@navikt/aksel-icons";
 import {Box, Button, HStack, VStack,} from "@navikt/ds-react";
 import {Dispatch, SetStateAction, useEffect} from "react";
 import {FormProvider, useForm} from "react-hook-form";
-import {type SokParameter} from "./SokParameter";
+import {type SokParameter, SokParameterSchema} from "./SokParameter";
 import {ForsystemEnum} from "../bestillMedFil/api/FlereFnrRequest";
 import {thisYear} from "../../util/dateUtils";
-import {z} from "zod";
 import FnrTextField from "./FnrTextField";
 import AarRadioGroup from "./AarRadioGroup";
 import ForsystemRadioGroup from "./ForsystemRadioGroup";
@@ -18,24 +17,14 @@ export type SoekProps = {
     nullstillStatus: () => void;
 };
 
-const FormDataSchema = z.object({
-    fnr: z.string().refine((value) => {
-        return /^\d{11}$/.test(value);
-    }, {message: "FNR kan bare inneholde 11 siffer"}).default("").nonoptional(),
-    forsystem: ForsystemEnum.default(ForsystemEnum.enum.OS).nonoptional(),
-    aar: z.number()
-});
-
-type FormData = z.infer<typeof FormDataSchema>
-
 export default function Soek({
                                  fnr,
                                  setSokparametre,
                                  isLoading,
                                  nullstillStatus
                              }: Readonly<SoekProps>) {
-    const form = useForm<FormData>({
-        resolver: zodResolver(FormDataSchema),
+    const form = useForm<SokParameter>({
+        resolver: zodResolver(SokParameterSchema),
         defaultValues: {
             fnr: "",
             forsystem: ForsystemEnum.enum.OS,
@@ -48,7 +37,7 @@ export default function Soek({
         form.reset();
     }
 
-    function handleSoekSubmit(parameter: FormData) {
+    function handleSoekSubmit(parameter: SokParameter) {
         nullstillStatus();
         setSokparametre({
             fnr: parameter.fnr,

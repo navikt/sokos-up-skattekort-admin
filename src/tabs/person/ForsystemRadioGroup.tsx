@@ -3,15 +3,15 @@ import {Radio, RadioGroup} from "@navikt/ds-react";
 import {ForsystemEnum} from "../bestillMedFil/api/FlereFnrRequest";
 
 export default function ForsystemRadioGroup() {
-    const {register, formState: {errors}} = useFormContext();
+    const {setValue, formState: {errors}} = useFormContext();
 
     return (
         <RadioGroup legend={"Forsystem"} defaultValue={ForsystemEnum.enum.OS}
-        error={JSON.stringify(errors.forsystem?.message, null, 2)}>
+        error={errors.forsystem?.message as string}
+        onChange={(forsystem) => setValue("forsystem",forsystem) }
+        >
             {ForsystemEnum.options.map((forsystem) =>
-                <Radio key={"soek" + forsystem}
-                       {...register("forsystem")}
-                       value={forsystem}>{forsystem}</Radio>)}
+                <Radio key={"soekforsystem" + forsystem} value={forsystem}>{forsystem}</Radio>)}
         </RadioGroup>
     )
 }

@@ -38,7 +38,6 @@ export default function BestilleSkattekortButton(
     }, [data, props.setShouldRefreshStatus, props.setSkattekortstatus]);
 
     function handleClick() {
-        console.log(JSON.stringify(props.sokParameters, null, 2));
         props.shouldRefreshStatus || props.setShouldRefreshStatus(true);
         bestillSkattekort(request)
             .then((response) => {

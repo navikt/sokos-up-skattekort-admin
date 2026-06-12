@@ -1,7 +1,7 @@
 import {z} from "zod";
 import {FoedselsnummerSchema} from "../../common/FoedselsnummerSchema";
 import {ForsystemEnum} from "../bestillMedFil/api/FlereFnrRequest";
-import {skattekortYears, thisYear} from "../../util/dateUtils";
+import {skattekortYears} from "../../util/dateUtils";
 
 export const SokParameterSchema = z.object({
 	fnr: FoedselsnummerSchema,

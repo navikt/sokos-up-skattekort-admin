@@ -12,7 +12,6 @@ export default function AarRadioGroup() {
                     onChange={(year) => setValue("aar",year)}
         >
             {skattekortYears().map((year) =>
-                <Radio key={"soek" + year} value={year}>{year}</Radio>
-            )}
+                <Radio key={"soekyear" + year} value={year}>{year}</Radio>)}
         </RadioGroup>)
 }
