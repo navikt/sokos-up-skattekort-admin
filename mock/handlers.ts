@@ -40,7 +40,7 @@ export const handlers = [
         // eslint-disable-next-line no-negated-condition
         const status = /* ..................... */ !skattekortBestilt ? "IKKE_FORESPURT"
             : now() < addSeconds(skattekortBestilt, 5)               ? "VENTER_PAA_UTSENDING"
-            : /* Og hvis det er mer enn 15s siden man trykket:       */ "SENDT_FORSYSTEM";
+            : /* Og hvis det er mer enn 15s siden man trykket:       */ "FERDIG_BEHANDLET";
         return HttpResponse.json({status}, {status: 200});
     }),
     http.post("/sokos-skattekort/api/v1/admin/auditlogg", async ({request}) => {

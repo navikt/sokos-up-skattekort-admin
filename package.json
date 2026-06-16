@@ -12,7 +12,8 @@
     "stylelint:check": "stylelint '**/*.css'",
     "stylelint:fix": "stylelint '**/*.css' --fix",
     "prepare": "husky",
-    "pnpm:resolve": "node scripts/resolve-pnpm-version.mjs"
+    "pnpm:resolve": "node scripts/resolve-pnpm-version.mjs",
+    "generate:svg": "depcruise src --exclude \"node_modules|util|apiConfig.ts|Error.ts|common\" --output-type dot | dot -Tsvg > programstruktur.svg"
   },
   "dependencies": {
     "@grafana/faro-web-sdk": "2.7.1",
