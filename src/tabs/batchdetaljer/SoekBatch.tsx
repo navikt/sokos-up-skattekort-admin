@@ -26,7 +26,6 @@ export type SoekProps = {
     setFilters: (filters: Array<string>) => void;
     batchTyper: string[];
     setBatchTyper: (batchTyper: string[]) => void;
-    handleOpenChange: (e: boolean) => void;
 };
 
 export default function SoekBatch({
@@ -36,8 +35,7 @@ export default function SoekBatch({
                                       batchTyper,
                                       setBatchTyper,
                                       filters,
-                                      setFilters,
-                                      handleOpenChange
+                                      setFilters
                                   }: Readonly<SoekProps>) {
     const [showLongRangeWarning, setShowLongRangeWarning] = useState(false);
     const [pendingSubmit, setPendingSubmit] = useState<BatchInsightRequest | null>(null);
@@ -160,7 +158,7 @@ export default function SoekBatch({
                             /></HStack> </VStack>
 
                     <VStack minWidth={"420px"}>
-                        <ReadMore onOpenChange={handleOpenChange} header={"Datovelger"} size={"small"}>
+                        <ReadMore header={"Datovelger"} size={"small"}>
                             <DatePicker.Standalone mode={"range"} onSelect={(dateRange) =>
                                 dateRange ? handlePickDate({from: dateRange.from, to: dateRange.to}) : null}/>
                         </ReadMore>

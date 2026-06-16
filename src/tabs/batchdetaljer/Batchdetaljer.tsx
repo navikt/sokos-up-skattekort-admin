@@ -44,36 +44,16 @@ export default function Batchdetaljer({dateRange}: Readonly<BatchdetaljerProps>)
         return foo ?? [] as Bestillingsbatch[]
     }, [data, batchTyper, filters])
 
-    const tabellY = useRef<HTMLDivElement>(null)
-    const soekBatchY = useRef<HTMLDivElement>(null)
-    const [tabellBoxHeight, setTabellBoxHeight] = useState<number>(500)
-
-    const [soekBatchOpenState, setSoekBatchOpenState] = useState<boolean>(false);
-
-    // biome-ignore lint/correctness/useExhaustiveDependencies: hmm
-    useLayoutEffect(() => {
-        const soekBatchHeight = soekBatchY?.current?.getBoundingClientRect().height ?? 400;
-        setTabellBoxHeight((visualViewport?.height ?? 1000) - soekBatchHeight - 300);
-    }, [
-        soekBatchY?.current?.getBoundingClientRect().height,
-        tabellY?.current?.getBoundingClientRect().y,
-        filteredBatches.length,
-        soekBatchOpenState
-    ]);
-
     return (
         <>
-            <div ref={soekBatchY}>
-                <SoekBatch isLoading={isLoading} batchInsightRequest={batchInsightRequest}
-                           setBatchInsightRequest={setBatchInsightRequest}
-                           filters={filters}
-                           setFilters={setFilters}
-                           batchTyper={batchTyper}
-                           setBatchTyper={setBatchTyper}
-                           handleOpenChange={setSoekBatchOpenState}
-                />
-            </div>
-            <Box margin={"space-24"} ref={tabellY}>
+            <SoekBatch isLoading={isLoading} batchInsightRequest={batchInsightRequest}
+                       setBatchInsightRequest={setBatchInsightRequest}
+                       filters={filters}
+                       setFilters={setFilters}
+                       batchTyper={batchTyper}
+                       setBatchTyper={setBatchTyper}
+            />
+            <Box margin={"space-24"}>
                 {isLoading && <Skeleton width="100%" height="200px"/>}
                 {!isLoading && data?.items.length === 0 &&
                     <BodyShort>Ingen bestillingsbatcher funnet
@@ -88,7 +68,7 @@ export default function Batchdetaljer({dateRange}: Readonly<BatchdetaljerProps>)
                     >
                         <Tidslinjer batcher={filteredBatches} handleScrollTo={scrollTo}/>
                         <div style={{
-                            height: tabellBoxHeight,
+                            height: "1000px",
                             overflowY: "scroll",
                             overflowX: "hidden"
                         }}>
