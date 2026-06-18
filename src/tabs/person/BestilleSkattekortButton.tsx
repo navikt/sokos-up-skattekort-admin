@@ -29,7 +29,10 @@ export default function BestilleSkattekortButton(
     useEffect(() => {
         if (data) {
             props.setSkattekortstatus(data);
-            if (["UGYLDIG_FNR", "FERDIG_BEHANDLET"].includes(data)) {
+            if (!["IKKE_FORESPURT", 
+                "IKKE_BESTILT", 
+                "BESTILT", 
+                "VENTER_UTSENDING"].includes(data)) {
                 props.setShouldRefreshStatus(false);
             }
             return
@@ -66,7 +69,7 @@ export default function BestilleSkattekortButton(
                     icon={!!props.error && <ExclamationmarkTriangleFillIcon/>}
                 >
 					Forespør
-                    {data === "FERDIG_BEHANDLET" && " igjen"}
+                    {data === "ABONNERER" && " igjen"}
 				</Button>
 			</span>
         </Tooltip>

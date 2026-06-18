@@ -29,7 +29,7 @@ export default function Person(props: Readonly<PersonProps>) {
         }}, [props.fnr, setSokParameters]);
 
     function addAlertMessage(alert: Alert) {
-        return setAlertMessages(prev => {
+        setAlertMessages(prev => {
             if ([...prev].some(a => a.message === alert.message)) return prev;
             else return new Set(prev).add(alert);
     })}
