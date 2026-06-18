@@ -28,5 +28,5 @@ export function useFetchBatcher(batchInsightRequest: BatchInsightRequest | null)
             shouldRetryOnError: false,
         },
     );
-    return {status: data, error, isLoading};
+    return {data, error, isLoading};
 }

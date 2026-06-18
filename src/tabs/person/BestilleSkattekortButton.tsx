@@ -24,7 +24,7 @@ export default function BestilleSkattekortButton(
         forsystem: props.sokParameters.forsystem,
     };
 
-    const {status} = useFetchSkattekortStatus(request, !!props.shouldRefreshStatus);
+    const {data: status} = useFetchSkattekortStatus(request, !!props.shouldRefreshStatus);
 
     useEffect(() => {
         console.log("Skattekortstatus:", status);
@@ -33,7 +33,7 @@ export default function BestilleSkattekortButton(
             if (!["IKKE_FORESPURT", 
                 "IKKE_BESTILT", 
                 "BESTILT", 
-                "VENTER_UTSENDING"].includes(status)) {
+                "VENTER_PAA_UTSENDING"].includes(status)) {
                 props.setShouldRefreshStatus(false);
             }
             return

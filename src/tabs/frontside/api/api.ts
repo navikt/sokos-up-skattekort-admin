@@ -29,7 +29,7 @@ export function useFetchLiveBestillinger(shouldRefresh: boolean): {
             shouldRetryOnError: false,
         }
     )
-    return {status: data, error, isLoading};
+    return {data, error, isLoading};
 }
 
 export function useFetchLiveUtsendinger(shouldRefresh: boolean = false): {
@@ -54,7 +54,7 @@ export function useFetchLiveUtsendinger(shouldRefresh: boolean = false): {
             shouldRetryOnError: false,
         }
     )
-    return {status: data, error, isLoading};
+    return {data, error, isLoading};
 }
 
 export function useFetchNoekkelinformasjon(shouldRefresh: boolean = false): {
@@ -79,7 +79,7 @@ export function useFetchNoekkelinformasjon(shouldRefresh: boolean = false): {
             shouldRetryOnError: false,
         }
     )
-    return {status: data, error, isLoading};
+    return {data, error, isLoading};
 }
 
 
@@ -107,7 +107,7 @@ export function useFetchAlleUferdigeBestillingsbatcher(shouldRefresh: boolean): 
             shouldRetryOnError: false,
         }
     )
-    return {status: data, error, isLoading, mutate};
+    return {data, error, isLoading, mutate};
 }
 
 export async function rerunBestillingsbatch(id: number) {

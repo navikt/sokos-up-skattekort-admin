@@ -96,7 +96,7 @@ export function useFetchSkattekortStatus(
             },
             refreshInterval: shouldRefresh ? 1000 : 0,
         });
-    return {status: data, error, isLoading};
+    return {data, error, isLoading};
 }
 
 export function useFetchAuditLogg(fnr: string, shouldRefresh: boolean): {
