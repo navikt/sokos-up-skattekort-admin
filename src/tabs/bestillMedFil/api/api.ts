@@ -10,7 +10,7 @@ export async function postForesoerselfil(file: FileObject | null, forsystem: For
     data: string,
     error: BackendError | null
 }> {
-    if (!file) return {data: "", error: new BackendError("Ingen fil valgt")};
+    if (!file) return {status: "", error: new BackendError("Ingen fil valgt")};
     try {
         const bytes = await file.file.arrayBuffer();
         const response = await api(BASE_URI.SOKOS_SKATTEKORT_API)
@@ -19,12 +19,12 @@ export async function postForesoerselfil(file: FileObject | null, forsystem: For
                 bytes, {
                     headers: {"Content-Type": "application/octet-stream"},
                 })
-        return {data: typeof response.data === "string" ? response.data : "Success", error: null}
+        return {status: typeof response.data === "string" ? response.data : "Success", error: null}
     } catch (error) {
         if (error instanceof Error) {
-            return {data: "", error: new BackendError(error.message)};
+            return {status: "", error: new BackendError(error.message)};
         }
-        return {data: "", error: new BackendError("Ukjent feil ved henting av statuser")};
+        return {status: "", error: new BackendError("Ukjent feil ved henting av statuser")};
     }
 }
 
@@ -54,6 +54,6 @@ export function useFetchStatuses(file: FileObject | null): {
             shouldRetryOnError: false,
         },
     );
-    return {data, error, isLoading};
+    return {status: data, error, isLoading};
 }
 

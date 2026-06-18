@@ -24,21 +24,22 @@ export default function BestilleSkattekortButton(
         forsystem: props.sokParameters.forsystem,
     };
 
-    const {data} = useFetchSkattekortStatus(request, !!props.shouldRefreshStatus);
+    const {status} = useFetchSkattekortStatus(request, !!props.shouldRefreshStatus);
 
     useEffect(() => {
-        if (data) {
-            props.setSkattekortstatus(data);
+        console.log("Skattekortstatus:", status);
+        if (status) {
+            props.setSkattekortstatus(status);
             if (!["IKKE_FORESPURT", 
                 "IKKE_BESTILT", 
                 "BESTILT", 
-                "VENTER_UTSENDING"].includes(data)) {
+                "VENTER_UTSENDING"].includes(status)) {
                 props.setShouldRefreshStatus(false);
             }
             return
         }
         props.setShouldRefreshStatus(false);
-    }, [data, props.setShouldRefreshStatus, props.setSkattekortstatus]);
+    }, [status, props.setShouldRefreshStatus, props.setSkattekortstatus]);
 
     function handleClick() {
         props.shouldRefreshStatus || props.setShouldRefreshStatus(true);
@@ -64,12 +65,12 @@ export default function BestilleSkattekortButton(
                     onClick={handleClick}
                     loading={props.shouldRefreshStatus}
                     disabled={
-                        !data || props.shouldRefreshStatus
+                        !status || props.shouldRefreshStatus
                     }
                     icon={!!props.error && <ExclamationmarkTriangleFillIcon/>}
                 >
 					Forespør
-                    {data === "ABONNERER" && " igjen"}
+                    {status === "ABONNERER" && " igjen"}
 				</Button>
 			</span>
         </Tooltip>

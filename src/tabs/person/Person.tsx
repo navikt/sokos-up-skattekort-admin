@@ -20,7 +20,8 @@ export default function Person(props: Readonly<PersonProps>) {
     const [sokParameters, setSokParameters] =
         useState<SokParameter>({fnr: "", aar: thisYear(), forsystem: "OS"});
 
-    const {data: skattekortData, error, isLoading} = useFetchSkattekort(sokParameters.fnr);
+    const [shouldRefresh, setShouldRefresh] = useState(false);
+    const {data: skattekortData, error, isLoading} = useFetchSkattekort(sokParameters.fnr, shouldRefresh);
     const [alertMessages, setAlertMessages] = useState<Set<Alert>>(new Set());
     useEffect(() => {
         if (props.fnr) {
@@ -34,7 +35,6 @@ export default function Person(props: Readonly<PersonProps>) {
             else return new Set(prev).add(alert);
     })}
 
-    const [shouldRefresh, setShouldRefresh] = useState(false);
 
     return (
         <Box marginInline={"auto"} padding="space-16" width="100%" maxWidth="1440px">

@@ -12,7 +12,7 @@ import type {ForespoerselRequest} from "./ForespoerselRequest";
 import {type SkattekortStatusResponse, SkattekortStatusResponseSchema} from "./SkattekortStatusResponse";
 import {type AuditLogg, AuditLoggSchema, type WrappedAuditLoggWithError, WrappedAuditLoggWithErrorSchema} from "./Audit";
 
-export function useFetchSkattekort(fnr: string | null): {
+export function useFetchSkattekort(fnr: string | null, shouldRefresh:boolean): {
     data: Skattekort[] | undefined;
     error: Error;
     isLoading: boolean;
@@ -48,6 +48,7 @@ export function useFetchSkattekort(fnr: string | null): {
                 return {data: [], error, isValidating: false};
             },
             shouldRetryOnError: false,
+            refreshInterval: shouldRefresh ? 1000 : 0,
         },
     );
     return {data, error, isLoading};
@@ -95,7 +96,7 @@ export function useFetchSkattekortStatus(
             },
             refreshInterval: shouldRefresh ? 1000 : 0,
         });
-    return {data, error, isLoading};
+    return {status: data, error, isLoading};
 }
 
 export function useFetchAuditLogg(fnr: string, shouldRefresh: boolean): {
