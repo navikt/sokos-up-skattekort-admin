@@ -30,7 +30,9 @@ export default function BestilleSkattekortButton(
         console.log("Skattekortstatus:", status);
         if (status) {
             props.setSkattekortstatus(status);
-            if (!["IKKE_FORESPURT", 
+            if (![
+                "ABONNERER_IKKE",
+                "IKKE_FORESPURT", 
                 "IKKE_BESTILT", 
                 "BESTILT", 
                 "VENTER_PAA_UTSENDING"].includes(status)) {
@@ -65,7 +67,13 @@ export default function BestilleSkattekortButton(
                     onClick={handleClick}
                     loading={props.shouldRefreshStatus}
                     disabled={
-                        !status || props.shouldRefreshStatus
+                        !status ||
+                        [
+                            "IKKE_BESTILT",
+                            "BESTILT",
+                            "VENTER_PAA_UTSENDING",
+                        ].includes(status) ||
+                        props.shouldRefreshStatus
                     }
                     icon={!!props.error && <ExclamationmarkTriangleFillIcon/>}
                 >
