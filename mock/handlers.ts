@@ -10,7 +10,7 @@ import utsendinger from "./utsendinger.json"
 import noekkelinformasjon from "./noekkelinformasjon.json"
 import detailedStatuses from "./detailStatuses.json";
 import {addSeconds, now, skattekortYears} from "../src/util/dateUtils";
-import {ForespoerselRequest} from "../src/tabs/person/api/ForespoerselRequest";
+import type {ForespoerselRequest} from "../src/tabs/person/api/ForespoerselRequest";
 
 let refNr = 9000
 let skattekortnstuff: number = refNr*(Math.round(Math.random()*100))
@@ -39,7 +39,7 @@ export const handlers = [
     http.post("/sokos-skattekort/api/v1/skattekort/status", async () => {
         // eslint-disable-next-line no-negated-condition
         const status = /* ..................... */ !skattekortBestilt ? "IKKE_FORESPURT"
-            : now() < addSeconds(skattekortBestilt, 5)               ? "VENTER_PAA_UTSENDING"
+            : now() < addSeconds(skattekortBestilt, 5)               ? "VENTER_UTSENDING"
             : /* Og hvis det er mer enn 15s siden man trykket:       */ "ABONNERER";
         return HttpResponse.json({status}, {status: 200});
     }),

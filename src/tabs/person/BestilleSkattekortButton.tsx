@@ -3,8 +3,8 @@ import {Button, Tooltip} from "@navikt/ds-react";
 import type {ForespoerselRequest} from "./api/ForespoerselRequest";
 import {bestillSkattekort, useFetchSkattekortStatus} from "./api/api";
 import {useEffect} from "react";
-import {Alert} from "../../common/AlertWithCloseButton";
-import {SokParameter} from "./SokParameter";
+import type {Alert} from "../../common/AlertWithCloseButton";
+import type {SokParameter} from "./SokParameter";
 
 interface BestilleSkattekortButtonProps {
     sokParameters: SokParameter;
@@ -27,7 +27,6 @@ export default function BestilleSkattekortButton(
     const {data: status} = useFetchSkattekortStatus(request, !!props.shouldRefreshStatus);
 
     useEffect(() => {
-        console.log("Skattekortstatus:", status);
         if (status) {
             props.setSkattekortstatus(status);
             if (![
@@ -35,7 +34,7 @@ export default function BestilleSkattekortButton(
                 "IKKE_FORESPURT", 
                 "IKKE_BESTILT", 
                 "BESTILT", 
-                "VENTER_PAA_UTSENDING"].includes(status)) {
+                "VENTER_UTSENDING"].includes(status)) {
                 props.setShouldRefreshStatus(false);
             }
             return
@@ -71,7 +70,7 @@ export default function BestilleSkattekortButton(
                         [
                             "IKKE_BESTILT",
                             "BESTILT",
-                            "VENTER_PAA_UTSENDING",
+                            "VENTER_UTSENDING",
                         ].includes(status) ||
                         props.shouldRefreshStatus
                     }
