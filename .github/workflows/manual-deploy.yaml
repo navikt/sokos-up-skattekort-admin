@@ -8,8 +8,8 @@ on:
         required: true
         type: choice
         options:
-          - q1
           - q2
+          - q1
           - qx
 env:
   TZ: Europe/Oslo
