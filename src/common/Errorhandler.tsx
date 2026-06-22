@@ -30,7 +30,7 @@ export default function Errorhandler({heading, error, emptyResponse}: Readonly<E
     const backendError = error ? isBackendError(error) : null;
     return (
         <Box margin={"space-16"}>
-            {error && noData && (
+            {noData && (
                 <Alert variant={"info"} role="alert">
                     Fant ingen skattekortopplysninger
                 </Alert>
