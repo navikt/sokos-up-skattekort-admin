@@ -1,13 +1,13 @@
 import {Box, Heading, HStack, VStack,} from "@navikt/ds-react";
 import {useEffect, useState} from "react";
-import AlertWithCloseButton, {Alert} from "../../common/AlertWithCloseButton";
+import AlertWithCloseButton, {type Alert} from "../../common/AlertWithCloseButton";
 import Errorhandler from "../../common/Errorhandler";
 import ShowAuditLogg from "./ShowAuditLogg";
 import Soek from "./Soek";
 import LabelText from "../../common/LabelText";
 import BestilleSkattekortButton from "./BestilleSkattekortButton";
 import {useFetchSkattekort} from "./api/api";
-import {SokParameter} from "./SokParameter";
+import type {SokParameter} from "./SokParameter";
 import {thisYear} from "../../util/dateUtils";
 
 export type PersonProps = {
@@ -27,7 +27,7 @@ export default function Person(props: Readonly<PersonProps>) {
         if (props.fnr) {
             setSokParameters(prev =>
                 ({fnr: props.fnr || "", aar: prev.aar, forsystem: prev.forsystem}))
-        }}, [props.fnr, setSokParameters]);
+        }}, [props.fnr]);
 
     function addAlertMessage(alert: Alert) {
         setAlertMessages(prev => {

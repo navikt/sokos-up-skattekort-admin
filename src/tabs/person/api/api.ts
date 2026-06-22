@@ -47,7 +47,8 @@ export function useFetchSkattekort(fnr: string | null, shouldRefresh:boolean): {
             onError: (error) => {
                 return {data: [], error, isValidating: false};
             },
-            shouldRetryOnError: false,
+            shouldRetryOnError: shouldRefresh,
+            errorRetryInterval: shouldRefresh ? 1000 : 0,
             refreshInterval: shouldRefresh ? 1000 : 0,
         },
     );
@@ -59,7 +60,7 @@ export async function bestillSkattekort(request: ForespoerselRequest) {
         BASE_URI.SOKOS_SKATTEKORT_API,
         "/skattekort/bestille",
         request,
-    ).then((response) => {
+    ).then((_) => {
         return {data: "Success", error: null};
     }).catch(error => {
         if (error instanceof ApiError) {
