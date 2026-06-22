@@ -23,7 +23,8 @@ export const handlers = [
             const sokeParameter = (await request.json()) as HentSkattekortRequest;
             const skattekort =
                 sokeParameter.fnr === "11111111111" ||
-                sokeParameter.fnr === "22222222222"
+                sokeParameter.fnr === "22222222222" || 
+                !skattekortBestilt
                     ? ingenSkattekort
                     : mangeSkattekort;
             return HttpResponse.json(skattekort, {status: 200});

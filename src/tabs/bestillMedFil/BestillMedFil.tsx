@@ -198,7 +198,7 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
                     {alertMessage.message}
                 </AlertWithCloseButton>
             )}
-            {error && <Errorhandler heading={"Feil under kommunikasjon med sokos-skattekort"} error={error}/>}
+            {error && <Errorhandler heading={"Feil under kommunikasjon med sokos-skattekort"} error={error} emptyResponse={!statusRows || statusRows.length === 0}/>}
 
             {statusRows.length > 0 && (
                 <Box background={"surface-default"} padding="space-16" borderRadius="medium">

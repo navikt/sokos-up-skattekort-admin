@@ -1,12 +1,13 @@
 import {Alert, Box, ErrorSummary, Heading} from "@navikt/ds-react";
-import type {AllErrors, ApiError, BackendError, NoDataError} from "./Error";
+import type {ApiError, BackendError} from "./Error";
 
 export type ErrorHandlerProps = {
     heading: string;
-    error: BackendError | ApiError | NoDataError | null
+    error: BackendError | ApiError | Error | null;
+    emptyResponse: boolean;
 };
 
-function safeParseJson(error: AllErrors): string {
+function safeParseJson(error: BackendError | Error): string {
     try {
         return JSON.parse(error.message);
     } catch (_) {
@@ -14,21 +15,17 @@ function safeParseJson(error: AllErrors): string {
     }
 }
 
-function isNoDataError(error: AllErrors): error is NoDataError {
-    return error && "name" in error && error.name === "NoDataError";
-}
-
-function isApiError(error: AllErrors): error is ApiError{
+function isApiError(error: Error): error is ApiError{
     return error && "name" in error && error.name === "ApiError";
 }
 
-function isBackendError(error: AllErrors): error is BackendError{
-    return error && "meldingFraBackend" in error && error.name === "BackendError";
+function isBackendError(error: BackendError | ApiError | Error | null): error is BackendError{
+    return !!error && "meldingFraBackend" in error && error.name === "BackendError";
 }
 
-export default function Errorhandler({heading, error}: Readonly<ErrorHandlerProps>) {
+export default function Errorhandler({heading, error, emptyResponse}: Readonly<ErrorHandlerProps>) {
     
-    const noData = error ? isNoDataError(error) : null;
+    const noData = emptyResponse;
     const apiError = error ? isApiError(error) : null;
     const backendError = error ? isBackendError(error) : null;
     return (

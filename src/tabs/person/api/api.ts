@@ -7,7 +7,7 @@ import {
     type WrappedSkattekortResponseDTOWithError,
     WrappedSkattekortResponseDTOWithErrorSchema
 } from "./WrappedResponseWithErrorSchema";
-import {ApiError, BackendError, NoDataError} from "../../../common/Error";
+import {ApiError, BackendError} from "../../../common/Error";
 import type {ForespoerselRequest} from "./ForespoerselRequest";
 import {type SkattekortStatusResponse, SkattekortStatusResponseSchema} from "./SkattekortStatusResponse";
 import {type AuditLogg, AuditLoggSchema, type WrappedAuditLoggWithError, WrappedAuditLoggWithErrorSchema} from "./Audit";
@@ -38,7 +38,7 @@ export function useFetchSkattekort(fnr: string | null, shouldRefresh:boolean): {
                             const data = wrapped.data;
 
                             if (!data || data.length === 0) {
-                                throw new NoDataError();
+                                return [];
                             }
                             return SkattekortListSchema.parse(wrapped.data);
                         });
@@ -47,8 +47,7 @@ export function useFetchSkattekort(fnr: string | null, shouldRefresh:boolean): {
             onError: (error) => {
                 return {data: [], error, isValidating: false};
             },
-            shouldRetryOnError: shouldRefresh,
-            errorRetryInterval: shouldRefresh ? 1000 : 0,
+            shouldRetryOnError: false,
             refreshInterval: shouldRefresh ? 1000 : 0,
         },
     );
