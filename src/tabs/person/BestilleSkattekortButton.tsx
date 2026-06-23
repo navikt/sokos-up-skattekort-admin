@@ -2,7 +2,7 @@ import {ExclamationmarkTriangleFillIcon} from "@navikt/aksel-icons";
 import {Button, Tooltip} from "@navikt/ds-react";
 import type {ForespoerselRequest} from "./api/ForespoerselRequest";
 import {bestillSkattekort, useFetchSkattekortStatus} from "./api/api";
-import {useEffect} from "react";
+import {useEffect, useRef} from "react";
 import type {Alert} from "../../common/AlertWithCloseButton";
 import type {SokParameter} from "./SokParameter";
 
@@ -23,7 +23,7 @@ export default function BestilleSkattekortButton(
         aar: Number(props.sokParameters.aar),
         forsystem: props.sokParameters.forsystem,
     };
-
+    const cooldownTimerRef = useRef<number>(null);
     const {data: status} = useFetchSkattekortStatus(request, !!props.shouldRefreshStatus);
 
     useEffect(() => {
@@ -35,11 +35,19 @@ export default function BestilleSkattekortButton(
                 "IKKE_BESTILT", 
                 "BESTILT", 
                 "VENTER_UTSENDING"].includes(status)) {
-                props.setShouldRefreshStatus(false);
+                if (cooldownTimerRef.current) clearTimeout(cooldownTimerRef.current);
+
+                cooldownTimerRef.current = setTimeout(() => {
+                    props.setShouldRefreshStatus(false);
+                }, 5000);
             }
-            return
         }
-        props.setShouldRefreshStatus(false);
+
+        return () => {
+            if (cooldownTimerRef.current) {
+                clearTimeout(cooldownTimerRef.current);
+            }
+        };
     }, [status, props.setShouldRefreshStatus, props.setSkattekortstatus]);
 
     function handleClick() {

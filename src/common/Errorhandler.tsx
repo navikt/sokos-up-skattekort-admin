@@ -28,6 +28,7 @@ export default function Errorhandler({heading, error, emptyResponse}: Readonly<E
     const noData = emptyResponse;
     const apiError = error ? isApiError(error) : null;
     const backendError = error ? isBackendError(error) : null;
+    
     return (
         <Box margin={"space-16"}>
             {noData && (
