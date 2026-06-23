@@ -36,15 +36,16 @@ export const handlers = [
                     ? ingenSkattekort
                     : mangeSkattekort;
             return HttpResponse.json(
+                /* Venter 7 sekunder etter bestilt skattekort og hiver så inn ett til*/
                 (skattekortBestilt && now() > addSeconds(skattekortBestilt, 7)) ? mangeSkattekortPlussOne 
                     : skattekort, {status: 200});
         },
     ),
     http.post("/sokos-skattekort/api/v1/skattekort/status", async () => {
         // eslint-disable-next-line no-negated-condition
-        const status = /* ..................... */ !skattekortBestilt ? "IKKE_FORESPURT"
-            : now() < addSeconds(skattekortBestilt, 5)               ? "VENTER_UTSENDING"
-            : /* Og hvis det er mer enn 15s siden man trykket:       */ "ABONNERER";
+        const status = !skattekortBestilt ? "IKKE_FORESPURT"
+            : now() < addSeconds(skattekortBestilt, 5) /*         */? "VENTER_UTSENDING"
+            : /* Og hvis det er mer enn 5s siden man trykket:               */ "ABONNERER";
         return HttpResponse.json({status}, {status: 200});
     }),
     http.post("/sokos-skattekort/api/v1/admin/auditlogg", async ({request}) => {
