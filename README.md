@@ -4,5 +4,4 @@ Et admingui som skal lette analysejobb og øke forståelsen av hvordan skattekor
 
 
 ## Programstruktur
-Man kan generere et nytt kart ved å kjøre `pnpm run generate:svg`.
 ![Programstruktur](./programstruktur.svg)  
