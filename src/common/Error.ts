@@ -1,6 +1,3 @@
-import type {AxiosError} from "axios";
-import type {ZodError} from "zod";
-
 export class BackendError extends Error {
 	meldingFraBackend: string;
 
@@ -8,12 +5,6 @@ export class BackendError extends Error {
 		super(meldingFraBackend);
 		this.name = "BackendError";
 		this.meldingFraBackend = meldingFraBackend;
-	}
-}
-export class NoDataError extends Error {
-	constructor() {
-		super();
-		this.name = "NoDataError";
 	}
 }
 
@@ -33,6 +24,3 @@ export class HttpStatusCodeError extends Error {
 		this.name = "HttpStatusCodeError";
 	}
 }
-
-export type OtherErrors = AxiosError | ZodError<unknown> | BackendError;
-export type AllErrors = OtherErrors | NoDataError;

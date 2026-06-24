@@ -1,0 +1,22 @@
+{
+	"data": [
+      {
+        "forskuddstrekkList": [
+          {
+            "trekkode": "loennFraNAV",
+            "frikort": {
+              "frikortBeloep": 1337
+            }
+          }
+        ],
+        "id": 2800,
+        "identifikator": "dolly",
+        "inntektsaar": 2026,
+        "kilde": "MANUELL",
+        "opprettet": "2026-06-06T09:01:45.793787Z",
+        "resultatForSkattekort": "skattekortopplysningerOK",
+        "tilleggsopplysningList": ["oppholdPaaSvalbard"],
+        "utstedtDato": "2026-06-06"
+      }
+	]
+}

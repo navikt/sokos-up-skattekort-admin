@@ -2,9 +2,9 @@ import {ExclamationmarkTriangleFillIcon} from "@navikt/aksel-icons";
 import {Button, Tooltip} from "@navikt/ds-react";
 import type {ForespoerselRequest} from "./api/ForespoerselRequest";
 import {bestillSkattekort, useFetchSkattekortStatus} from "./api/api";
-import {useEffect} from "react";
-import {Alert} from "../../common/AlertWithCloseButton";
-import {SokParameter} from "./SokParameter";
+import {useEffect, useRef} from "react";
+import type {Alert} from "../../common/AlertWithCloseButton";
+import type {SokParameter} from "./SokParameter";
 
 interface BestilleSkattekortButtonProps {
     sokParameters: SokParameter;
@@ -23,19 +23,32 @@ export default function BestilleSkattekortButton(
         aar: Number(props.sokParameters.aar),
         forsystem: props.sokParameters.forsystem,
     };
-
-    const {data} = useFetchSkattekortStatus(request, !!props.shouldRefreshStatus);
+    const cooldownTimerRef = useRef<number>(null);
+    const {data: status, error} = useFetchSkattekortStatus(request, !!props.shouldRefreshStatus);
 
     useEffect(() => {
-        if (data) {
-            props.setSkattekortstatus(data);
-            if (["UGYLDIG_FNR", "KUNSTIG_FNR", "SENDT_FORSYSTEM"].includes(data)) {
-                props.setShouldRefreshStatus(false);
+        if (status) {
+            props.setSkattekortstatus(status);
+            if (![
+                "ABONNERER_IKKE",
+                "IKKE_FORESPURT", 
+                "IKKE_BESTILT", 
+                "BESTILT", 
+                "VENTER_UTSENDING"].includes(status)) {
+                if (cooldownTimerRef.current) clearTimeout(cooldownTimerRef.current);
+
+                cooldownTimerRef.current = setTimeout(() => {
+                    props.setShouldRefreshStatus(false);
+                }, 5000);
             }
-            return
         }
-        props.setShouldRefreshStatus(false);
-    }, [data, props.setShouldRefreshStatus, props.setSkattekortstatus]);
+
+        return () => {
+            if (cooldownTimerRef.current) {
+                clearTimeout(cooldownTimerRef.current);
+            }
+        };
+    }, [status, props.setShouldRefreshStatus, props.setSkattekortstatus]);
 
     function handleClick() {
         props.shouldRefreshStatus || props.setShouldRefreshStatus(true);
@@ -61,12 +74,18 @@ export default function BestilleSkattekortButton(
                     onClick={handleClick}
                     loading={props.shouldRefreshStatus}
                     disabled={
-                        !data || props.shouldRefreshStatus
+                        !status ||
+                        [
+                            "IKKE_BESTILT",
+                            "BESTILT",
+                            "VENTER_UTSENDING",
+                        ].includes(status) ||
+                        props.shouldRefreshStatus
                     }
                     icon={!!props.error && <ExclamationmarkTriangleFillIcon/>}
                 >
 					Forespør
-                    {data === "SENDT_FORSYSTEM" && " igjen"}
+                    {status === "ABONNERER" && " igjen"}
 				</Button>
 			</span>
         </Tooltip>

@@ -9,7 +9,6 @@ import {
     useFetchLiveUtsendinger,
     rerunBestillingsbatch
 } from "./api/api";
-import type {AllErrors} from "../../common/Error";
 
 export type FrontsideProps = {
     handleVisPerson: (fnr: string) => void;
@@ -63,7 +62,7 @@ export function Frontside({handleVisPerson, handleShowBatchesAround}: Readonly<F
             });
     }
 
-    function safeParseJson(error: AllErrors): string {
+    function safeParseJson(error: Error): string {
         try {
             return JSON.parse(error.message);
         } catch (_) {

@@ -1,5 +1,6 @@
 import {http, HttpResponse} from "msw";
 import mangeSkattekort from "./responseMedMangeSkattekort.json";
+import ettEkstraSkattekort from "./ettEkstraSkattekort.json";
 import type {HentSkattekortRequest} from "../src/tabs/person/api/HentSkattekortRequestSchema";
 import ingenSkattekort from "./responseUtenSkattekort.json";
 import auditLogg from "./auditLogg.json"
@@ -10,37 +11,38 @@ import utsendinger from "./utsendinger.json"
 import noekkelinformasjon from "./noekkelinformasjon.json"
 import detailedStatuses from "./detailStatuses.json";
 import {addSeconds, now, skattekortYears} from "../src/util/dateUtils";
-import {ForespoerselRequest} from "../src/tabs/person/api/ForespoerselRequest";
+import type {ForespoerselRequest} from "../src/tabs/person/api/ForespoerselRequest";
 
 let refNr = 9000
 let skattekortnstuff: number = refNr*(Math.round(Math.random()*100))
 const reranIds: Array<number> = []
 
 export const handlers = [
-    http.post(
-        "/sokos-skattekort/api/v2/person/hent-skattekort",
-        async ({request}) => {
-            const sokeParameter = (await request.json()) as HentSkattekortRequest;
-            const skattekort =
-                sokeParameter.fnr === "11111111111" ||
-                sokeParameter.fnr === "22222222222"
-                    ? ingenSkattekort
-                    : mangeSkattekort;
-            return HttpResponse.json(skattekort, {status: 200});
-        },
-    ),
     http.post("/sokos-skattekort/api/v1/skattekort/bestille", async ({request}) => {
-        skattekortBestilt = now();
+        skattekortBestiltTidspunkt = now();
         const sokeParameter = (await request.json()) as ForespoerselRequest;
         if (!skattekortYears().includes(sokeParameter.aar)) 
             return HttpResponse.json({message: "Feilmelding fra backend om inntektsår"}, {status: 400});
         return new HttpResponse(null, {status: 202})
     }),
+    http.post(
+        "/sokos-skattekort/api/v2/person/hent-skattekort",
+        async ({request}) => {
+            const sokeParameter = (await request.json()) as HentSkattekortRequest;
+            const mangePlussEttSkattekort = {data:[...mangeSkattekort.data, ettEkstraSkattekort]}
+            const skattekort =
+                sokeParameter.fnr === "11111111111" || sokeParameter.fnr === "22222222222" || !skattekortBestiltTidspunkt ? ingenSkattekort
+                        : (skattekortBestiltTidspunkt && now() < addSeconds(skattekortBestiltTidspunkt, 7)) ? mangeSkattekort 
+                        : /* Etter 7 sekunder kommer det inn ett skattekort til */ mangePlussEttSkattekort;
+            return HttpResponse.json(
+                skattekort, {status: 200});
+        },
+    ),
     http.post("/sokos-skattekort/api/v1/skattekort/status", async () => {
         // eslint-disable-next-line no-negated-condition
-        const status = /* ..................... */ !skattekortBestilt ? "IKKE_FORESPURT"
-            : now() < addSeconds(skattekortBestilt, 5)               ? "VENTER_PAA_UTSENDING"
-            : /* Og hvis det er mer enn 15s siden man trykket:       */ "SENDT_FORSYSTEM";
+        const status = !skattekortBestiltTidspunkt ? "IKKE_FORESPURT"
+            : now() < addSeconds(skattekortBestiltTidspunkt, 5) /*         */? "VENTER_UTSENDING"
+            : /* Og hvis det er mer enn 5s siden man trykket:               */ "ABONNERER";
         return HttpResponse.json({status}, {status: 200});
     }),
     http.post("/sokos-skattekort/api/v1/admin/auditlogg", async ({request}) => {
@@ -99,4 +101,4 @@ export const handlers = [
         return HttpResponse.json(detailedStatuses, {status: 200})
     })
 ];
-let skattekortBestilt: Date | null = null;
+let skattekortBestiltTidspunkt: Date | null = null;
