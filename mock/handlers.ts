@@ -19,7 +19,7 @@ const reranIds: Array<number> = []
 
 export const handlers = [
     http.post("/sokos-skattekort/api/v1/skattekort/bestille", async ({request}) => {
-        skattekortBestilt = now();
+        skattekortBestiltTidspunkt = now();
         const sokeParameter = (await request.json()) as ForespoerselRequest;
         if (!skattekortYears().includes(sokeParameter.aar)) 
             return HttpResponse.json({message: "Feilmelding fra backend om inntektsår"}, {status: 400});
@@ -31,17 +31,17 @@ export const handlers = [
             const sokeParameter = (await request.json()) as HentSkattekortRequest;
             const mangePlussEttSkattekort = {data:[...mangeSkattekort.data, ettEkstraSkattekort]}
             const skattekort =
-                sokeParameter.fnr === "11111111111" || sokeParameter.fnr === "22222222222" || !skattekortBestilt ? ingenSkattekort
-                        : (skattekortBestilt && now() > addSeconds(skattekortBestilt, 7)) ? mangePlussEttSkattekort 
-                        : mangeSkattekort;
+                sokeParameter.fnr === "11111111111" || sokeParameter.fnr === "22222222222" || !skattekortBestiltTidspunkt ? ingenSkattekort
+                        : (skattekortBestiltTidspunkt && now() < addSeconds(skattekortBestiltTidspunkt, 7)) ? mangeSkattekort 
+                        : /* Etter 7 sekunder kommer det inn ett skattekort til */ mangePlussEttSkattekort;
             return HttpResponse.json(
                 skattekort, {status: 200});
         },
     ),
     http.post("/sokos-skattekort/api/v1/skattekort/status", async () => {
         // eslint-disable-next-line no-negated-condition
-        const status = !skattekortBestilt ? "IKKE_FORESPURT"
-            : now() < addSeconds(skattekortBestilt, 5) /*         */? "VENTER_UTSENDING"
+        const status = !skattekortBestiltTidspunkt ? "IKKE_FORESPURT"
+            : now() < addSeconds(skattekortBestiltTidspunkt, 5) /*         */? "VENTER_UTSENDING"
             : /* Og hvis det er mer enn 5s siden man trykket:               */ "ABONNERER";
         return HttpResponse.json({status}, {status: 200});
     }),
@@ -101,4 +101,4 @@ export const handlers = [
         return HttpResponse.json(detailedStatuses, {status: 200})
     })
 ];
-let skattekortBestilt: Date | null = null;
+let skattekortBestiltTidspunkt: Date | null = null;
