@@ -69,7 +69,6 @@ export default function BestilleSkattekortButton(
     return (
         <Tooltip content={"Send forespørsel til sokos-skattekort om Skattekort"}>
 			<span>
-                {JSON.stringify(error, null, 2)}
 				<Button
                     size={"small"}
                     onClick={handleClick}

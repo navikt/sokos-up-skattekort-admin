@@ -34,7 +34,6 @@ export default function Errorhandler({heading, error, emptyResponse}: Readonly<E
             {noData && (
                 <Alert variant={"info"} role="alert">
                     Fant ingen skattekortopplysninger
-                    {JSON.stringify(error)}
                 </Alert>
             )}
             {error && apiError &&

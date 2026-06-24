@@ -107,7 +107,6 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
                         }
                     })
                     .catch(error => {
-                        console.log(`${hvertForsystem} ${hvertAar} mislykket: ${JSON.stringify(error, null, 2)}`)
                         setAlertMessages(prev => [...prev, {
                             message: `Feil for ${hvertForsystem} ${hvertAar}`,
                             variant: "error",
