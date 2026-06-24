@@ -24,7 +24,7 @@ export default function BestilleSkattekortButton(
         forsystem: props.sokParameters.forsystem,
     };
     const cooldownTimerRef = useRef<number>(null);
-    const {data: status} = useFetchSkattekortStatus(request, !!props.shouldRefreshStatus);
+    const {data: status, error} = useFetchSkattekortStatus(request, !!props.shouldRefreshStatus);
 
     useEffect(() => {
         if (status) {
@@ -69,6 +69,7 @@ export default function BestilleSkattekortButton(
     return (
         <Tooltip content={"Send forespørsel til sokos-skattekort om Skattekort"}>
 			<span>
+                {JSON.stringify(error, null, 2)}
 				<Button
                     size={"small"}
                     onClick={handleClick}

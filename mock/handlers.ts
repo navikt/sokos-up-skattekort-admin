@@ -1,6 +1,6 @@
 import {http, HttpResponse} from "msw";
 import mangeSkattekort from "./responseMedMangeSkattekort.json";
-import mangeSkattekortPlussOne from "./responseMedMangeSkattekortPluss1.json";
+import ettEkstraSkattekort from "./ettEkstraSkattekort.json";
 import type {HentSkattekortRequest} from "../src/tabs/person/api/HentSkattekortRequestSchema";
 import ingenSkattekort from "./responseUtenSkattekort.json";
 import auditLogg from "./auditLogg.json"
@@ -29,16 +29,13 @@ export const handlers = [
         "/sokos-skattekort/api/v2/person/hent-skattekort",
         async ({request}) => {
             const sokeParameter = (await request.json()) as HentSkattekortRequest;
+            const mangePlussEttSkattekort = {data:[...mangeSkattekort.data, ettEkstraSkattekort]}
             const skattekort =
-                sokeParameter.fnr === "11111111111" ||
-                sokeParameter.fnr === "22222222222" ||
-                !skattekortBestilt
-                    ? ingenSkattekort
-                    : mangeSkattekort;
+                sokeParameter.fnr === "11111111111" || sokeParameter.fnr === "22222222222" || !skattekortBestilt ? ingenSkattekort
+                        : (skattekortBestilt && now() > addSeconds(skattekortBestilt, 7)) ? mangePlussEttSkattekort 
+                        : mangeSkattekort;
             return HttpResponse.json(
-                /* Venter 7 sekunder etter bestilt skattekort og hiver så inn ett til*/
-                (skattekortBestilt && now() > addSeconds(skattekortBestilt, 7)) ? mangeSkattekortPlussOne 
-                    : skattekort, {status: 200});
+                skattekort, {status: 200});
         },
     ),
     http.post("/sokos-skattekort/api/v1/skattekort/status", async () => {
