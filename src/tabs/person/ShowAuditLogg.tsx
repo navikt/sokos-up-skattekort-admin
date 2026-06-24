@@ -90,7 +90,7 @@ export default function ShowAuditLogg({fnr, shouldRefresh, jumpToBatches, skatte
 
     return (
         <VStack padding="space-8" gap="space-16">
-            <Errorhandler heading={"Feil ved henting av auditlogg"} error={error} emptyResponse={!events || events.length === 0} />
+            <Errorhandler fetchSubject={"auditlogg"} error={error} emptyResponse={!events || events.length === 0} />
             <Process>{esah}</Process>
         </VStack>)
 }

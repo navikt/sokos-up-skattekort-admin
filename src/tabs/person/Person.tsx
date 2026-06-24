@@ -48,7 +48,7 @@ export default function Person(props: Readonly<PersonProps>) {
                     setSkattekortstatus("UKJENT");
                 }}
             />
-            <Errorhandler heading={"Feil ved henting av person:"} error={error} emptyResponse={skattekortData?.length===0}/>
+            <Errorhandler fetchSubject={"skattekort:"} error={error} emptyResponse={skattekortData?.length===0}/>
             {(alertMessages.size > 0) && [...alertMessages].map((alertMessage) => (
                     <AlertWithCloseButton
                         key={alertMessage.message}

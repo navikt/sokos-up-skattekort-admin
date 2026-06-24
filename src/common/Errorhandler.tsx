@@ -2,7 +2,7 @@ import {Alert, Box, ErrorSummary, Heading} from "@navikt/ds-react";
 import type {ApiError, BackendError} from "./Error";
 
 export type ErrorHandlerProps = {
-    heading: string;
+    fetchSubject: string;
     error: BackendError | ApiError | Error | null;
     emptyResponse: boolean;
 };
@@ -23,28 +23,27 @@ function isBackendError(error: BackendError | ApiError | Error | null): error is
     return !!error && "meldingFraBackend" in error && error.name === "BackendError";
 }
 
-export default function Errorhandler({heading, error, emptyResponse}: Readonly<ErrorHandlerProps>) {
+export default function Errorhandler({fetchSubject, error, emptyResponse: noData}: Readonly<ErrorHandlerProps>) {
     
-    const noData = emptyResponse;
     const apiError = error ? isApiError(error) : null;
     const backendError = error ? isBackendError(error) : null;
-    
+    const errorHeading = `Feil ved henting av ${fetchSubject}:`;
     return (
         <Box margin={"space-16"}>
             {noData && (
                 <Alert variant={"info"} role="alert">
-                    Fant ingen skattekortopplysninger
+                    Fant ingen {fetchSubject}
                 </Alert>
             )}
             {error && apiError &&
-                <ErrorSummary heading={heading}>
+                <ErrorSummary heading={errorHeading}>
                     <ErrorSummary.Item key={error.name}>
                         {error.message}
                     </ErrorSummary.Item>
                 </ErrorSummary>
             }
             {error && isBackendError(error) &&
-                <ErrorSummary heading={heading}>
+                <ErrorSummary heading={errorHeading}>
                     <ErrorSummary.Item key={error.name}>
                         {error.meldingFraBackend}
                     </ErrorSummary.Item>
@@ -52,7 +51,7 @@ export default function Errorhandler({heading, error, emptyResponse}: Readonly<E
             }
             
             {error && !noData && !apiError && !backendError &&
-                <ErrorSummary heading={heading}>
+                <ErrorSummary heading={errorHeading}>
                         <ErrorSummary.Item key={error.name}>
                             <Heading size={"small"}>{error.name}</Heading>
                             <pre>{JSON.stringify(safeParseJson(error), null, 2)}</pre>

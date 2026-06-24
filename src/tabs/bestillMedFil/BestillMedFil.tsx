@@ -106,7 +106,7 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
                             }])
                         }
                     })
-                    .catch(error => {
+                    .catch(_ => {
                         setAlertMessages(prev => [...prev, {
                             message: `Feil for ${hvertForsystem} ${hvertAar}`,
                             variant: "error",
@@ -172,7 +172,7 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
                                     )}
                                 </CheckboxGroup>
                             </HStack>
-                            <Button disabled={!file || forsystemer.length == 0 || aar.length == 0}
+                            <Button disabled={!file || forsystemer.length === 0 || aar.length === 0}
                                     onClick={handleOpprettAbonnement}>Bestill for alle fnr</Button>
 
                         </VStack>
@@ -197,7 +197,7 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
                     {alertMessage.message}
                 </AlertWithCloseButton>
             )}
-            {error && <Errorhandler heading={"Feil under kommunikasjon med sokos-skattekort"} error={error} emptyResponse={!statusRows || statusRows.length === 0}/>}
+            {error && <Errorhandler fetchSubject={"Feil under kommunikasjon med sokos-skattekort"} error={error} emptyResponse={!statusRows || statusRows.length === 0}/>}
 
             {statusRows.length > 0 && (
                 <Box background={"surface-default"} padding="space-16" borderRadius="medium">
