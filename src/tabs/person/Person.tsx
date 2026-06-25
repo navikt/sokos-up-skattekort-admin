@@ -1,4 +1,4 @@
-import {Box, Heading, HStack, VStack,} from "@navikt/ds-react";
+import {Box, Heading, HStack, Switch, VStack,} from "@navikt/ds-react";
 import {useEffect, useState} from "react";
 import AlertWithCloseButton, {type Alert} from "../../common/AlertWithCloseButton";
 import Errorhandler from "../../common/Errorhandler";
@@ -20,8 +20,14 @@ export default function Person(props: Readonly<PersonProps>) {
     const [sokParameters, setSokParameters] =
         useState<SokParameter>({fnr: "", aar: thisYear(), forsystem: "OS"});
 
-    const [shouldRefresh, setShouldRefresh] = useState(false);
-    const {data: skattekortData, error, isLoading} = useFetchSkattekort(sokParameters.fnr, shouldRefresh);
+    const [refreshingAfterBestilling, setRefreshingAfterBestilling] = useState<boolean>(false);
+    const [refreshSwitch, setRefreshSwitch] = useState<boolean>(false);
+    
+    const refreshRate = refreshingAfterBestilling ? 1000 
+                            : refreshSwitch ? 5000 
+                            : 0;
+    
+    const {data: skattekortData, error, isLoading} = useFetchSkattekort(sokParameters.fnr, refreshRate);
     const [alertMessages, setAlertMessages] = useState<Set<Alert>>(new Set());
     useEffect(() => {
         if (props.fnr) {
@@ -48,6 +54,12 @@ export default function Person(props: Readonly<PersonProps>) {
                     setSkattekortstatus("UKJENT");
                 }}
             />
+            <Switch
+                value="live"
+                checked={refreshSwitch}
+                onChange={e =>
+                    setRefreshSwitch((x) => (x ? false : e.target.value === "live"))}
+            > Automatisk oppdatering av data</Switch>
             <Errorhandler fetchSubject={"skattekort:"} error={error} emptyResponse={skattekortData?.length===0}/>
             {(alertMessages.size > 0) && [...alertMessages].map((alertMessage) => (
                     <AlertWithCloseButton
@@ -78,15 +90,15 @@ export default function Person(props: Readonly<PersonProps>) {
                             error={error}
                             setSkattekortstatus={setSkattekortstatus}
                             addAlertMessage={addAlertMessage}
-                            shouldRefreshStatus={shouldRefresh}
-                            setShouldRefreshStatus={setShouldRefresh}
+                            shouldRefreshStatus={refreshRate}
+                            setAwaitingFinalStatus={setRefreshingAfterBestilling}
                         />
                     </HStack>
                 </VStack>
             </Box>
             }
             {sokParameters.fnr &&
-                <ShowAuditLogg shouldRefresh={shouldRefresh} fnr={sokParameters.fnr} skattekort={skattekortData}
+                <ShowAuditLogg refreshRate={refreshRate} fnr={sokParameters.fnr} skattekort={skattekortData}
                                jumpToBatches={props.handleShowBatchesAt}/>}
         </Box>
     );

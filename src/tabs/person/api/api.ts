@@ -12,7 +12,7 @@ import type {ForespoerselRequest} from "./ForespoerselRequest";
 import {type SkattekortStatusResponse, SkattekortStatusResponseSchema} from "./SkattekortStatusResponse";
 import {type AuditLogg, AuditLoggSchema, type WrappedAuditLoggWithError, WrappedAuditLoggWithErrorSchema} from "./Audit";
 
-export function useFetchSkattekort(fnr: string | null, shouldRefresh:boolean): {
+export function useFetchSkattekort(fnr: string | null, shouldRefresh:number): {
     data: Skattekort[] | undefined;
     error: Error;
     isLoading: boolean;
@@ -48,7 +48,7 @@ export function useFetchSkattekort(fnr: string | null, shouldRefresh:boolean): {
                 return {data: [], error, isValidating: false};
             },
             shouldRetryOnError: false,
-            refreshInterval: shouldRefresh ? 1000 : 0,
+            refreshInterval: shouldRefresh,
         },
     );
     return {data, error, isLoading};
@@ -71,7 +71,7 @@ export async function bestillSkattekort(request: ForespoerselRequest) {
 
 export function useFetchSkattekortStatus(
     request: ForespoerselRequest | null,
-    shouldRefresh: boolean
+    shouldRefresh: number
 ) {
     const key = request?.personIdent?.length === 11 ? ["/skattekort/status", request] : null;
     const {data, error, isLoading} = useSWR<string>(
@@ -94,12 +94,12 @@ export function useFetchSkattekortStatus(
             onError: (error) => {
                 return {data: "API_ERROR", error, isLoading: false};
             },
-            refreshInterval: shouldRefresh ? 1000 : 0,
+            refreshInterval: shouldRefresh,
         });
     return {data, error, isLoading};
 }
 
-export function useFetchAuditLogg(fnr: string, shouldRefresh: boolean): {
+export function useFetchAuditLogg(fnr: string, shouldRefresh: number): {
     data: AuditLogg | undefined;
     error: Error;
     isLoading: boolean;
@@ -128,7 +128,7 @@ export function useFetchAuditLogg(fnr: string, shouldRefresh: boolean): {
                 return {data: {}, error, isValidating: false};
             },
             shouldRetryOnError: false,
-            refreshInterval: shouldRefresh ? 5000 : 0,
+            refreshInterval: shouldRefresh,
         },
     );
     return {data, error, isLoading};
