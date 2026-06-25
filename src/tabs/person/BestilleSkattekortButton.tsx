@@ -2,7 +2,7 @@ import {ExclamationmarkTriangleFillIcon} from "@navikt/aksel-icons";
 import {Button, Tooltip} from "@navikt/ds-react";
 import type {ForespoerselRequest} from "./api/ForespoerselRequest";
 import {bestillSkattekort, useFetchSkattekortStatus} from "./api/api";
-import {useEffect, useRef} from "react";
+import {type Dispatch, type SetStateAction, useEffect, useRef} from "react";
 import type {Alert} from "../../common/AlertWithCloseButton";
 import type {SokParameter} from "./SokParameter";
 
@@ -11,8 +11,8 @@ interface BestilleSkattekortButtonProps {
     error: Error | null;
     setSkattekortstatus: (status: string) => void;
     addAlertMessage: (alert: Alert) => void;
-    shouldRefreshStatus?: boolean;
-    setShouldRefreshStatus: (should: boolean) => void;
+    shouldRefreshStatus?: number;
+    setAwaitingFinalStatus: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function BestilleSkattekortButton(
@@ -24,22 +24,22 @@ export default function BestilleSkattekortButton(
         forsystem: props.sokParameters.forsystem,
     };
     const cooldownTimerRef = useRef<number>(null);
-    const {data: status, error} = useFetchSkattekortStatus(request, !!props.shouldRefreshStatus);
+    const {data: status, error} = useFetchSkattekortStatus(request, props.shouldRefreshStatus ?? 0);
 
     useEffect(() => {
         if (status) {
             props.setSkattekortstatus(status);
             if (![
                 "ABONNERER_IKKE",
-                "IKKE_FORESPURT", 
-                "IKKE_BESTILT", 
-                "BESTILT", 
+                "IKKE_FORESPURT",
+                "IKKE_BESTILT",
+                "BESTILT",
                 "VENTER_UTSENDING"].includes(status)) {
                 if (cooldownTimerRef.current) clearTimeout(cooldownTimerRef.current);
 
                 cooldownTimerRef.current = setTimeout(() => {
-                    props.setShouldRefreshStatus(false);
-                }, 5000);
+                    props.setAwaitingFinalStatus(false);
+                }, 10000);
             }
         }
 
@@ -48,10 +48,10 @@ export default function BestilleSkattekortButton(
                 clearTimeout(cooldownTimerRef.current);
             }
         };
-    }, [status, props.setShouldRefreshStatus, props.setSkattekortstatus]);
+    }, [status, props.setAwaitingFinalStatus, props.setSkattekortstatus]);
 
     function handleClick() {
-        props.shouldRefreshStatus || props.setShouldRefreshStatus(true);
+        props.setAwaitingFinalStatus(true);
         bestillSkattekort(request)
             .then((response) => {
                 if (response.data === "Success") {
@@ -66,22 +66,21 @@ export default function BestilleSkattekortButton(
             });
     }
 
+    const isATransientStatus = !status ||
+        [
+            "IKKE_BESTILT",
+            "BESTILT",
+            "VENTER_UTSENDING",
+        ].includes(status)
+
     return (
         <Tooltip content={"Send forespørsel til sokos-skattekort om Skattekort"}>
 			<span>
 				<Button
                     size={"small"}
                     onClick={handleClick}
-                    loading={props.shouldRefreshStatus}
-                    disabled={
-                        !status ||
-                        [
-                            "IKKE_BESTILT",
-                            "BESTILT",
-                            "VENTER_UTSENDING",
-                        ].includes(status) ||
-                        props.shouldRefreshStatus
-                    }
+                    loading={isATransientStatus && !!props.shouldRefreshStatus}
+                    disabled={isATransientStatus}
                     icon={!!props.error && <ExclamationmarkTriangleFillIcon/>}
                 >
 					Forespør

@@ -29,7 +29,7 @@ export const handlers = [
         "/sokos-skattekort/api/v2/person/hent-skattekort",
         async ({request}) => {
             const sokeParameter = (await request.json()) as HentSkattekortRequest;
-            const mangePlussEttSkattekort = {data:[...mangeSkattekort.data, ettEkstraSkattekort]}
+            const mangePlussEttSkattekort = {data:[...mangeSkattekort.data, ...ettEkstraSkattekort.data]}
             const skattekort =
                 sokeParameter.fnr === "11111111111" || sokeParameter.fnr === "22222222222" || !skattekortBestiltTidspunkt ? ingenSkattekort
                         : (skattekortBestiltTidspunkt && now() < addSeconds(skattekortBestiltTidspunkt, 7)) ? mangeSkattekort 

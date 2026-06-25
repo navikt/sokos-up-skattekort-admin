@@ -11,7 +11,7 @@ type ShowAuditLoggProps = {
     fnr: string;
     jumpToBatches: (date: Date) => void;
     skattekort?: Skattekort[];
-    shouldRefresh: boolean;
+    refreshRate: number;
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: Dette er en metode for å sjekke type
@@ -24,8 +24,8 @@ function isASkattekort(periode: Periode<any>): periode is Periode<Skattekort> {
     return SkattekortResponseDTOSchema.safeParse(periode.item).success
 }
 
-export default function ShowAuditLogg({fnr, shouldRefresh, jumpToBatches, skattekort}: Readonly<ShowAuditLoggProps>) {
-    const {data: auditData, error} = useFetchAuditLogg(fnr, shouldRefresh)
+export default function ShowAuditLogg({fnr, refreshRate, jumpToBatches, skattekort}: Readonly<ShowAuditLoggProps>) {
+    const {data: auditData, error} = useFetchAuditLogg(fnr, refreshRate)
 
     const skattekortPerioder =
         skattekort?.map(skattekort => new Periode(skattekort, new Date(skattekort.opprettet), undefined)) ?? []
