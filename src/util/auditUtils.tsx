@@ -3,11 +3,22 @@ import {type Skattekort, SkattekortResponseDTOSchema} from "../tabs/person/api/S
 import {type Audit, AuditSchema} from "../tabs/person/api/Audit";
 import {
     BagdeIcon,
-    BroadcastMinusCircleIcon, ChatCheckmarkIcon,
-    ChatExclamationmarkIcon, ClipboardIcon, ClipboardLinkIcon, InboxDownIcon,
-    InboxUpIcon, LaptopTriangleIcon, PencilWritingIcon,
-    PersonCrossIcon, PersonGavelIcon, PersonPencilIcon, PersonPlusIcon, PersonSuitIcon, QuestionmarkCircleIcon,
-    RobotFrownIcon
+    BookmarkDashIcon,
+    ChatExclamationmarkFillIcon,
+    ClipboardCheckmarkIcon,
+    ClipboardIcon,
+    InboxDownIcon,
+    InboxUpIcon,
+    NotePencilIcon,
+    PersonCrossFillIcon,
+    PersonGavelIcon,
+    PersonPencilIcon,
+    PersonPlusIcon,
+    PersonSuitIcon,
+    PhoneSlashFillIcon,
+    QuestionmarkCircleIcon,
+    RobotIcon,
+    XMarkOctagonFillIcon
 } from "@navikt/aksel-icons";
 
 // biome-ignore lint/suspicious/noExplicitAny: Dette er en metode for å sjekke type
@@ -33,16 +44,16 @@ export function ikon(hendelse:Periode<Skattekort | Audit>, dato: string) {
         tooltiptext = hendelse.item.tag
         switch(hendelse.item.tag) {
             case "BESTILLING_FEILET":
-                Ikon = ChatExclamationmarkIcon;
+                Ikon = ChatExclamationmarkFillIcon;
                 break;
             case "BESTILLING_SENDT":
-                Ikon = InboxUpIcon;
+                Ikon = ClipboardCheckmarkIcon;
                 break;
             case "HENTING_AV_SKATTEKORT_FEILET":
-                Ikon = BroadcastMinusCircleIcon;
+                Ikon = XMarkOctagonFillIcon;
                 break;
             case "INVALID_FNR":
-                Ikon = PersonCrossIcon;
+                Ikon = PersonCrossFillIcon;
                 break;
             case "MOTTATT_FORESPOERSEL":
                 Ikon = ClipboardIcon;
@@ -60,25 +71,25 @@ export function ikon(hendelse:Periode<Skattekort | Audit>, dato: string) {
                 Ikon = InboxDownIcon;
                 break;
             case "SYNTETISERT_SKATTEKORT":
-                Ikon = ClipboardLinkIcon;
+                Ikon = RobotIcon;
                 break;
             case "UKJENT":
                 Ikon = QuestionmarkCircleIcon;
                 break;
             case "UTSENDING_FEILET":
-                Ikon = LaptopTriangleIcon;
+                Ikon = PhoneSlashFillIcon;
                 break;
             case "UTSENDING_OK":
-                Ikon = ChatCheckmarkIcon;
+                Ikon = InboxUpIcon;
                 break;
             case "UVENTET_PERSON":
                 Ikon = PersonSuitIcon;
                 break;
             case "MANUELL":
-                Ikon = PencilWritingIcon;
+                Ikon = NotePencilIcon;
                 break;
             case "BESTILLING_ETTERLATT":
-                Ikon = RobotFrownIcon
+                Ikon = BookmarkDashIcon
                 break;
         }
     }
