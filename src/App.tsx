@@ -6,7 +6,7 @@ import Person from "./tabs/person/Person";
 import {Frontside} from "./tabs/frontside/Frontside";
 import {useEffect, useState} from "react";
 import BestillMedFil from "./tabs/bestillMedFil/BestillMedFil";
-import {DateRange} from "./util/dateUtils";
+import type {DateRange} from "./util/dateUtils";
 
 export default function App() {
     useEffect(() => {

@@ -34,7 +34,7 @@ export default function Batchdetaljer({dateRange}: Readonly<BatchdetaljerProps>)
     }
 
     const [batchTyper, setBatchTyper] = useState<string[]>(["OPPDATERING", "BESTILLING"])
-    const [filters, setFilters] = useState<string[]>(["Ingen endringer", "FERDIG"])
+    const [filters, setFilters] = useState<string[]>(["Ingen endringer"])
 
     const filteredBatches = useMemo(() => {
         const foo = data?.items
@@ -46,12 +46,10 @@ export default function Batchdetaljer({dateRange}: Readonly<BatchdetaljerProps>)
 
     return (
         <>
-            <SoekBatch isLoading={isLoading} batchInsightRequest={batchInsightRequest}
-                       setBatchInsightRequest={setBatchInsightRequest}
-                       filters={filters}
-                       setFilters={setFilters}
-                       batchTyper={batchTyper}
-                       setBatchTyper={setBatchTyper}
+            <SoekBatch isLoading={isLoading} 
+                       batchInsightRequestState={{value: batchInsightRequest, set: setBatchInsightRequest}}
+                       filtersState={{value: filters, set: setFilters}}
+                       batchTyperState={{value: batchTyper, set: setBatchTyper}}
             />
             <Box margin={"space-24"}>
                 {isLoading && <Skeleton width="100%" height="200px"/>}
@@ -127,7 +125,7 @@ function showDataMottatt(batch: Bestillingsbatch) {
     const dataMottatt = batch.dataMottatt ? JSON.parse(batch.dataMottatt) : null
     if (!dataMottatt) return ""
     if (dataMottatt.status === "INGEN_ENDRINGER") return "Ingen endringer"
-    // @ts-expect-error - kanskje legge inn type på data mottatt senere
+    // @ts-expect-error - kanskje legge inn typer på data mottatt senere
     const arbeidstakere = dataMottatt?.arbeidsgiver[0]?.arbeidstaker.map(a => a.arbeidstakeridentifikator)
     if (arbeidstakere.length < 5) return `Skattekort for ${arbeidstakere.join(",")}`
     return `Skattekort for ${arbeidstakere.length} personer`
