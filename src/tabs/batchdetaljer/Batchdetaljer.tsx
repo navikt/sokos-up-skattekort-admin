@@ -118,9 +118,10 @@ export default function Batchdetaljer({dateRange}: Readonly<BatchdetaljerProps>)
 
 function showDataSendt(batch: Bestillingsbatch) {
     const dataSendt = batch.dataSendt ? JSON.parse(batch.dataSendt) : null;
-    const arbeidstakere = dataSendt?.forespoerselOmSkattekortTilArbeidsgiver?.arbeidsgiver[0]?.arbeidstakeridentifikator?.join(", ")
+    const arbeidstakere = dataSendt?.forespoerselOmSkattekortTilArbeidsgiver?.arbeidsgiver[0]?.arbeidstakeridentifikator
     if (batch.type === "OPPDATERING") return "Det vanlige Oppdateringsrequestet"
-    return `Request(${dataSendt.inntektsaar}, ${arbeidstakere})`;
+    if (arbeidstakere.length < 5) return `Request(${dataSendt.inntektsaar}, ${arbeidstakere.join(",")})`
+    return `Request for ${dataSendt.inntektsaar}, ${arbeidstakere.length} personer)`;
 }
 
 function showDataMottatt(batch: Bestillingsbatch) {
