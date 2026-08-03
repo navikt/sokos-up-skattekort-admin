@@ -221,10 +221,20 @@
       "id": 7945,
       "status": "FEILET",
       "type": "BESTILLING",
-      "bestillingsreferanse": "BR9711",
+      "bestillingsreferanse": "BR9714",
       "oppdatert": "2026-04-16T08:00:19.764359Z",
       "opprettet": "2026-04-16T06:08:26.694452Z",
       "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"16846496576\"]}]}}"
+    },
+    {
+      "id": 7946,
+      "status": "FEILET",
+      "type": "BESTILLING",
+      "bestillingsreferanse": "BR9711",
+      "oppdatert": "2026-04-16T08:00:19.764359Z",
+      "opprettet": "2026-04-16T06:08:26.694452Z",
+      "dataSendt": "{\"inntektsaar\":\"2026\",\"bestillingstype\":\"HENT_ALLE_OPPGITTE\",\"kontaktinformasjon\":{\"epostadresse\":\"nav.ur.og.os@nav.no\",\"mobiltelefonummer\":\"+4721070000\"},\"varslingstype\":\"INGEN_VARSEL\",\"forespoerselOmSkattekortTilArbeidsgiver\":{\"arbeidsgiver\":[{\"arbeidsgiveridentifikator\":{\"organisasjonsnummer\":\"312978083\"},\"arbeidstakeridentifikator\":[\"12818012341\",\"15928045672\",\"23838078903\",\"01848011234\",\"09858044565\",\"17868077896\",\"25878011127\",\"31888044458\",\"05898077789\",\"14818011020\",\"22828044351\",\"30838077682\",\"07848010913\",\"16858044244\",\"24868077575\",\"02878010806\",\"11888044137\",\"19898077468\",\"27818010799\",\"35828044030\",\"03838077361\",\"12848010692\",\"20858043923\",\"28868077254\",\"06878010585\",\"15888043816\",\"23898077147\",\"01818010478\",\"09828043709\",\"17838077040\"]}]}}"
     }
+
   ]
 }
