@@ -117,7 +117,7 @@ export default function SoekBatch({
     }, [batchInsightRequestState?.value, setValue]);
 
     return (
-        <><Box padding="6" background={"surface-alt-1-subtle"} borderRadius="large">
+        <><Box padding="space-24" background={"meta-purple-soft"} borderRadius="8">
             <form onSubmit={handleSubmit(onSubmit)}>
                 <HStack justify={"space-between"} gap={"space-16"}>
                     <VStack>
@@ -175,37 +175,36 @@ export default function SoekBatch({
                             </CheckboxGroup>
                         </Box></HStack></VStack>
 
-                    <VStack justify={"end"}>
-                        <HStack gap={"space-16"}>
-                            <Button
-                                disabled={isLoading}
-                                variant="secondary"
-                                size={"small"}
-                                type="button"
-                                icon={<EraserIcon aria-hidden={"true"}/>}
-                                iconPosition={"right"}
-                                title={"Nytt søk"}
-                                onClick={handleSoekReset}
-                            >
-                                Nytt søk
-                            </Button>
-                            <Button
-                                disabled={isLoading}
-                                size={"small"}
-                                variant={"primary"}
-                                type={"submit"}
-                                title={"Søk"}
-                                iconPosition={"right"}
-                                icon={<MagnifyingGlassIcon aria-hidden={"true"}/>}
-                            >
-                                Søk
-                            </Button>
+                            <VStack justify={"end"}>
+                                <HStack gap={"space-16"}>
+                                    <Button
+                                        disabled={isLoading}
+                                        variant="secondary"
+                                        size={"small"}
+                                        type="button"
+                                        icon={<EraserIcon aria-hidden={"true"}/>}
+                                        iconPosition={"right"}
+                                        title={"Nytt søk"}
+                                        onClick={handleSoekReset}
+                                    >
+                                        Nytt søk
+                                    </Button>
+                                    <Button
+                                        disabled={isLoading}
+                                        size={"small"}
+                                        variant={"primary"}
+                                        type={"submit"}
+                                        title={"Søk"}
+                                        iconPosition={"right"}
+                                        icon={<MagnifyingGlassIcon aria-hidden={"true"}/>}
+                                    >
+                                        Søk
+                                    </Button>
+                                </HStack>
+                            </VStack>
                         </HStack>
-                    </VStack>
-                </HStack>
-            </form>
-        </Box>
-
+                    </form>
+                </Box>
             <Dialog open={showLongRangeWarning} onOpenChange={handleCancelSearch}>
                 <Dialog.Popup id={"long time interval"}>
                     <Dialog.Header>
