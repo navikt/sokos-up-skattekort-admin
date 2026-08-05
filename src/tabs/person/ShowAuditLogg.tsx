@@ -58,8 +58,7 @@ export default function ShowAuditLogg({fnr, refreshRate, jumpToBatches, skatteko
                                                         </ExpansionCard.Title>
                                                     </ExpansionCard.Header>
                                                     <ExpansionCard.Content>
-                                                        <Skattekortdata skattekort={skattekort}
-                                                                        jumpToBatches={jumpToBatches}/>
+                                                        <Skattekortdata skattekort={skattekort} jumpToBatches={jumpToBatches}/>
                                                     </ExpansionCard.Content>
                                                 </ExpansionCard>
                                             </Box>
@@ -74,8 +73,7 @@ export default function ShowAuditLogg({fnr, refreshRate, jumpToBatches, skatteko
                                                  margin={"space-2"}
                                                  borderRadius="8">
                                                 <HStack align={"center"} wrap={false} gap={"space-32"}>
-                                                    <HStack align={"center"} wrap={false} gap="space-8"
-                                                            justify={"space-evenly"}>
+                                                    <HStack align={"center"} wrap={false} gap="space-8" justify={"space-evenly"}>
                                                         <BodyShort> {auditLogg.brukerId} </BodyShort>
                                                         <Button variant={"tertiary-neutral"}
                                                                 style={{whiteSpace: "nowrap"}}

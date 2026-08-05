@@ -15,34 +15,25 @@ import {
 } from "@navikt/ds-react";
 import {useForm} from "react-hook-form";
 import {type BatchInsightRequest, BatchInsightRequestSchema} from "./api/Bestillingsbatch";
-import {A_DAY, DateRange, plus23H59m59s, timeBetweenIsoStrings, toZulu} from "../../util/dateUtils";
-import {useCallback, useEffect, useState} from "react";
+import {A_DAY, type DateRange, plus23H59m59s, timeBetweenIsoStrings, toZulu} from "../../util/dateUtils";
+import {type Dispatch, type SetStateAction, useCallback, useEffect, useState} from "react";
 
 export type SoekProps = {
     isLoading?: boolean;
-    batchInsightRequest: BatchInsightRequest | null;
-    setBatchInsightRequest: (insightRequest: BatchInsightRequest) => void;
-    filters: string[];
-    setFilters: (filters: Array<string>) => void;
-    batchTyper: string[];
-    setBatchTyper: (batchTyper: string[]) => void;
+    batchInsightRequestState: {value: BatchInsightRequest|null, set: Dispatch<SetStateAction<BatchInsightRequest|null>>|null};
+    batchTyperState: {value: string[], set: Dispatch<SetStateAction<string[]>>|null};
+    filtersState: {value: string[], set: Dispatch<SetStateAction<string[]>>|null};
 };
 
 export default function SoekBatch({
                                       isLoading,
-                                      batchInsightRequest,
-                                      setBatchInsightRequest,
-                                      batchTyper,
-                                      setBatchTyper,
-                                      filters,
-                                      setFilters
+                                      batchInsightRequestState,
+                                      batchTyperState,
+                                      filtersState,
                                   }: Readonly<SoekProps>) {
     const [showLongRangeWarning, setShowLongRangeWarning] = useState(false);
     const [pendingSubmit, setPendingSubmit] = useState<BatchInsightRequest | null>(null);
-    const defaultBatchInsightRequest = {
-        tidspunktFom: null,
-        tidspunktTom: null
-    }
+    const defaultBatchInsightRequest = {tidspunktFom: null, tidspunktTom: null}
     const {
         register,
         handleSubmit,
@@ -55,12 +46,12 @@ export default function SoekBatch({
     })
 
     function handleSoekReset() {
-        setBatchInsightRequest(defaultBatchInsightRequest);
+        batchInsightRequestState?.set?.(defaultBatchInsightRequest);
         reset();
     }
 
     function executeSearch(data: BatchInsightRequest) {
-        setBatchInsightRequest({
+        batchInsightRequestState?.set?.({
             tidspunktFom: data?.tidspunktFom ?
                 new Date(data.tidspunktFom.replace(",", ".")).toISOString() : null,
             tidspunktTom: data?.tidspunktTom ?
@@ -119,70 +110,70 @@ export default function SoekBatch({
     }, [setValue])
 
     useEffect(() => {
-        if (batchInsightRequest != null) {
-            setValue("tidspunktFom", batchInsightRequest.tidspunktFom ?? null);
-            setValue("tidspunktTom", batchInsightRequest.tidspunktTom ?? null);
+        if (batchInsightRequestState?.value != null) {
+            setValue("tidspunktFom", batchInsightRequestState.value.tidspunktFom ?? null);
+            setValue("tidspunktTom", batchInsightRequestState.value.tidspunktTom ?? null);
         }
-    }, [batchInsightRequest, setValue]);
+    }, [batchInsightRequestState?.value, setValue]);
 
     return (
         <><Box padding="space-24" background={"meta-purple-soft"} borderRadius="8">
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <HStack justify={"space-between"} gap={"space-16"}>
-                            <VStack>
-                                <HStack gap={"space-8"}><TextField
-                                    {...register("tidspunktFom")}
-                                    size={"small"}
-                                    htmlSize={30}
-                                    maxLength={27}
-                                    label="Dato FOM"
-                                    onPaste={(event: React.ClipboardEvent<HTMLInputElement>) => {
-                                        event.preventDefault();
-                                        setValue("tidspunktFom", toZulu(event.clipboardData.getData("text/plain")));
-                                    }}
-                                    defaultValue={batchInsightRequest?.tidspunktFom ?? ""}
-                                    error={errors.tidspunktFom?.message}
-                                />
-                                    <TextField
-                                        {...register("tidspunktTom")}
-                                        size={"small"}
-                                        htmlSize={30}
-                                        maxLength={27}
-                                        label="Dato TOM"
-                                        onPaste={(event: React.ClipboardEvent<HTMLInputElement>) => {
-                                            event.preventDefault();
-                                            setValue("tidspunktTom", toZulu(event.clipboardData.getData("text/plain")));
-                                        }}
-                                        defaultValue={batchInsightRequest?.tidspunktTom ?? ""}
-                                        error={errors.tidspunktTom?.message}
-                                    /></HStack> </VStack>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <HStack justify={"space-between"} gap={"space-16"}>
+                    <VStack>
+                        <HStack gap={"space-8"}><TextField
+                            {...register("tidspunktFom")}
+                            size={"small"}
+                            htmlSize={30}
+                            maxLength={27}
+                            label="Dato FOM"
+                            onPaste={(event: React.ClipboardEvent<HTMLInputElement>) => {
+                                event.preventDefault();
+                                setValue("tidspunktFom", toZulu(event.clipboardData.getData("text/plain")));
+                            }}
+                            defaultValue={batchInsightRequestState?.value?.tidspunktFom ?? ""}
+                            error={errors.tidspunktFom?.message}
+                        />
+                            <TextField
+                                {...register("tidspunktTom")}
+                                size={"small"}
+                                htmlSize={30}
+                                maxLength={27}
+                                label="Dato TOM"
+                                onPaste={(event: React.ClipboardEvent<HTMLInputElement>) => {
+                                    event.preventDefault();
+                                    setValue("tidspunktTom", toZulu(event.clipboardData.getData("text/plain")));
+                                }}
+                                defaultValue={batchInsightRequestState?.value?.tidspunktTom ?? ""}
+                                error={errors.tidspunktTom?.message}
+                            /></HStack> </VStack>
 
-                            <VStack minWidth={"420px"}>
-                                <ReadMore header={"Datovelger"} size={"small"}>
-                                    <DatePicker.Standalone mode={"range"} onSelect={(dateRange) =>
-                                        dateRange ? handlePickDate({from: dateRange.from, to: dateRange.to}) : null}/>
-                                </ReadMore>
-                            </VStack>
-                            <VStack><HStack gap={"space-8"}><Box
-                                padding={"space-16"}
-                                borderWidth={"2"}
-                            >
-                                <CheckboxGroup legend="Vis" value={batchTyper} onChange={setBatchTyper}>
-                                    <Checkbox value="OPPDATERING">Oppdatering</Checkbox>
-                                    <Checkbox value="BESTILLING">Bestilling</Checkbox>
-                                </CheckboxGroup>
-                            </Box>
-                                <Box
-                                    padding={"space-16"}
-                                    borderWidth={"2"}
-                                >
-                                    <CheckboxGroup legend="Skjul" value={filters} onChange={setFilters}>
-                                        <Checkbox value="Ingen endringer"
-                                                  disabled={!batchTyper.includes("OPPDATERING") || filters.includes("FERDIG")}>
-                                            Oppdateringsbatcher uten endringer</Checkbox>
-                                        <Checkbox value="FERDIG">Ferdige batcher</Checkbox>
-                                    </CheckboxGroup>
-                                </Box></HStack></VStack>
+                    <VStack minWidth={"420px"}>
+                        <ReadMore header={"Datovelger"} size={"small"}>
+                            <DatePicker.Standalone mode={"range"} onSelect={(dateRange) =>
+                                dateRange ? handlePickDate({from: dateRange.from, to: dateRange.to}) : null}/>
+                        </ReadMore>
+                    </VStack>
+                    <VStack><HStack gap={"space-8"}><Box
+                        padding={"space-16"}
+                        borderWidth={"2"}
+                    >
+                        <CheckboxGroup legend="Vis" value={batchTyperState?.value} onChange={(batchtyper:string[]) => batchTyperState?.set?.(batchtyper)}>
+                            <Checkbox value="OPPDATERING">Oppdatering</Checkbox>
+                            <Checkbox value="BESTILLING">Bestilling</Checkbox>
+                        </CheckboxGroup>
+                    </Box>
+                        <Box
+                            padding={"space-16"}
+                            borderWidth={"2"}
+                        >
+                            <CheckboxGroup legend="Skjul" value={filtersState?.value} onChange={(filters: string[]) => filtersState?.set?.(filters)}>
+                                <Checkbox value="Ingen endringer"
+                                          disabled={!batchTyperState?.value.includes("OPPDATERING") || filtersState?.value.includes("FERDIG")}>
+                                    Oppdateringsbatcher uten endringer</Checkbox>
+                                <Checkbox value="FERDIG">Ferdige batcher</Checkbox>
+                            </CheckboxGroup>
+                        </Box></HStack></VStack>
 
                             <VStack justify={"end"}>
                                 <HStack gap={"space-16"}>
