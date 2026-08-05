@@ -53,10 +53,10 @@ export default function Soek({
     }, [fnr, form.setValue]);
 
     return (
-        <Box padding="6" background={"surface-alt-1-subtle"} borderRadius="large">
+        <Box padding="space-24" background={"surface-alt-1-subtle"} borderRadius="large">
             <form onSubmit={form.handleSubmit(handleSoekSubmit)}>
                 <FormProvider {...form}>
-                    <VStack gap={"4"}>
+                    <VStack gap={"space-16"}>
                         <HStack justify="start" gap={"space-64"}>
                             <HStack gap="space-8" justify="space-evenly">
                                 <ForsystemRadioGroup/>

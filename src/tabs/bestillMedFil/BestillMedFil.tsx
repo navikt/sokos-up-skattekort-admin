@@ -123,7 +123,7 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
     return (
         <Box margin={"space-24"}>
             <Heading spacing level="3" size="medium">Bestill med fil</Heading>
-            <Box padding="6" background={"surface-alt-1-subtle"} borderRadius="large">
+            <Box padding="space-24" background={"surface-alt-1-subtle"} borderRadius="large">
                 <HGrid columns={file ? "1fr 240px" : "1"} gap={"space-16"}>
                     <VStack>
                         {file === null && <FileUpload.Dropzone
@@ -143,12 +143,12 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
                                 }}
                             />}
                         <Box overflow={"hidden"} background={"surface-default"} padding={"space-16"}
-                             marginBlock={"space-16 0"}
+                             marginBlock={"space-16 space-0"}
                              borderRadius="medium">
                             <BodyShort>Filstatus: {fileStatus}</BodyShort>
                         </Box>
                         <Box overflow={"hidden"} background={"surface-default"} padding={"space-16"}
-                             marginBlock={"space-16 0"}
+                             marginBlock={"space-16 space-0"}
                              borderRadius="medium">
                             <Label>Innhold i fil:</Label>
                             <BodyLong
@@ -179,7 +179,6 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
                     }
                 </HGrid>
             </Box>
-
             {alert && <AlertWithCloseButton
                 show={!!alert}
                 setShow={() => setAlert(null)}
@@ -198,7 +197,6 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
                 </AlertWithCloseButton>
             )}
             {error && <Errorhandler fetchSubject={"Feil under kommunikasjon med sokos-skattekort"} error={error} emptyResponse={!statusRows || statusRows.length === 0}/>}
-
             {statusRows.length > 0 && (
                 <Box background={"surface-default"} padding="space-16" borderRadius="medium">
                     <Table zebraStripes size="small">
@@ -236,5 +234,5 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
                 </Box>
             )}
         </Box>
-    )
+    );
 }

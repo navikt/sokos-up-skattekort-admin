@@ -96,7 +96,7 @@ export function Frontside({handleVisPerson, handleShowBatchesAround}: Readonly<F
                 </LocalAlert.Content>
             </LocalAlert>
             }
-            {noekkeldata && <Box padding="6" background={"surface-default"} borderRadius="large">
+            {noekkeldata && <Box padding="space-24" background={"surface-default"} borderRadius="large">
                 {Object.keys(noekkeldata.antallAvHver).map((antallAv) => (
                     <LabelText key={antallAv}
                                label={`Antall ${Number.isNaN(Number(antallAv)) ? "" : "skattekort for "}${antallAv}`}
@@ -122,9 +122,8 @@ export function Frontside({handleVisPerson, handleShowBatchesAround}: Readonly<F
                 </LocalAlert.Content>
             </LocalAlert>
             }
-
             {batchData?.items &&
-                <Box padding="6" background={"surface-default"} borderRadius="large">
+                <Box padding="space-24" background={"surface-default"} borderRadius="large">
                     <Heading size={"medium"} spacing>Batcher under behandling</Heading>
                     <Table title="Batcher under behandling" zebraStripes>
                         <Table.Header>
@@ -157,7 +156,6 @@ export function Frontside({handleVisPerson, handleShowBatchesAround}: Readonly<F
                         </Table.Body>
                     </Table>
                 </Box>}
-
             <HGrid gap="space-24" columns={2}>
                 {utsendingerIsLoading &&
                     <Skeleton variant={"rounded"} height={500}/>
@@ -173,7 +171,7 @@ export function Frontside({handleVisPerson, handleShowBatchesAround}: Readonly<F
                     </LocalAlert.Content>
                 </LocalAlert>
                 }
-                {utsendingerData?.items && <Box padding="6" background={"surface-default"} borderRadius="large">
+                {utsendingerData?.items && <Box padding="space-24" background={"surface-default"} borderRadius="large">
                     <Heading size={"medium"}
                              spacing>{`Planlagte utsendinger(${utsendingerData.items.length})`}</Heading>
                     <Table title={`Planlagte utsendinger(${utsendingerData.items.length})`} zebraStripes>
@@ -217,7 +215,7 @@ export function Frontside({handleVisPerson, handleShowBatchesAround}: Readonly<F
                 </LocalAlert>
                 }
                 {bestillingerData?.items &&
-                    <Box padding="6" background={"surface-default"} borderRadius="large">
+                    <Box padding="space-24" background={"surface-default"} borderRadius="large">
                         <Heading size={"medium"}
                                  spacing>{`Planlagte bestillinger(${bestillingerData.items.length})`} </Heading>
                         <Table title={`Planlagte bestillinger(${bestillingerData.items.length})`} zebraStripes>
@@ -249,6 +247,5 @@ export function Frontside({handleVisPerson, handleShowBatchesAround}: Readonly<F
                     </Box>}
             </HGrid>
         </VStack>
-
-    )
+    );
 }
