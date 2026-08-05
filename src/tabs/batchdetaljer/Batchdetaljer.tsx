@@ -62,7 +62,7 @@ export default function Batchdetaljer({dateRange}: Readonly<BatchdetaljerProps>)
 
                     <Box
                         padding={"space-8"}
-                        background={"surface-default"}
+                        background={"default"}
                         borderWidth="2"
                         borderRadius="12"
                     >
@@ -113,7 +113,7 @@ export default function Batchdetaljer({dateRange}: Readonly<BatchdetaljerProps>)
                 }
             </Box>
         </>
-    )
+    );
 }
 
 function showDataSendt(batch: Bestillingsbatch) {

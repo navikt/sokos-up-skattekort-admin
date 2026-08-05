@@ -73,10 +73,10 @@ export default function Person(props: Readonly<PersonProps>) {
                 )
             )}
             {sokParameters.fnr && <Box
-                background={"surface-default"}
+                background={"default"}
                 padding="space-16"
                 paddingInline="space-32"
-                borderRadius="large"
+                borderRadius="8"
             >
                 <VStack justify="space-between" align={"baseline"} gap={"space-16"}>
                     <HStack gap={"space-32"} align={"center"}>

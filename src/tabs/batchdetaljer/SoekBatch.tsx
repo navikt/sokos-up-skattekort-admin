@@ -126,94 +126,94 @@ export default function SoekBatch({
     }, [batchInsightRequest, setValue]);
 
     return (
-        <><Box padding="space-24" background={"surface-alt-1-subtle"} borderRadius="large">
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <HStack justify={"space-between"} gap={"space-16"}>
-                        <VStack>
-                            <HStack gap={"space-8"}><TextField
-                                {...register("tidspunktFom")}
-                                size={"small"}
-                                htmlSize={30}
-                                maxLength={27}
-                                label="Dato FOM"
-                                onPaste={(event: React.ClipboardEvent<HTMLInputElement>) => {
-                                    event.preventDefault();
-                                    setValue("tidspunktFom", toZulu(event.clipboardData.getData("text/plain")));
-                                }}
-                                defaultValue={batchInsightRequest?.tidspunktFom ?? ""}
-                                error={errors.tidspunktFom?.message}
-                            />
-                                <TextField
-                                    {...register("tidspunktTom")}
+        <><Box padding="space-24" background={"meta-purple-soft"} borderRadius="8">
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <HStack justify={"space-between"} gap={"space-16"}>
+                            <VStack>
+                                <HStack gap={"space-8"}><TextField
+                                    {...register("tidspunktFom")}
                                     size={"small"}
                                     htmlSize={30}
                                     maxLength={27}
-                                    label="Dato TOM"
+                                    label="Dato FOM"
                                     onPaste={(event: React.ClipboardEvent<HTMLInputElement>) => {
                                         event.preventDefault();
-                                        setValue("tidspunktTom", toZulu(event.clipboardData.getData("text/plain")));
+                                        setValue("tidspunktFom", toZulu(event.clipboardData.getData("text/plain")));
                                     }}
-                                    defaultValue={batchInsightRequest?.tidspunktTom ?? ""}
-                                    error={errors.tidspunktTom?.message}
-                                /></HStack> </VStack>
+                                    defaultValue={batchInsightRequest?.tidspunktFom ?? ""}
+                                    error={errors.tidspunktFom?.message}
+                                />
+                                    <TextField
+                                        {...register("tidspunktTom")}
+                                        size={"small"}
+                                        htmlSize={30}
+                                        maxLength={27}
+                                        label="Dato TOM"
+                                        onPaste={(event: React.ClipboardEvent<HTMLInputElement>) => {
+                                            event.preventDefault();
+                                            setValue("tidspunktTom", toZulu(event.clipboardData.getData("text/plain")));
+                                        }}
+                                        defaultValue={batchInsightRequest?.tidspunktTom ?? ""}
+                                        error={errors.tidspunktTom?.message}
+                                    /></HStack> </VStack>
 
-                        <VStack minWidth={"420px"}>
-                            <ReadMore header={"Datovelger"} size={"small"}>
-                                <DatePicker.Standalone mode={"range"} onSelect={(dateRange) =>
-                                    dateRange ? handlePickDate({from: dateRange.from, to: dateRange.to}) : null}/>
-                            </ReadMore>
-                        </VStack>
-                        <VStack><HStack gap={"space-8"}><Box
-                            padding={"space-16"}
-                            borderWidth={"2"}
-                        >
-                            <CheckboxGroup legend="Vis" value={batchTyper} onChange={setBatchTyper}>
-                                <Checkbox value="OPPDATERING">Oppdatering</Checkbox>
-                                <Checkbox value="BESTILLING">Bestilling</Checkbox>
-                            </CheckboxGroup>
-                        </Box>
-                            <Box
+                            <VStack minWidth={"420px"}>
+                                <ReadMore header={"Datovelger"} size={"small"}>
+                                    <DatePicker.Standalone mode={"range"} onSelect={(dateRange) =>
+                                        dateRange ? handlePickDate({from: dateRange.from, to: dateRange.to}) : null}/>
+                                </ReadMore>
+                            </VStack>
+                            <VStack><HStack gap={"space-8"}><Box
                                 padding={"space-16"}
                                 borderWidth={"2"}
                             >
-                                <CheckboxGroup legend="Skjul" value={filters} onChange={setFilters}>
-                                    <Checkbox value="Ingen endringer"
-                                              disabled={!batchTyper.includes("OPPDATERING") || filters.includes("FERDIG")}>
-                                        Oppdateringsbatcher uten endringer</Checkbox>
-                                    <Checkbox value="FERDIG">Ferdige batcher</Checkbox>
+                                <CheckboxGroup legend="Vis" value={batchTyper} onChange={setBatchTyper}>
+                                    <Checkbox value="OPPDATERING">Oppdatering</Checkbox>
+                                    <Checkbox value="BESTILLING">Bestilling</Checkbox>
                                 </CheckboxGroup>
-                            </Box></HStack></VStack>
+                            </Box>
+                                <Box
+                                    padding={"space-16"}
+                                    borderWidth={"2"}
+                                >
+                                    <CheckboxGroup legend="Skjul" value={filters} onChange={setFilters}>
+                                        <Checkbox value="Ingen endringer"
+                                                  disabled={!batchTyper.includes("OPPDATERING") || filters.includes("FERDIG")}>
+                                            Oppdateringsbatcher uten endringer</Checkbox>
+                                        <Checkbox value="FERDIG">Ferdige batcher</Checkbox>
+                                    </CheckboxGroup>
+                                </Box></HStack></VStack>
 
-                        <VStack justify={"end"}>
-                            <HStack gap={"space-16"}>
-                                <Button
-                                    disabled={isLoading}
-                                    variant="secondary"
-                                    size={"small"}
-                                    type="button"
-                                    icon={<EraserIcon aria-hidden={"true"}/>}
-                                    iconPosition={"right"}
-                                    title={"Nytt søk"}
-                                    onClick={handleSoekReset}
-                                >
-                                    Nytt søk
-                                </Button>
-                                <Button
-                                    disabled={isLoading}
-                                    size={"small"}
-                                    variant={"primary"}
-                                    type={"submit"}
-                                    title={"Søk"}
-                                    iconPosition={"right"}
-                                    icon={<MagnifyingGlassIcon aria-hidden={"true"}/>}
-                                >
-                                    Søk
-                                </Button>
-                            </HStack>
-                        </VStack>
-                    </HStack>
-                </form>
-            </Box>
+                            <VStack justify={"end"}>
+                                <HStack gap={"space-16"}>
+                                    <Button
+                                        disabled={isLoading}
+                                        variant="secondary"
+                                        size={"small"}
+                                        type="button"
+                                        icon={<EraserIcon aria-hidden={"true"}/>}
+                                        iconPosition={"right"}
+                                        title={"Nytt søk"}
+                                        onClick={handleSoekReset}
+                                    >
+                                        Nytt søk
+                                    </Button>
+                                    <Button
+                                        disabled={isLoading}
+                                        size={"small"}
+                                        variant={"primary"}
+                                        type={"submit"}
+                                        title={"Søk"}
+                                        iconPosition={"right"}
+                                        icon={<MagnifyingGlassIcon aria-hidden={"true"}/>}
+                                    >
+                                        Søk
+                                    </Button>
+                                </HStack>
+                            </VStack>
+                        </HStack>
+                    </form>
+                </Box>
             <Dialog open={showLongRangeWarning} onOpenChange={handleCancelSearch}>
                 <Dialog.Popup id={"long time interval"}>
                     <Dialog.Header>

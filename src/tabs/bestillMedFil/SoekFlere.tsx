@@ -39,7 +39,7 @@ export default function SoekFlere() {
 
     return (
         <>
-            <Box padding="space-24" background={"surface-alt-1-subtle"} borderRadius="large">
+            <Box padding="space-24" background={"meta-purple-soft"} borderRadius="8">
             <form onSubmit={handleSubmit(handleSoekSubmit)}>
                 <VStack gap={"space-16"}>
                     <HStack justify="space-between">

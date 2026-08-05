@@ -53,7 +53,7 @@ export default function Soek({
     }, [fnr, form.setValue]);
 
     return (
-        <Box padding="space-24" background={"surface-alt-1-subtle"} borderRadius="large">
+        <Box padding="space-24" background={"meta-purple-soft"} borderRadius="8">
             <form onSubmit={form.handleSubmit(handleSoekSubmit)}>
                 <FormProvider {...form}>
                     <VStack gap={"space-16"}>

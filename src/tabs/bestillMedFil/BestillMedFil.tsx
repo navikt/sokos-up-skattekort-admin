@@ -123,7 +123,7 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
     return (
         <Box margin={"space-24"}>
             <Heading spacing level="3" size="medium">Bestill med fil</Heading>
-            <Box padding="space-24" background={"surface-alt-1-subtle"} borderRadius="large">
+            <Box padding="space-24" background={"meta-purple-soft"} borderRadius="8">
                 <HGrid columns={file ? "1fr 240px" : "1"} gap={"space-16"}>
                     <VStack>
                         {file === null && <FileUpload.Dropzone
@@ -142,14 +142,14 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
                                     onClick: () => handleReset(),
                                 }}
                             />}
-                        <Box overflow={"hidden"} background={"surface-default"} padding={"space-16"}
+                        <Box overflow={"hidden"} background={"default"} padding={"space-16"}
                              marginBlock={"space-16 space-0"}
-                             borderRadius="medium">
+                             borderRadius="4">
                             <BodyShort>Filstatus: {fileStatus}</BodyShort>
                         </Box>
-                        <Box overflow={"hidden"} background={"surface-default"} padding={"space-16"}
+                        <Box overflow={"hidden"} background={"default"} padding={"space-16"}
                              marginBlock={"space-16 space-0"}
-                             borderRadius="medium">
+                             borderRadius="4">
                             <Label>Innhold i fil:</Label>
                             <BodyLong
                                 style={{overflow: "hidden", textOverflow: "ellipsis"}}>{fileContent}</BodyLong>
@@ -198,7 +198,7 @@ export default function BestillMedFil({handleVisPerson}: Readonly<BestillMedFilP
             )}
             {error && <Errorhandler fetchSubject={"Feil under kommunikasjon med sokos-skattekort"} error={error} emptyResponse={!statusRows || statusRows.length === 0}/>}
             {statusRows.length > 0 && (
-                <Box background={"surface-default"} padding="space-16" borderRadius="medium">
+                <Box background={"default"} padding="space-16" borderRadius="4">
                     <Table zebraStripes size="small">
                         <Table.Header>
                             <Table.Row>
