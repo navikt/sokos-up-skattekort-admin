@@ -31,7 +31,8 @@ export default function ShowAuditLogg({fnr, refreshRate, jumpToBatches, skatteko
         ...(events?.map(([dato, perioder], index) => {
             const dagensHendelser = perioder.toSorted((a, b) => a.fom.getTime() - b.fom.getTime());
             const dagensIcons = dagensHendelser.map(hendelse => ikon(hendelse, dato))
-            return (<ExpansionCard defaultOpen={index === 0} aria-label={`Hendelser for ${dato}`} key={dato}>
+            return (
+                <ExpansionCard defaultOpen={index === 0} aria-label={`Hendelser for ${dato}`} key={dato}>
                     <ExpansionCard.Header>
                         <ExpansionCard.Title as="h4" size="small">
                             <HStack gap="space-8">{toLocalDate(dato)}, {dagensIcons.length} hendelser: {dagensIcons}</HStack>
@@ -67,10 +68,10 @@ export default function ShowAuditLogg({fnr, refreshRate, jumpToBatches, skatteko
                                         const auditLogg = hendelse.item
                                         return (
                                             <Box key={auditLogg.id}
-                                                 background={"surface-default"}
+                                                 background={"default"}
                                                  paddingInline={"space-8"}
                                                  margin={"space-2"}
-                                                 borderRadius="large">
+                                                 borderRadius="8">
                                                 <HStack align={"center"} wrap={false} gap={"space-32"}>
                                                     <HStack align={"center"} wrap={false} gap="space-8" justify={"space-evenly"}>
                                                         <BodyShort> {auditLogg.brukerId} </BodyShort>
@@ -81,7 +82,8 @@ export default function ShowAuditLogg({fnr, refreshRate, jumpToBatches, skatteko
                                                     <BodyLong><b>{auditLogg.tag}({ikon(hendelse, dato)}):</b> {auditLogg.informasjon}
                                                     </BodyLong>
                                                 </HStack>
-                                            </Box>)
+                                            </Box>
+                                        );
                                     }
 
                                     return JSON.stringify(hendelse.item)
@@ -89,7 +91,7 @@ export default function ShowAuditLogg({fnr, refreshRate, jumpToBatches, skatteko
                         </Process.Event>
                     </ExpansionCard.Content>
                 </ExpansionCard>
-            )
+            );
         }) ?? []),
     ];
 
