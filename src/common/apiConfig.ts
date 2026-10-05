@@ -63,9 +63,9 @@ export async function axiosPostFetcher<T, U>(
 }
 
 export const BASE_URI = {
-    SOKOS_SKATTEKORT_API: "/sokos-skattekort/api/v1/",
-    SOKOS_SKATTEKORT_PERSON_API: "/sokos-skattekort/api/v2/person/",
-    SOKOS_SKATTEKORT_ADMIN_API: "/sokos-skattekort/api/v1/admin/"
+    SOKOS_SKATTEKORT_API: "/api/v1/",
+    SOKOS_SKATTEKORT_PERSON_API: "/api/v2/person/",
+    SOKOS_SKATTEKORT_ADMIN_API: "/api/v1/admin/"
 };
 
 export function swrConfig<T, ArgType>(fetcher: (arg: ArgType) => Promise<T>) {

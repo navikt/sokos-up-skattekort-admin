@@ -4,7 +4,7 @@ import { defineConfig, esmExternalRequirePlugin } from "vite";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 
 export default defineConfig(({ mode }) => ({
-	base: "/skattekort-admin",
+	base: "/",
 	build: {
 		rolldownOptions: {
 			input: resolve(import.meta.dirname, "src/App.tsx"),
@@ -28,9 +28,8 @@ export default defineConfig(({ mode }) => ({
 	server: {
 		proxy: {
 			...(mode === "backend" && {
-				"/sokos-skattekort/api": {
+				"/api": {
 					target: "http://localhost:8080",
-					rewrite: (path: string) => path.replace(/^\/sokos-skattekort/, ""),
 					changeOrigin: true,
 					secure: false,
 				},

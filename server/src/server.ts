@@ -2,12 +2,12 @@ import path from "node:path";
 import express, { type Request, type Response } from "express";
 import expressStaticGzip from "express-static-gzip";
 
-const basePath = "/sokos-up-skattekort-admin";
+const basePath = "/admin";
 const buildPath = path.resolve(import.meta.dirname, "../dist");
 const server = express();
 
 const corsAllowedOrigins: (string | RegExp)[] = [
-	/^https:\/\/utbetalingsportalen(?:-q[a-z0-9]+)?\.(?:ansatt|intern)(?:\.dev)?\.nav\.no$/,
+	/^https:\/\/sokos-skattekort(?:-q[a-z0-9]+)?\.(?:ansatt|intern)(?:\.dev)?\.nav\.no$/,
 	"http://localhost:5173",
 ];
 
