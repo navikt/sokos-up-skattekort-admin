@@ -9,20 +9,20 @@ spec:
   image: "{{ image }}"
   port: 8080
   liveness:
-    path: /admin/internal/isAlive
+    path: /internal/isAlive
     initialDelay: 10
   readiness:
-    path: /admin/internal/isReady
+    path: /internal/isReady
     initialDelay: 10
   prometheus:
     enabled: true
-    path: /admin/internal/metrics
+    path: /internal/metrics
   replicas:
     min: 1
     max: 2
   ingresses:
-    - "https://sokos-skattekort.intern.dev.nav.no/admin"
-    - "https://sokos-skattekort.ansatt.dev.nav.no/admin"
+    - "https://sokos-skattekort-admin.intern.dev.nav.no"
+    - "https://sokos-skattekort-admin.ansatt.dev.nav.no"
   resources:
     limits:
       cpu: "3"

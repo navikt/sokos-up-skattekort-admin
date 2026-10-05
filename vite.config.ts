@@ -27,6 +27,13 @@ export default defineConfig(({ mode }) => ({
 	},
 	server: {
 		proxy: {
+			...(mode === "realdev" && {
+				"/api": {
+					target: "https://sokos-skattekort.intern.dev.nav.no",
+					changeOrigin: true,
+					secure: true,
+				},
+			}),
 			...(mode === "backend" && {
 				"/api": {
 					target: "http://localhost:8080",

@@ -2,7 +2,7 @@ import path from "node:path";
 import express, { type Request, type Response } from "express";
 import expressStaticGzip from "express-static-gzip";
 
-const basePath = "/admin";
+const basePath = "/";
 const buildPath = path.resolve(import.meta.dirname, "../dist");
 const server = express();
 
