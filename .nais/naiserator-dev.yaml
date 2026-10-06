@@ -30,3 +30,21 @@ spec:
     requests:
       cpu: "50m"
       memory: 256Mi
+  azure:
+    application:
+      enabled: true
+      allowAllUsers: false
+      claims:
+        groups:
+          - id: "f760594e-4918-4246-a636-329148c82fa7" # 0000-CA-SOKOS-UP-SKATTEKORT-ADMIN-WRITE
+        extra:
+          - NAVident
+    sidecar:
+      enabled: true
+      autoLogin: true
+      autoLoginIgnorePaths:
+        - /internal/*
+  accessPolicy:
+    outbound:
+      rules:
+        - application: sokos-skattekort
