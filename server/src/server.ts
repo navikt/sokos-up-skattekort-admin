@@ -8,6 +8,7 @@ const basePath = "";
 const buildPath = path.resolve(import.meta.dirname, "../dist");
 const server = express();
 const apiTarget = new URL("https://sokos-skattekort.intern.dev.nav.no");
+const oboAudience = `api://${process.env.NAIS_CLUSTER_NAME ?? "dev-gcp"}.okonomi.sokos-skattekort/.default`;
 
 const corsAllowedOrigins: (string | RegExp)[] = [
 	/^https:\/\/sokos-skattekort(?:-q[a-z0-9]+)?\.(?:ansatt|intern)(?:\.dev)?\.nav\.no$/,
@@ -42,7 +43,7 @@ server.use("/api", async (req, res, next) => {
 
 	const oboTokenResult = await requestOboToken(
 		incomingToken,
-		"0970c9f3-d599-4996-862c-012b61541be3",
+		oboAudience,
 	);
 
 	if (!oboTokenResult.ok) {
