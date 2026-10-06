@@ -25,12 +25,6 @@ export default defineConfig(({ mode }) => ({
 					secure: false,
 				},
 			}),
-			...(mode === "mock" && {
-				"/mockServiceWorker.js": {
-					target: "http://localhost:5173",
-					rewrite: () => "skattekort-admin/mockServiceWorker.js",
-				},
-			}),
 		},
 	},
 	plugins: [react(), cssInjectedByJsPlugin()],
