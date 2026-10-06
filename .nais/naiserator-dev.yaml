@@ -48,6 +48,5 @@ spec:
     outbound:
       external:
         - host: sokos-skattekort.intern.dev.nav.no
-          port: 443
       rules:
         - application: sokos-skattekort
