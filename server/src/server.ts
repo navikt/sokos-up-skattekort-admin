@@ -37,7 +37,6 @@ server.use("/api", (req, res, next) => {
 		{
 			protocol: apiTarget.protocol,
 			hostname: apiTarget.hostname,
-			port: apiTarget.port || 443,
 			method: req.method,
 			path: req.originalUrl,
 			headers: {
