@@ -2,6 +2,7 @@ import path from "node:path";
 import https from "node:https";
 import express, { type Request, type Response } from "express";
 import expressStaticGzip from "express-static-gzip";
+import { getToken, requestOboToken } from "@navikt/oasis";
 
 const basePath = "";
 const buildPath = path.resolve(import.meta.dirname, "../dist");
@@ -32,7 +33,23 @@ server.use((req, res, next) => {
 	next();
 });
 
-server.use("/api", (req, res, next) => {
+server.use("/api", async (req, res, next) => {
+	const incomingToken = getToken(req);
+	if (!incomingToken) {
+		res.status(401).json({ message: "Mangler innkommende brukertoken" });
+		return;
+	}
+
+	const oboTokenResult = await requestOboToken(
+		incomingToken,
+		"0970c9f3-d599-4996-862c-012b61541be3",
+	);
+
+	if (!oboTokenResult.ok) {
+		next(oboTokenResult.error);
+		return;
+	}
+
 	const proxyRequest = https.request(
 		{
 			protocol: apiTarget.protocol,
@@ -41,6 +58,7 @@ server.use("/api", (req, res, next) => {
 			path: req.originalUrl,
 			headers: {
 				...req.headers,
+				authorization: `Bearer ${oboTokenResult.token}`,
 				host: apiTarget.host,
 			},
 		},
