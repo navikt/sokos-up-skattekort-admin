@@ -1,14 +1,22 @@
-import path from "node:path";
 import https from "node:https";
+import path from "node:path";
+import { getToken, requestOboToken } from "@navikt/oasis";
 import express, { type Request, type Response } from "express";
 import expressStaticGzip from "express-static-gzip";
-import { getToken, requestOboToken } from "@navikt/oasis";
+import { getServerSideEnvironment } from "./environment.js";
 
 const basePath = "";
 const buildPath = path.resolve(import.meta.dirname, "../dist");
 const server = express();
-const apiTarget = new URL("https://sokos-skattekort.intern.dev.nav.no");
-const oboAudience = `api://${process.env.NAIS_CLUSTER_NAME ?? "dev-gcp"}.okonomi.sokos-skattekort/.default`;
+const env = getServerSideEnvironment();
+const apiTarget = 
+	      (env==="development") ? new URL("https://sokos-skattekort.intern.dev.nav.no")
+		: (env==="production") ? new URL("https://sokos-skattekort.intern.nav.no") 
+				  : new URL("http://localhost:8080");
+const oboAudience =
+	      (env==="development") ? "api://dev-gcp.okonomi.sokos-skattekort/.default"
+		: (env==="production") ? "api://prod-gcp.okonomi.sokos-skattekort/.default"
+				  : "sokos-skattekort";
 
 const corsAllowedOrigins: (string | RegExp)[] = [
 	/^https:\/\/sokos-skattekort(?:-q[a-z0-9]+)?\.(?:ansatt|intern)(?:\.dev)?\.nav\.no$/,
