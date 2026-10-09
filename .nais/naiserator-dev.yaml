@@ -36,7 +36,7 @@ spec:
       allowAllUsers: false
       claims:
         groups:
-          - id: "b9c50759-8b85-4502-bfee-530d1cdb49ba" # skatt-og-trekk-ops
+          - id: "f760594e-4918-4246-a636-329148c82fa7" # "b9c50759-8b85-4502-bfee-530d1cdb49ba" # skatt-og-trekk-ops
         extra:
           - NAVident
     sidecar:
