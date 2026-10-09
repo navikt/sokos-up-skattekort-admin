@@ -1,7 +1,7 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: sokos-up-skattekort-admin
+  name: sokos-skattekort-admin
   namespace: okonomi
   labels:
     team: okonomi
@@ -9,20 +9,20 @@ spec:
   image: "{{ image }}"
   port: 8080
   liveness:
-    path: /sokos-up-skattekort-admin/internal/isAlive
+    path: /internal/isAlive
     initialDelay: 10
   readiness:
-    path: /sokos-up-skattekort-admin/internal/isReady
+    path: /internal/isReady
     initialDelay: 10
   prometheus:
     enabled: true
-    path: /sokos-up-skattekort-admin/internal/metrics
+    path: /internal/metrics
   replicas:
     min: 1
     max: 2
   ingresses:
-    - "https://utbetalingsportalen.intern.dev.nav.no/sokos-up-skattekort-admin"
-    - "https://utbetalingsportalen.ansatt.dev.nav.no/sokos-up-skattekort-admin"
+    - "https://sokos-skattekort-admin.intern.dev.nav.no"
+    - "https://sokos-skattekort-admin.ansatt.dev.nav.no"
   resources:
     limits:
       cpu: "3"
@@ -30,3 +30,24 @@ spec:
     requests:
       cpu: "50m"
       memory: 256Mi
+  azure:
+    application:
+      enabled: true
+      allowAllUsers: false
+      claims:
+        groups:
+          - id: "b9c50759-8b85-4502-bfee-530d1cdb49ba" # skatt-og-trekk-ops
+        extra:
+          - NAVident
+    sidecar:
+      enabled: true
+      autoLogin: true
+      autoLoginIgnorePaths:
+        - /internal/*
+  accessPolicy:
+    outbound:
+      external:
+        - host: sokos-skattekort.intern.dev.nav.no
+      rules:
+        - application: sokos-skattekort
+          namespace: okonomi

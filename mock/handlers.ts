@@ -18,7 +18,7 @@ let skattekortnstuff: number = refNr*(Math.round(Math.random()*100))
 const reranIds: Array<number> = []
 
 export const handlers = [
-    http.post("/sokos-skattekort/api/v1/skattekort/bestille", async ({request}) => {
+    http.post("/api/v1/skattekort/bestille", async ({request}) => {
         skattekortBestiltTidspunkt = now();
         const sokeParameter = (await request.json()) as ForespoerselRequest;
         if (!skattekortYears().includes(sokeParameter.aar)) 
@@ -26,7 +26,7 @@ export const handlers = [
         return new HttpResponse(null, {status: 202})
     }),
     http.post(
-        "/sokos-skattekort/api/v2/person/hent-skattekort",
+        "/api/v2/person/hent-skattekort",
         async ({request}) => {
             const sokeParameter = (await request.json()) as HentSkattekortRequest;
             const mangePlussEttSkattekort = {data:[...mangeSkattekort.data, ...ettEkstraSkattekort.data]}
@@ -38,14 +38,14 @@ export const handlers = [
                 skattekort, {status: 200});
         },
     ),
-    http.post("/sokos-skattekort/api/v1/skattekort/status", async () => {
+    http.post("/api/v1/skattekort/status", async () => {
         // eslint-disable-next-line no-negated-condition
         const status = !skattekortBestiltTidspunkt ? "IKKE_FORESPURT"
             : now() < addSeconds(skattekortBestiltTidspunkt, 5) /*         */? "VENTER_UTSENDING"
             : /* Og hvis det er mer enn 5s siden man trykket:               */ "ABONNERER";
         return HttpResponse.json({status}, {status: 200});
     }),
-    http.post("/sokos-skattekort/api/v1/admin/auditlogg", async ({request}) => {
+    http.post("/api/v1/admin/auditlogg", async ({request}) => {
         const sokeParameter = (await request.json()) as {fnr:string};
         const res =
             sokeParameter.fnr === "11111111111" 
@@ -53,10 +53,10 @@ export const handlers = [
                 : auditLogg;
         return HttpResponse.json(res, {status: 200});
     }),
-    http.post("/sokos-skattekort/api/v1/admin/bestillingsbatcher", async () => {
+    http.post("/api/v1/admin/bestillingsbatcher", async () => {
         return HttpResponse.json(batcher, {status: 200});
     }),
-    http.get("/sokos-skattekort/api/v1/admin/bestillingsbatcher", async () => {
+    http.get("/api/v1/admin/bestillingsbatcher", async () => {
         const nowStamp = now();
         const terningkast = Math.round(Math.random() * 2) 
         const saltaBatcher = terningkast === 0 ? batcherUtenJson.items : [{
@@ -73,13 +73,13 @@ export const handlers = [
             },
             {status: 200});
     }),
-    http.get("/sokos-skattekort/api/v1/admin/bestillinger", async () => {
+    http.get("/api/v1/admin/bestillinger", async () => {
         return HttpResponse.json(bestillinger, {status: 200});
     }),
-    http.get("/sokos-skattekort/api/v1/admin/utsendinger", async () => {
+    http.get("/api/v1/admin/utsendinger", async () => {
         return HttpResponse.json(utsendinger, {status: 200});
     }),
-    http.get("/sokos-skattekort/api/v1/admin/noekkelinformasjon", async () => {
+    http.get("/api/v1/admin/noekkelinformasjon", async () => {
         skattekortnstuff += (Math.round(Math.random()*10))
         return HttpResponse.json(
             {"antallAvHver": {...noekkelinformasjon.antallAvHver,
@@ -87,17 +87,17 @@ export const handlers = [
                 "personer": noekkelinformasjon.antallAvHver["personer"]+Math.round(skattekortnstuff/2)
             }}, {status: 200});
     }),
-    http.patch("/sokos-skattekort/api/v1/admin/bestillingsbatcher/:id", async ({params}) => {
+    http.patch("/api/v1/admin/bestillingsbatcher/:id", async ({params}) => {
         const id = Number(params.id)
         reranIds.push(id)
         return new HttpResponse(null, {status: 202})
     }),
-    http.post("/sokos-skattekort/api/v1/skattekort/bestillingbulk/:forsystem/:year", async ({params}) => {
+    http.post("/api/v1/skattekort/bestillingbulk/:forsystem/:year", async ({params}) => {
         const aar = params.year;
         if (!skattekortYears().includes(Number(aar))) return HttpResponse.json({message: "Feilmelding fra backend om inntektsår"}, {status: 400});
         return new HttpResponse(null, {status: 202})
     }),
-    http.post("/sokos-skattekort/api/v1/skattekort/statuser", async () => {
+    http.post("/api/v1/skattekort/statuser", async () => {
         return HttpResponse.json(detailedStatuses, {status: 200})
     })
 ];

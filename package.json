@@ -1,11 +1,12 @@
 {
-	"name": "sokos-up-skattekort-admin",
+	"name": "sokos-skattekort-admin",
 	"version": "1.0.0",
 	"description": "Mikrofrontend for Utbetalingsportalen",
 	"type": "module",
 	"scripts": {
 		"dev": "vite --mode mock",
 		"dev:backend": "vite --mode backend",
+		"dev:realdev": "vite --mode realdev",
 		"build": "tsc && vite build",
 		"biome:check": "biome check --files-ignore-unknown=true",
 		"biome:fix": "biome check --write --no-errors-on-unmatched",

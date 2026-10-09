@@ -1,25 +1,9 @@
-import { resolve } from "node:path";
+import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { defineConfig, esmExternalRequirePlugin } from "vite";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 
 export default defineConfig(({ mode }) => ({
-	base: "/skattekort-admin",
-	build: {
-		rolldownOptions: {
-			input: resolve(import.meta.dirname, "src/App.tsx"),
-			preserveEntrySignatures: "exports-only",
-			plugins: [
-				esmExternalRequirePlugin({
-					external: ["react", "react-dom"],
-				}),
-			],
-			output: {
-				entryFileNames: "bundle.js",
-				format: "esm",
-			},
-		},
-	},
+	base: "/",
 	css: {
 		modules: {
 			generateScopedName: "[name]__[local]___[hash:base64:5]",
@@ -27,18 +11,18 @@ export default defineConfig(({ mode }) => ({
 	},
 	server: {
 		proxy: {
-			...(mode === "backend" && {
-				"/sokos-skattekort/api": {
-					target: "http://localhost:8080",
-					rewrite: (path: string) => path.replace(/^\/sokos-skattekort/, ""),
+			...(mode === "realdev" && {
+				"/api": {
+					target: "https://sokos-skattekort.intern.dev.nav.no",
 					changeOrigin: true,
-					secure: false,
+					secure: true,
 				},
 			}),
-			...(mode === "mock" && {
-				"/mockServiceWorker.js": {
-					target: "http://localhost:5173",
-					rewrite: () => "skattekort-admin/mockServiceWorker.js",
+			...(mode === "backend" && {
+				"/api": {
+					target: "http://localhost:8080",
+					changeOrigin: true,
+					secure: false,
 				},
 			}),
 		},
