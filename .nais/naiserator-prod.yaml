@@ -39,7 +39,9 @@ spec:
       allowAllUsers: false
       claims:
         groups:
-          - id: "0918ffcf-2cc4-4282-a1d0-757e116a1d9f" # skatt-og-trekk
+          - id: "0918ffcf-2cc4-4282-a1d0-757e116a1d9f" # 0000-CA-SKATT-OG-TREKK-ADMIN
+          - id: "3849f5dd-e312-4b8e-8cca-752a0d5e59ec" # 0000-CA-SKATTEKORT-ADMIN-WRITE
+          - id: "8f27b0f8-b78c-45d3-b0a1-7b3075b636c2" # 0000-CA-SOKOS-UP-SKATTEKORT-ADMIN-WRITE
         extra:
           - NAVident
     sidecar:
