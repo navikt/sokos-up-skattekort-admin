@@ -16,22 +16,22 @@
 		"pnpm:resolve": "node scripts/resolve-pnpm-version.mjs"
 	},
 	"dependencies": {
-		"@grafana/faro-web-sdk": "2.12.1",
+		"@grafana/faro-web-sdk": "2.13.0",
 		"@hookform/resolvers": "5.9.1",
 		"@navikt/aksel-icons": "8.19.2",
 		"@navikt/ds-css": "8.19.2",
 		"@navikt/ds-react": "8.19.2",
-		"axios": "1.20.0",
+		"axios": "1.21.0",
 		"date-fns": "4.4.0",
 		"react": "19.3.1",
 		"react-datepicker": "9.1.0",
 		"react-dom": "19.3.1",
-		"react-hook-form": "7.90.0",
+		"react-hook-form": "7.91.0",
 		"swr": "2.5.1",
 		"zod": "4.6.7"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.5.15",
+		"@biomejs/biome": "2.6.3",
 		"@navikt/aksel-stylelint": "8.19.2",
 		"@types/node": "26.6.5",
 		"@types/react": "19.3.0",
@@ -44,8 +44,8 @@
 		"stylelint": "17.16.0",
 		"stylelint-config-standard": "40.0.0",
 		"typescript": "7.0.2",
-		"vite": "8.3.4",
-		"vite-plugin-css-injected-by-js": "5.0.2"
+		"vite": "8.3.5",
+		"vite-plugin-css-injected-by-js": "5.0.3"
 	},
 	"msw": {
 		"workerDirectory": [
