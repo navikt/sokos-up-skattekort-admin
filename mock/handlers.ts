@@ -29,21 +29,17 @@ export const handlers = [
         "/api/v2/person/hent-skattekort",
         async ({request}) => {
             const sokeParameter = (await request.json()) as HentSkattekortRequest;
-            const mangePlussEttSkattekort = {data:[...mangeSkattekort.data, ...ettEkstraSkattekort.data]}
             const skattekort =
-                sokeParameter.fnr === "11111111111" || sokeParameter.fnr === "22222222222" || !skattekortBestiltTidspunkt ? ingenSkattekort
-                        : (skattekortBestiltTidspunkt && now() < addSeconds(skattekortBestiltTidspunkt, 7)) ? mangeSkattekort 
-                        : /* Etter 7 sekunder kommer det inn ett skattekort til */ mangePlussEttSkattekort;
+                sokeParameter.fnr === "11111111111" || sokeParameter.fnr === "22222222222" || mangeSkattekort;
             return HttpResponse.json(
                 skattekort, {status: 200});
         },
     ),
-    http.post("/api/v1/skattekort/status", async () => {
-        // eslint-disable-next-line no-negated-condition
-        const status = !skattekortBestiltTidspunkt ? "IKKE_FORESPURT"
-            : now() < addSeconds(skattekortBestiltTidspunkt, 5) /*         */? "VENTER_UTSENDING"
-            : /* Og hvis det er mer enn 5s siden man trykket:               */ "ABONNERER";
-        return HttpResponse.json({status}, {status: 200});
+    http.post("/api/v1/skattekort/status", 
+        async ({request}) => {
+            const sokeParameter = (await request.json()) as ForespoerselRequest;
+            const status = sokeParameter.personIdent === "11111111111" ? "UKJENT" : "ABONNERER";
+        return  HttpResponse.json({status}, {status: 200});
     }),
     http.post("/api/v1/admin/auditlogg", async ({request}) => {
         const sokeParameter = (await request.json()) as {fnr:string};
