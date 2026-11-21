@@ -96,7 +96,7 @@ export default function ShowAuditLogg({fnr, refreshRate, jumpToBatches, skatteko
     ];
 
     return (
-        <VStack padding="space-8" gap="space-16">
+        <VStack>
             <Errorhandler fetchSubject={"auditlogg"} error={error} emptyResponse={!events || events.length === 0}/>
             <Process>{esah}</Process>
         </VStack>)

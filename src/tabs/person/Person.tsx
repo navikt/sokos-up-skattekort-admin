@@ -5,8 +5,7 @@ import Errorhandler from "../../common/Errorhandler";
 import ShowAuditLogg from "./ShowAuditLogg";
 import Soek from "./Soek";
 import LabelText from "../../common/LabelText";
-import BestilleSkattekortButton from "./BestilleSkattekortButton";
-import {useFetchSkattekort} from "./api/api";
+import {useFetchSkattekort, useFetchSkattekortStatus} from "./api/api";
 import type {SokParameter} from "./SokParameter";
 import {thisYear} from "../../util/dateUtils";
 
@@ -16,16 +15,17 @@ export type PersonProps = {
 }
 
 export default function Person(props: Readonly<PersonProps>) {
-    const [skattekortstatus, setSkattekortstatus] = useState<string>("UKJENT");
     const [sokParameters, setSokParameters] =
         useState<SokParameter>({fnr: "", aar: thisYear(), forsystem: "OS"});
 
-    const [refreshingAfterBestilling, setRefreshingAfterBestilling] = useState<boolean>(false);
     const [refreshSwitch, setRefreshSwitch] = useState<boolean>(false);
-    
-    const refreshRate = refreshingAfterBestilling ? 1000 
-                            : refreshSwitch ? 5000 
-                            : 0;
+    const refreshRate = refreshSwitch ? 5000 : 0;
+
+    const skattekortstatus = useFetchSkattekortStatus({
+        personIdent: sokParameters.fnr,
+        aar: sokParameters.aar,
+        forsystem: sokParameters.forsystem
+    }, refreshRate)
     
     const {data: skattekortData, error, isLoading} = useFetchSkattekort(sokParameters.fnr, refreshRate);
     const [alertMessages, setAlertMessages] = useState<Set<Alert>>(new Set());
@@ -34,13 +34,6 @@ export default function Person(props: Readonly<PersonProps>) {
             setSokParameters(prev =>
                 ({fnr: props.fnr || "", aar: prev.aar, forsystem: prev.forsystem}))
         }}, [props.fnr]);
-
-    function addAlertMessage(alert: Alert) {
-        setAlertMessages(prev => {
-            if ([...prev].some(a => a.message === alert.message)) return prev;
-            else return new Set(prev).add(alert);
-    })}
-
 
     return (
         <Box marginInline={"auto"} padding="space-16" width="100%" maxWidth="1440px">
@@ -51,7 +44,6 @@ export default function Person(props: Readonly<PersonProps>) {
                 isLoading={isLoading}
                 nullstillStatus={() => {
                     setSokParameters({fnr: "", aar: thisYear(), forsystem: "OS"});
-                    setSkattekortstatus("UKJENT");
                 }}
             />
             <Switch
@@ -78,23 +70,11 @@ export default function Person(props: Readonly<PersonProps>) {
                 paddingInline="space-32"
                 borderRadius="8"
             >
-                <VStack justify="space-between" align={"baseline"} gap={"space-16"}>
-                    <HStack gap={"space-32"} align={"center"}>
+                 
                         {skattekortstatus && sokParameters.fnr && (<LabelText
-                                label={`Skattekort status for ${sokParameters.fnr}, ${sokParameters.forsystem}, ${sokParameters.aar}`} 
-                                text={skattekortstatus}
-                            />
-                        )}
-                        <BestilleSkattekortButton
-                            sokParameters={sokParameters}
-                            error={error}
-                            setSkattekortstatus={setSkattekortstatus}
-                            addAlertMessage={addAlertMessage}
-                            shouldRefreshStatus={refreshRate}
-                            setAwaitingFinalStatus={setRefreshingAfterBestilling}
-                        />
-                    </HStack>
-                </VStack>
+                                label={`Skattekortstatus for ${sokParameters.fnr}, ${sokParameters.forsystem}, ${sokParameters.aar}`} 
+                                text={skattekortstatus.data || "Venter"}/>)}                         
+
             </Box>
             }
             {sokParameters.fnr &&
